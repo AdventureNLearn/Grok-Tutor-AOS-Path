@@ -30,7 +30,7 @@ This repo is an **educational development resource**: study it, fork it, remix i
 ```bash
 npm install
 cp .env.example .env   # optional: add XAI_API_KEY for live model replies
-npm run dev            # http://127.0.0.1:8080
+npm run dev            # http://127.0.0.1:8085  (or: npm run start:release)
 ```
 
 Without an API key, the app still teaches using high-quality **offline educational replies**.
@@ -40,9 +40,12 @@ npm run typecheck
 npm run build
 ```
 
+**The Hive** (home): Map-first craft field; optional 3D. Click a comb to open a floating desk.
+Deep-link 3D: `http://127.0.0.1:8085/?view=3d`
+
 ## Stack
 
-React 19 · TypeScript · Vite · TanStack Start / Router · Tailwind CSS v4 · Zustand  
+React 19 · TypeScript · Vite · TanStack Start / Router · Tailwind CSS v4 · Zustand · Three.js (optional Hive 3D)
 
 Optional: `XAI_API_KEY` for server-side Grok tutoring (never expose keys in the browser or in git).
 
@@ -50,14 +53,16 @@ Optional: `XAI_API_KEY` for server-side Grok tutoring (never expose keys in the 
 
 ```text
 src/
-  routes/           App pages (Learn, Samples, Explore, Skills, Get yours, …)
+  routes/              App pages (Learn, Samples, Library, Explore, Plan Lab, …)
+  components/hive/     The Hive (Map + 3D, desks, coach)
   lib/
-    industries.ts   Industry catalog (plain-language topics)
-    demo/           Craft-specific sample lesson content
-    demo-lessons.ts Lesson builder (multi-turn dialogues)
-    aos-skills.ts   Thinking-tool map (tutor-safe subset)
-    tutor-api.ts    Live + offline tutor
-  components/       UI chrome
+    industries.ts      Industry catalog (plain-language topics)
+    demo/              Craft-specific sample lesson content
+    tutor-hive-map.ts  Hive comb graph
+    release-curriculum.ts  Public curriculum counts
+    tutor-api.ts       Live + offline tutor
+scripts/               Local launchers + stress helpers (host tooling)
+docs/                  Product notes (ops soak logs stay host-local)
 ```
 
 ## Related public libraries
@@ -83,6 +88,45 @@ On Grok.me (SuperGrok), open **Get your own** in the live app or use the build p
 ## License
 
 MIT — see [LICENSE](LICENSE).
+
+## Credits & lineage (public)
+
+Full in-app page: **`/credits`**. Machine-readable notices: [NOTICE](NOTICE).
+
+Product chrome stays clean (craft learning first). Attribution is explicit on Credits / NOTICE / this README.
+
+### CAI-OS (conceptual spark — not code merge)
+
+CAI-OS / CAIOS (Jonathan M. Schack · ELXaber) helped spark AOS/LPIN integrity framing. **Grok Tutor does not ship CAIOS software.** Exact creator-requested strings:
+
+> Built on CAIOS v1.0 by inventor Jonathan M. Schack – Patent Pending US 19/433,771 & 19/390,493 – www.cai-os.com
+
+> Built on CRB 6.7 by Jonathan Schack (ELXaber) (GPL 3.0).
+
+> Chaos-Persona framework by ELXaber (https://github.com/ELXaber/chaos-persona/).
+
+- https://cai-os.com · https://github.com/ELXaber/chaos-persona · jon@cai-os.com
+
+### Multi-Agent CAD (educational Plan Lab)
+
+Offline Plan Lab curriculum is aligned with MAC (browser does not run the Python CAD kernel):
+
+```bibtex
+@misc{mac2026,
+  author = {Guanxing Qu and Xueyan Zou},
+  title  = {MAC (Multi-Agent CAD): A Decoupled Multi-Agent Framework for Text-to-CAD Generation},
+  year   = {2026},
+  publisher = {GitHub},
+  journal   = {GitHub repository},
+  howpublished = {\url{https://github.com/Pan-Chera/Multi-Agent-CAD}}
+}
+```
+
+Copyright (c) 2026 Tsinghua University · IEI Lab · MIT. Also cite [earthtojake/text-to-cad](https://github.com/earthtojake/text-to-cad) when using that baseline lineage.
+
+### Runtime open source
+
+See [NOTICE](NOTICE) and `/credits` (three.js, React, TanStack, Vite, Tailwind, Zustand, Zod, Lucide, Sonner, PGLite, Better Auth, and others).
 
 ## Changelog note
 
