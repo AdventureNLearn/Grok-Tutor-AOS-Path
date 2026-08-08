@@ -16,6 +16,7 @@ import { AOS_SKILLS, AOS_SOURCE, SKILL_CATEGORIES } from "@/lib/aos-skills";
 import { demoStats } from "@/lib/demo-lessons";
 
 export const Route = createFileRoute("/")({
+  // Visual home is the 3D Tutor Hive in AppShell; this page is SEO + no-JS fallback.
   component: HomePage,
 });
 
@@ -41,19 +42,23 @@ function HomePage() {
             <Badge>Real trades · Real professions · Honest thinking</Badge>
           </div>
           <h1 className="max-w-3xl text-balance text-4xl sm:text-5xl font-semibold tracking-tight leading-[1.08]">
-            Learn a craft with a tutor that cares about evidence, not fluff.
+            Learn a craft with a tutor that prioritizes evidence and practice.
           </h1>
           <p className="mt-5 max-w-2xl text-muted text-lg leading-relaxed">
-            From electrical and HVAC to nursing, software, and civic work — learn the way a good
-            mentor teaches: clear explanations, practice that sticks, and thinking tools that keep
-            you honest when the stakes are high.
+            From electrical and HVAC to nursing, software, and public information literacy — learn
+            the way a good mentor teaches: clear explanations, practice that sticks, and thinking
+            tools that keep claims honest when the stakes are high.
           </p>
           <p className="mt-3 max-w-2xl text-sm text-subtle leading-relaxed">
-            You are in the live prototype. Browse{" "}
+            Browse{" "}
             <Link to="/demo" className="text-teal underline-offset-2 hover:underline">
               {demos.lessons} sample lessons
             </Link>{" "}
-            across every industry, or open Learn for a live session.
+            across every industry, open Learn for a live session, or return to{" "}
+            <Link to="/" className="text-teal underline-offset-2 hover:underline">
+              The Hive
+            </Link>
+            .
           </p>
           <div className="mt-8 flex flex-wrap gap-3">
             <Button asChild size="lg" variant="teal">
@@ -112,7 +117,7 @@ function HomePage() {
               <Layers className="h-5 w-5 text-teal mb-2" />
               <CardTitle>2. Thinking tools you can turn on</CardTitle>
               <CardDescription>
-                Attach habits like Evidence Gate or Four-Role Team when you want stricter judgment —
+                Attach habits like Evidence Check or Four-Role Team when you want stricter judgment —
                 careful methods taught for learning.
               </CardDescription>
             </CardHeader>

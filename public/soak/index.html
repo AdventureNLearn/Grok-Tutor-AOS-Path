@@ -1,0 +1,280 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Grok Tutor · Soak log (same host)</title>
+  <style>
+    :root {
+      --bg: #05060a;
+      --surface: #0c0e14;
+      --fg: #f2f4f8;
+      --muted: #9aa3b5;
+      --teal: #5eead4;
+      --violet: #a78bfa;
+      --border: #1e2433;
+      --ok: #86efac;
+      --soft: #fde68a;
+      --bad: #fca5a5;
+    }
+    * { box-sizing: border-box; }
+    body {
+      margin: 0;
+      min-height: 100dvh;
+      font-family: "Segoe UI", system-ui, sans-serif;
+      background:
+        radial-gradient(ellipse 70% 40% at 20% 0%, rgba(99, 102, 241, 0.12), transparent 55%),
+        radial-gradient(ellipse 50% 35% at 90% 10%, rgba(14, 165, 233, 0.08), transparent 50%),
+        var(--bg);
+      color: var(--fg);
+      padding: 1.25rem 1.35rem 2rem;
+    }
+    .pill {
+      display: inline-block;
+      font-size: 0.68rem;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: var(--teal);
+      border: 1px solid rgba(94, 234, 212, 0.35);
+      background: rgba(94, 234, 212, 0.1);
+      border-radius: 999px;
+      padding: 0.35rem 0.75rem;
+      margin-bottom: 0.75rem;
+    }
+    h1 {
+      margin: 0 0 0.35rem;
+      font-size: 1.35rem;
+      letter-spacing: -0.02em;
+    }
+    .lede {
+      color: var(--muted);
+      font-size: 0.9rem;
+      max-width: 40rem;
+      line-height: 1.45;
+      margin: 0 0 1rem;
+    }
+    .split {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 0.75rem;
+      margin-bottom: 1rem;
+    }
+    @media (min-width: 720px) {
+      .split { grid-template-columns: 1fr 1fr; }
+    }
+    .card {
+      border: 1px solid var(--border);
+      background: rgba(12, 14, 20, 0.88);
+      border-radius: 0.9rem;
+      padding: 0.85rem 1rem;
+    }
+    .card h2 {
+      margin: 0 0 0.5rem;
+      font-size: 0.72rem;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: var(--violet);
+    }
+    .card a {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.35rem;
+      color: var(--teal);
+      font-weight: 600;
+      text-decoration: none;
+      margin: 0.25rem 0.5rem 0.25rem 0;
+      font-size: 0.88rem;
+    }
+    .card a:hover { text-decoration: underline; }
+    .hint { font-size: 0.75rem; color: var(--muted); margin-top: 0.45rem; }
+    .bar {
+      height: 10px;
+      background: #1e2433;
+      border-radius: 999px;
+      overflow: hidden;
+      margin: 0 0 1rem;
+    }
+    .bar > i {
+      display: block;
+      height: 100%;
+      width: 0%;
+      background: linear-gradient(90deg, var(--teal), var(--violet));
+      transition: width 0.4s ease;
+    }
+    .stats {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.65rem;
+      margin-bottom: 1rem;
+    }
+    .stat {
+      min-width: 5.5rem;
+      border: 1px solid var(--border);
+      background: var(--surface);
+      border-radius: 0.75rem;
+      padding: 0.55rem 0.75rem;
+    }
+    .stat b {
+      display: block;
+      font-size: 1.2rem;
+      color: var(--teal);
+    }
+    .stat span {
+      font-size: 0.65rem;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      color: var(--muted);
+    }
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 0.8rem;
+    }
+    th, td {
+      text-align: left;
+      padding: 0.4rem 0.5rem;
+      border-bottom: 1px solid var(--border);
+    }
+    th { color: var(--muted); font-weight: 600; font-size: 0.7rem; letter-spacing: 0.06em; text-transform: uppercase; }
+    tr.ok td { color: var(--ok); }
+    tr.soft td { color: var(--soft); }
+    tr.bad td { color: var(--bad); }
+    .status {
+      font-size: 0.8rem;
+      color: var(--muted);
+      margin-bottom: 0.75rem;
+    }
+    .status strong { color: var(--fg); }
+    #err {
+      display: none;
+      border-left: 3px solid var(--soft);
+      background: rgba(251, 191, 36, 0.08);
+      color: var(--soft);
+      padding: 0.55rem 0.75rem;
+      border-radius: 0 0.5rem 0.5rem 0;
+      margin-bottom: 0.75rem;
+      font-size: 0.85rem;
+    }
+  </style>
+</head>
+<body>
+  <div class="pill">same host · product HTTP only · no drive paths</div>
+  <h1>Soak log · watch next to The Hive</h1>
+  <p class="lede">
+    Keep this tab open for the automated log. Open a Hive scenario in another tab
+    (or use the links below — they open in a new tab so you don’t lose this page).
+  </p>
+
+  <div id="err"></div>
+
+  <div class="split">
+    <div class="card">
+      <h2>Product (new tab)</h2>
+      <a href="/?orch=1&shape=spine" target="_blank" rel="noopener">Spine scenario</a>
+      <a href="/?orch=1&style=galactic&shape=spine" target="_blank" rel="noopener">Galactic + scenario</a>
+      <a href="/?orch=1&deep=1" target="_blank" rel="noopener">Deep universe</a>
+      <a href="/labs/cad" target="_blank" rel="noopener">Plan Lab</a>
+      <p class="hint">Links use target=_blank so this log tab stays put.</p>
+    </div>
+    <div class="card">
+      <h2>This page</h2>
+      <p class="hint" style="margin:0">
+        Polls <code>/soak/LIVE.json</code> every 5s on the same origin.
+        Product links open in a <strong>new tab</strong> so this log stays visible.
+      </p>
+    </div>
+  </div>
+
+  <div class="bar" aria-hidden="true"><i id="bar"></i></div>
+  <div class="stats" id="stats">
+    <div class="stat"><b>—</b><span>pass</span></div>
+    <div class="stat"><b>—</b><span>soft</span></div>
+    <div class="stat"><b>—</b><span>fail</span></div>
+    <div class="stat"><b>—</b><span>cycles</span></div>
+    <div class="stat"><b>—</b><span>elapsed</span></div>
+  </div>
+  <p class="status" id="status">Waiting for soak process…</p>
+  <table>
+    <thead>
+      <tr><th>Time</th><th>Check</th><th>Status</th><th>ms</th><th>Note</th></tr>
+    </thead>
+    <tbody id="rows">
+      <tr><td colspan="5">No LIVE.json yet — start <code>npm run test:sim1h</code></td></tr>
+    </tbody>
+  </table>
+
+  <script>
+    const errEl = document.getElementById("err");
+    const bar = document.getElementById("bar");
+    const stats = document.getElementById("stats");
+    const status = document.getElementById("status");
+    const rows = document.getElementById("rows");
+
+    function esc(s) {
+      return String(s ?? "")
+        .replace(/&/g, "&amp;")
+        .replace(/</g, "&lt;")
+        .replace(/>/g, "&gt;")
+        .replace(/"/g, "&quot;");
+    }
+
+    async function tick() {
+      try {
+        const res = await fetch("/soak/LIVE.json?t=" + Date.now(), {
+          cache: "no-store",
+        });
+        if (!res.ok) throw new Error("LIVE.json not ready (" + res.status + ")");
+        const s = await res.json();
+        errEl.style.display = "none";
+
+        const minutes = s.minutes || 60;
+        const elapsed = s.elapsedMs || 0;
+        const pct = Math.min(100, (elapsed / (minutes * 60000)) * 100);
+        bar.style.width = pct.toFixed(1) + "%";
+
+        const elMin = Math.round(elapsed / 60000);
+        stats.innerHTML =
+          '<div class="stat"><b>' + (s.pass ?? 0) + "</b><span>pass</span></div>" +
+          '<div class="stat"><b>' + (s.soft ?? 0) + "</b><span>soft</span></div>" +
+          '<div class="stat"><b>' + (s.fail ?? 0) + "</b><span>fail</span></div>" +
+          '<div class="stat"><b>' + (s.cycles ?? 0) + "</b><span>cycles</span></div>" +
+          '<div class="stat"><b>' + elMin + "m</b><span>elapsed</span></div>" +
+          '<div class="stat"><b>' + (s.sourcePass ?? 0) + "/" + (s.sourceTotal ?? 0) + "</b><span>source</span></div>";
+
+        status.innerHTML =
+          "<strong>Last:</strong> " + esc(s.lastMessage || "—") +
+          " · target " + minutes + " min · " + pct.toFixed(1) + "%";
+
+        const recent = (s.recent || []).slice(-16).reverse();
+        if (!recent.length) {
+          rows.innerHTML = '<tr><td colspan="5">Soak running — waiting for first checks…</td></tr>';
+        } else {
+          rows.innerHTML = recent
+            .map(function (r) {
+              const cls = r.pass ? (r.soft ? "soft" : "ok") : "bad";
+              return (
+                '<tr class="' + cls + '">' +
+                "<td>" + esc(r.t) + "</td>" +
+                "<td>" + esc(r.name) + "</td>" +
+                "<td>" + esc(r.status) + "</td>" +
+                "<td>" + esc(r.ms) + "ms</td>" +
+                "<td>" + esc(r.reason) + "</td>" +
+                "</tr>"
+              );
+            })
+            .join("");
+        }
+      } catch (e) {
+        errEl.style.display = "block";
+        errEl.textContent =
+          "Log feed idle: " +
+          (e && e.message ? e.message : "unknown") +
+          ". Keep this tab open; start the soak if it is not running.";
+      }
+    }
+
+    tick();
+    setInterval(tick, 5000);
+  </script>
+</body>
+</html>

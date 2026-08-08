@@ -1,0 +1,3185 @@
+{
+  "name": "ITSHABBENING",
+  "version": "1.0.0",
+  "class": "private-educational-resource",
+  "opsec": "public-suite-safe-content",
+  "description": "ITSHABBENING — private, PII-scrubbed, OPSEC-compliant educational verified-currency for SuperGrok and Grok Tutor. Not generative. Operator-dated facts with limits and sources.",
+  "generatedAt": "2026-08-06T01:47:15.488Z",
+  "noteCount": 101,
+  "industries": [
+    "electrical",
+    "plumbing",
+    "hvac",
+    "welding",
+    "construction",
+    "carpentry",
+    "nursing",
+    "emt",
+    "pharmacy",
+    "software",
+    "cybersecurity",
+    "it-support",
+    "data",
+    "cnc",
+    "quality",
+    "accounting",
+    "sales",
+    "project-management",
+    "culinary",
+    "hospitality",
+    "law-enforcement",
+    "teaching",
+    "cdl",
+    "aviation",
+    "design",
+    "video",
+    "energy",
+    "agriculture",
+    "automotive",
+    "logistics",
+    "civic-intelligence",
+    "media-literacy"
+  ],
+  "notes": [
+    {
+      "verifiedOn": "2026-08-06",
+      "reviewBy": "2027-02-06",
+      "id": "global-stop-if-unsafe",
+      "title": "Stop if unsafe",
+      "statement": "If a person could get hurt, stop that path and tell the right lead. Schedule pressure does not override a clear safety problem.",
+      "limits": "Stop-work authority details are employer- and site-specific.",
+      "sources": [
+        "Workplace stop-work culture (educational)"
+      ],
+      "tier": "must",
+      "safetyCritical": true,
+      "scope": {
+        "industries": [],
+        "modes": [
+          "explain",
+          "socratic",
+          "practice",
+          "quiz",
+          "scenario",
+          "career"
+        ],
+        "topicHints": [
+          "hurt",
+          "unsafe",
+          "rush",
+          "pressure",
+          "safety",
+          "emergency"
+        ]
+      }
+    },
+    {
+      "verifiedOn": "2026-08-06",
+      "reviewBy": "2027-02-06",
+      "id": "global-not-license",
+      "title": "Learning support",
+      "statement": "Grok Tutor is here to help you learn and practice. For real licensed work, follow your instructors, workplace procedures, and official guidance.",
+      "limits": "Check what your workplace and instructors expect.",
+      "sources": [
+        "Grok Tutor scope"
+      ],
+      "tier": "must",
+      "scope": {
+        "industries": [],
+        "modes": [
+          "explain",
+          "socratic",
+          "practice",
+          "quiz",
+          "scenario",
+          "career"
+        ]
+      }
+    },
+    {
+      "verifiedOn": "2026-08-06",
+      "reviewBy": "2027-02-06",
+      "id": "global-saw-think-guess",
+      "title": "Saw / think / guess",
+      "statement": "Separate what you saw, what you think, and what you are still guessing. Mixing them creates false certainty.",
+      "limits": "A learning habit—not a legal standard of proof.",
+      "sources": [
+        "Evidence hygiene (educational)"
+      ],
+      "tier": "must",
+      "scope": {
+        "industries": [],
+        "modes": [
+          "explain",
+          "socratic",
+          "practice",
+          "quiz",
+          "scenario",
+          "career"
+        ],
+        "topicHints": [
+          "evidence",
+          "guess",
+          "sure",
+          "maybe",
+          "think"
+        ]
+      }
+    },
+    {
+      "verifiedOn": "2026-08-06",
+      "reviewBy": "2027-02-06",
+      "id": "global-no-pii-in-chat",
+      "title": "Minimize personal data in learning chats",
+      "statement": "Do not paste real patient, student, client, or coworker private identifiers into learning tools. Use synthetic examples.",
+      "limits": "You control what you type; tools may process chat under their policies when live models are used.",
+      "sources": [
+        "Grok Tutor OPSEC / PII guidance"
+      ],
+      "tier": "must",
+      "scope": {
+        "industries": [],
+        "modes": [
+          "explain",
+          "practice",
+          "scenario",
+          "career"
+        ],
+        "topicHints": [
+          "patient",
+          "ssn",
+          "address",
+          "phone",
+          "student",
+          "client"
+        ]
+      }
+    },
+    {
+      "verifiedOn": "2026-08-06",
+      "reviewBy": "2027-02-06",
+      "id": "global-primary-source",
+      "title": "Prefer primary public sources",
+      "statement": "For rules and requirements, prefer primary public documents (code body, agency page, manufacturer instructions) over random social posts.",
+      "limits": "Links rot; re-verify on review dates.",
+      "sources": [
+        "Information literacy (educational)"
+      ],
+      "tier": "when_relevant",
+      "scope": {
+        "industries": [],
+        "modes": [
+          "explain",
+          "career",
+          "quiz"
+        ],
+        "topicHints": [
+          "code",
+          "law",
+          "rule",
+          "required",
+          "legal",
+          "regulation"
+        ]
+      }
+    },
+    {
+      "verifiedOn": "2026-08-06",
+      "reviewBy": "2027-02-06",
+      "id": "electrical-must-core",
+      "title": "Test before touch",
+      "statement": "Assume circuits are energized until you verify de-energized state using the site’s approved method (lockout/tagout and test-before-touch). “Someone said it’s off” is not verification.",
+      "limits": "Exact LOTO steps, PPE, and permit rules are employer- and jurisdiction-specific. Not a substitute for a licensed electrician or site procedure.",
+      "sources": [
+        "OSHA LOTO concepts (educational)",
+        "NFPA 70E awareness topics (educational overview)"
+      ],
+      "tier": "must",
+      "safetyCritical": true,
+      "scope": {
+        "industries": [
+          "electrical"
+        ],
+        "modes": [
+          "explain",
+          "socratic",
+          "practice",
+          "quiz",
+          "scenario",
+          "career"
+        ],
+        "topicHints": [
+          "panel",
+          "live",
+          "power",
+          "breaker",
+          "wire",
+          "safety",
+          "lockout"
+        ]
+      }
+    },
+    {
+      "verifiedOn": "2026-08-06",
+      "reviewBy": "2027-02-06",
+      "id": "electrical-habit-core",
+      "title": "Clear field update",
+      "statement": "When something is wrong, tell a lead: where, what you saw, hold or go, and who must decide. Photos help when allowed.",
+      "limits": "Radio/phone rules and chain of command are site-specific.",
+      "sources": [
+        "Field communication practice (educational)"
+      ],
+      "tier": "when_relevant",
+      "scope": {
+        "industries": [
+          "electrical"
+        ],
+        "modes": [
+          "explain",
+          "practice",
+          "scenario",
+          "socratic",
+          "quiz"
+        ],
+        "topicHints": [
+          "update",
+          "message",
+          "lead",
+          "photo",
+          "hold"
+        ]
+      }
+    },
+    {
+      "verifiedOn": "2026-08-06",
+      "reviewBy": "2027-02-06",
+      "id": "electrical-career-credential-check",
+      "title": "Credential path — Electrical",
+      "statement": "Before promising a career outcome in Electrical, check the real credential, license, or apprenticeship path where you live. Requirements differ by region and change over time.",
+      "limits": "Not career counseling or a guarantee of employment. Confirm with official boards, unions, or schools.",
+      "sources": [
+        "State/provincial licensing boards (look up locally)",
+        "Employer or apprenticeship program requirements"
+      ],
+      "tier": "when_relevant",
+      "scope": {
+        "industries": [
+          "electrical"
+        ],
+        "modes": [
+          "career",
+          "explain"
+        ],
+        "topicHints": [
+          "license",
+          "cert",
+          "career",
+          "apprentice",
+          "school",
+          "job"
+        ]
+      }
+    },
+    {
+      "verifiedOn": "2026-08-06",
+      "reviewBy": "2027-02-06",
+      "id": "plumbing-must-core",
+      "title": "Test before conceal",
+      "statement": "Do not cover drain or supply work until required tests pass and the responsible lead releases the area for cover.",
+      "limits": "Exact tests and sign-off follow your site process and the people who release cover.",
+      "sources": [
+        "Typical plumbing rough inspection practice (educational)"
+      ],
+      "tier": "must",
+      "safetyCritical": true,
+      "scope": {
+        "industries": [
+          "plumbing"
+        ],
+        "modes": [
+          "explain",
+          "socratic",
+          "practice",
+          "quiz",
+          "scenario",
+          "career"
+        ],
+        "topicHints": [
+          "drain",
+          "vent",
+          "leak",
+          "test",
+          "wall",
+          "cover",
+          "slope"
+        ]
+      }
+    },
+    {
+      "verifiedOn": "2026-08-06",
+      "reviewBy": "2027-02-06",
+      "id": "plumbing-habit-core",
+      "title": "Slope and vent matter",
+      "statement": "Drains need correct slope and a clear vent path so traps hold and waste flows. “Looks fine” is not a measurement.",
+      "limits": "Code numbers and methods vary by jurisdiction.",
+      "sources": [
+        "DWV fundamentals (educational)"
+      ],
+      "tier": "when_relevant",
+      "scope": {
+        "industries": [
+          "plumbing"
+        ],
+        "modes": [
+          "explain",
+          "practice",
+          "scenario",
+          "socratic",
+          "quiz"
+        ],
+        "topicHints": [
+          "slope",
+          "vent",
+          "trap",
+          "gurgle"
+        ]
+      }
+    },
+    {
+      "verifiedOn": "2026-08-06",
+      "reviewBy": "2027-02-06",
+      "id": "plumbing-career-credential-check",
+      "title": "Credential path — Plumbing",
+      "statement": "Before promising a career outcome in Plumbing, check the real credential, license, or apprenticeship path where you live. Requirements differ by region and change over time.",
+      "limits": "Not career counseling or a guarantee of employment. Confirm with official boards, unions, or schools.",
+      "sources": [
+        "State/provincial licensing boards (look up locally)",
+        "Employer or apprenticeship program requirements"
+      ],
+      "tier": "when_relevant",
+      "scope": {
+        "industries": [
+          "plumbing"
+        ],
+        "modes": [
+          "career",
+          "explain"
+        ],
+        "topicHints": [
+          "license",
+          "cert",
+          "career",
+          "apprentice",
+          "school",
+          "job"
+        ]
+      }
+    },
+    {
+      "verifiedOn": "2026-08-06",
+      "reviewBy": "2027-02-06",
+      "id": "hvac-must-core",
+      "title": "Refrigerant and power safety",
+      "statement": "Treat equipment as hazardous for power, moving parts, and refrigerant until trained procedures and required credentials for the task are confirmed. Do not bypass safeties to “just get cooling back.”",
+      "limits": "EPA/section 608 and local rules apply to refrigerant work; employer SOP governs.",
+      "sources": [
+        "EPA Section 608 awareness (educational)",
+        "Manufacturer service literature (public)"
+      ],
+      "tier": "must",
+      "safetyCritical": true,
+      "scope": {
+        "industries": [
+          "hvac"
+        ],
+        "modes": [
+          "explain",
+          "socratic",
+          "practice",
+          "quiz",
+          "scenario",
+          "career"
+        ],
+        "topicHints": [
+          "refrigerant",
+          "power",
+          "coil",
+          "pressure",
+          "recovery",
+          "heat pump"
+        ]
+      }
+    },
+    {
+      "verifiedOn": "2026-08-06",
+      "reviewBy": "2027-02-06",
+      "id": "hvac-habit-core",
+      "title": "Measure, then decide",
+      "statement": "Capture temperatures, pressures (if qualified), and airflow symptoms before swapping major parts. Guess-and-replace wastes money and can create new faults.",
+      "limits": "Gauge work requires training and credentials where required.",
+      "sources": [
+        "HVAC diagnostic discipline (educational)"
+      ],
+      "tier": "when_relevant",
+      "scope": {
+        "industries": [
+          "hvac"
+        ],
+        "modes": [
+          "explain",
+          "practice",
+          "scenario",
+          "socratic",
+          "quiz"
+        ],
+        "topicHints": [
+          "superheat",
+          "subcool",
+          "airflow",
+          "filter",
+          "thermostat"
+        ]
+      }
+    },
+    {
+      "verifiedOn": "2026-08-06",
+      "reviewBy": "2027-02-06",
+      "id": "hvac-career-credential-check",
+      "title": "Credential path — HVAC / R",
+      "statement": "Before promising a career outcome in HVAC / R, check the real credential, license, or apprenticeship path where you live. Requirements differ by region and change over time.",
+      "limits": "Not career counseling or a guarantee of employment. Confirm with official boards, unions, or schools.",
+      "sources": [
+        "State/provincial licensing boards (look up locally)",
+        "Employer or apprenticeship program requirements"
+      ],
+      "tier": "when_relevant",
+      "scope": {
+        "industries": [
+          "hvac"
+        ],
+        "modes": [
+          "career",
+          "explain"
+        ],
+        "topicHints": [
+          "license",
+          "cert",
+          "career",
+          "apprentice",
+          "school",
+          "job"
+        ]
+      }
+    },
+    {
+      "verifiedOn": "2026-08-06",
+      "reviewBy": "2027-02-06",
+      "id": "welding-must-core",
+      "title": "Hot work controls",
+      "statement": "Before arc or flame: confirm hot-work permission, combustibles cleared or protected, fire watch as required, and PPE for the process. Never weld over unknown coatings or closed vessels without procedure.",
+      "limits": "Permit systems and fire-watch rules are site-specific.",
+      "sources": [
+        "OSHA hot work / welding hazard awareness (educational)"
+      ],
+      "tier": "must",
+      "safetyCritical": true,
+      "scope": {
+        "industries": [
+          "welding"
+        ],
+        "modes": [
+          "explain",
+          "socratic",
+          "practice",
+          "quiz",
+          "scenario",
+          "career"
+        ],
+        "topicHints": [
+          "arc",
+          "hot work",
+          "ppe",
+          "fume",
+          "fire",
+          "weld"
+        ]
+      }
+    },
+    {
+      "verifiedOn": "2026-08-06",
+      "reviewBy": "2027-02-06",
+      "id": "welding-habit-core",
+      "title": "Procedure before improvisation",
+      "statement": "Follow the welding procedure specification for the joint. Random settings “that worked last time” are not a procedure.",
+      "limits": "WPS/PQR requirements are code- and employer-specific.",
+      "sources": [
+        "Welding procedure awareness (educational)"
+      ],
+      "tier": "when_relevant",
+      "scope": {
+        "industries": [
+          "welding"
+        ],
+        "modes": [
+          "explain",
+          "practice",
+          "scenario",
+          "socratic",
+          "quiz"
+        ],
+        "topicHints": [
+          "wps",
+          "amperage",
+          "joint",
+          "pass",
+          "inspect"
+        ]
+      }
+    },
+    {
+      "verifiedOn": "2026-08-06",
+      "reviewBy": "2027-02-06",
+      "id": "welding-career-credential-check",
+      "title": "Credential path — Welding & Fabrication",
+      "statement": "Before promising a career outcome in Welding & Fabrication, check the real credential, license, or apprenticeship path where you live. Requirements differ by region and change over time.",
+      "limits": "Not career counseling or a guarantee of employment. Confirm with official boards, unions, or schools.",
+      "sources": [
+        "State/provincial licensing boards (look up locally)",
+        "Employer or apprenticeship program requirements"
+      ],
+      "tier": "when_relevant",
+      "scope": {
+        "industries": [
+          "welding"
+        ],
+        "modes": [
+          "career",
+          "explain"
+        ],
+        "topicHints": [
+          "license",
+          "cert",
+          "career",
+          "apprentice",
+          "school",
+          "job"
+        ]
+      }
+    },
+    {
+      "verifiedOn": "2026-08-06",
+      "reviewBy": "2027-02-06",
+      "id": "construction-must-core",
+      "title": "Stop for uncontrolled change",
+      "statement": "When plans, site conditions, or safety controls do not match, stop and escalate. Do not invent a field fix that hides a coordination or structural risk.",
+      "limits": "Change-order authority and RFI process are contract-specific.",
+      "sources": [
+        "Construction coordination / RFI practice (educational)"
+      ],
+      "tier": "must",
+      "safetyCritical": true,
+      "scope": {
+        "industries": [
+          "construction"
+        ],
+        "modes": [
+          "explain",
+          "socratic",
+          "practice",
+          "quiz",
+          "scenario",
+          "career"
+        ],
+        "topicHints": [
+          "plan",
+          "change",
+          "rfi",
+          "safety",
+          "schedule",
+          "gc"
+        ]
+      }
+    },
+    {
+      "verifiedOn": "2026-08-06",
+      "reviewBy": "2027-02-06",
+      "id": "construction-habit-core",
+      "title": "Write the constraint",
+      "statement": "If two trades conflict, write the constraint (who, where, when, drawing reference) so the next decision is informed.",
+      "limits": "Contract roles differ by project.",
+      "sources": [
+        "Jobsite coordination practice (educational)"
+      ],
+      "tier": "when_relevant",
+      "scope": {
+        "industries": [
+          "construction"
+        ],
+        "modes": [
+          "explain",
+          "practice",
+          "scenario",
+          "socratic",
+          "quiz"
+        ],
+        "topicHints": [
+          "trade",
+          "conflict",
+          "drawing",
+          "constraint"
+        ]
+      }
+    },
+    {
+      "verifiedOn": "2026-08-06",
+      "reviewBy": "2027-02-06",
+      "id": "construction-career-credential-check",
+      "title": "Credential path — Construction Management",
+      "statement": "Before promising a career outcome in Construction Management, check the real credential, license, or apprenticeship path where you live. Requirements differ by region and change over time.",
+      "limits": "Not career counseling or a guarantee of employment. Confirm with official boards, unions, or schools.",
+      "sources": [
+        "State/provincial licensing boards (look up locally)",
+        "Employer or apprenticeship program requirements"
+      ],
+      "tier": "when_relevant",
+      "scope": {
+        "industries": [
+          "construction"
+        ],
+        "modes": [
+          "career",
+          "explain"
+        ],
+        "topicHints": [
+          "license",
+          "cert",
+          "career",
+          "apprentice",
+          "school",
+          "job"
+        ]
+      }
+    },
+    {
+      "verifiedOn": "2026-08-06",
+      "reviewBy": "2027-02-06",
+      "id": "carpentry-must-core",
+      "title": "Load path and temporary support",
+      "statement": "Do not remove structural members or temporary bracing without an approved plan. Gravity does not wait for a second opinion.",
+      "limits": "Engineering direction is required for structural alterations.",
+      "sources": [
+        "Basic framing / temporary support safety awareness (educational)"
+      ],
+      "tier": "must",
+      "safetyCritical": true,
+      "scope": {
+        "industries": [
+          "carpentry"
+        ],
+        "modes": [
+          "explain",
+          "socratic",
+          "practice",
+          "quiz",
+          "scenario",
+          "career"
+        ],
+        "topicHints": [
+          "beam",
+          "load",
+          "brace",
+          "framing",
+          "wall",
+          "header"
+        ]
+      }
+    },
+    {
+      "verifiedOn": "2026-08-06",
+      "reviewBy": "2027-02-06",
+      "id": "carpentry-habit-core",
+      "title": "Layout twice",
+      "statement": "Verify layout against plan dimensions before cutting expensive members. Mark waste clearly.",
+      "limits": "Plan hold status and RFIs may change dimensions.",
+      "sources": [
+        "Framing layout habit (educational)"
+      ],
+      "tier": "when_relevant",
+      "scope": {
+        "industries": [
+          "carpentry"
+        ],
+        "modes": [
+          "explain",
+          "practice",
+          "scenario",
+          "socratic",
+          "quiz"
+        ],
+        "topicHints": [
+          "layout",
+          "cut",
+          "measure",
+          "plan"
+        ]
+      }
+    },
+    {
+      "verifiedOn": "2026-08-06",
+      "reviewBy": "2027-02-06",
+      "id": "carpentry-career-credential-check",
+      "title": "Credential path — Carpentry & Framing",
+      "statement": "Before promising a career outcome in Carpentry & Framing, check the real credential, license, or apprenticeship path where you live. Requirements differ by region and change over time.",
+      "limits": "Not career counseling or a guarantee of employment. Confirm with official boards, unions, or schools.",
+      "sources": [
+        "State/provincial licensing boards (look up locally)",
+        "Employer or apprenticeship program requirements"
+      ],
+      "tier": "when_relevant",
+      "scope": {
+        "industries": [
+          "carpentry"
+        ],
+        "modes": [
+          "career",
+          "explain"
+        ],
+        "topicHints": [
+          "license",
+          "cert",
+          "career",
+          "apprentice",
+          "school",
+          "job"
+        ]
+      }
+    },
+    {
+      "verifiedOn": "2026-08-06",
+      "reviewBy": "2027-02-06",
+      "id": "nursing-must-core",
+      "title": "Escalate patient change",
+      "statement": "If breathing, mentation, pain, or vitals trend worsen, reassess and escalate per unit protocol. Do not wait for someone else to notice.",
+      "limits": "Not medical advice. Scope of practice and protocols are license- and facility-specific.",
+      "sources": [
+        "Basic nursing escalation concepts (educational)"
+      ],
+      "tier": "must",
+      "safetyCritical": true,
+      "scope": {
+        "industries": [
+          "nursing"
+        ],
+        "modes": [
+          "explain",
+          "socratic",
+          "practice",
+          "quiz",
+          "scenario",
+          "career"
+        ],
+        "topicHints": [
+          "patient",
+          "vital",
+          "assess",
+          "pain",
+          "breathing",
+          "change"
+        ]
+      }
+    },
+    {
+      "verifiedOn": "2026-08-06",
+      "reviewBy": "2027-02-06",
+      "id": "nursing-habit-core",
+      "title": "Closed-loop communication",
+      "statement": "Read back critical verbal orders and confirm who owns the next action. Ambiguous “someone will…” is not a plan.",
+      "limits": "Facility communication policies govern.",
+      "sources": [
+        "Clinical communication habits (educational)"
+      ],
+      "tier": "when_relevant",
+      "scope": {
+        "industries": [
+          "nursing"
+        ],
+        "modes": [
+          "explain",
+          "practice",
+          "scenario",
+          "socratic",
+          "quiz"
+        ],
+        "topicHints": [
+          "order",
+          "read back",
+          "handoff",
+          "sbarr",
+          "sbarr"
+        ]
+      }
+    },
+    {
+      "verifiedOn": "2026-08-06",
+      "reviewBy": "2027-02-06",
+      "id": "nursing-career-credential-check",
+      "title": "Credential path — Nursing",
+      "statement": "Before promising a career outcome in Nursing, check the real credential, license, or apprenticeship path where you live. Requirements differ by region and change over time.",
+      "limits": "Not career counseling or a guarantee of employment. Confirm with official boards, unions, or schools.",
+      "sources": [
+        "State/provincial licensing boards (look up locally)",
+        "Employer or apprenticeship program requirements"
+      ],
+      "tier": "when_relevant",
+      "scope": {
+        "industries": [
+          "nursing"
+        ],
+        "modes": [
+          "career",
+          "explain"
+        ],
+        "topicHints": [
+          "license",
+          "cert",
+          "career",
+          "apprentice",
+          "school",
+          "job"
+        ]
+      }
+    },
+    {
+      "verifiedOn": "2026-08-06",
+      "reviewBy": "2027-02-06",
+      "id": "emt-must-core",
+      "title": "Scene safety first",
+      "statement": "Do not enter an unsafe scene. Make the scene as safe as practical, request resources, and follow medical direction and protocols for your certification level.",
+      "limits": "Not medical direction. Local protocols and medical control govern.",
+      "sources": [
+        "EMS scene safety principles (educational)"
+      ],
+      "tier": "must",
+      "safetyCritical": true,
+      "scope": {
+        "industries": [
+          "emt"
+        ],
+        "modes": [
+          "explain",
+          "socratic",
+          "practice",
+          "quiz",
+          "scenario",
+          "career"
+        ],
+        "topicHints": [
+          "scene",
+          "unsafe",
+          "protocol",
+          "patient",
+          "handoff"
+        ]
+      }
+    },
+    {
+      "verifiedOn": "2026-08-06",
+      "reviewBy": "2027-02-06",
+      "id": "emt-habit-core",
+      "title": "Handoff structure",
+      "statement": "Give receiving staff a short structured handoff: age/sex if known, chief concern, findings, treatments, response, and open questions.",
+      "limits": "Local handoff formats vary.",
+      "sources": [
+        "EMS handoff concepts (educational)"
+      ],
+      "tier": "when_relevant",
+      "scope": {
+        "industries": [
+          "emt"
+        ],
+        "modes": [
+          "explain",
+          "practice",
+          "scenario",
+          "socratic",
+          "quiz"
+        ],
+        "topicHints": [
+          "handoff",
+          "report",
+          "radio",
+          "hospital"
+        ]
+      }
+    },
+    {
+      "verifiedOn": "2026-08-06",
+      "reviewBy": "2027-02-06",
+      "id": "emt-career-credential-check",
+      "title": "Credential path — EMT / EMS",
+      "statement": "Before promising a career outcome in EMT / EMS, check the real credential, license, or apprenticeship path where you live. Requirements differ by region and change over time.",
+      "limits": "Not career counseling or a guarantee of employment. Confirm with official boards, unions, or schools.",
+      "sources": [
+        "State/provincial licensing boards (look up locally)",
+        "Employer or apprenticeship program requirements"
+      ],
+      "tier": "when_relevant",
+      "scope": {
+        "industries": [
+          "emt"
+        ],
+        "modes": [
+          "career",
+          "explain"
+        ],
+        "topicHints": [
+          "license",
+          "cert",
+          "career",
+          "apprentice",
+          "school",
+          "job"
+        ]
+      }
+    },
+    {
+      "verifiedOn": "2026-08-06",
+      "reviewBy": "2027-02-06",
+      "id": "pharmacy-must-core",
+      "title": "Right drug, right patient, right check",
+      "statement": "Verify identity, drug, dose, route, and timing against the order and policy before dispensing or administering. Interruptions are a known error risk—reset the check.",
+      "limits": "Not medical or dispensing authority. Facility policy and license rules control.",
+      "sources": [
+        "Medication safety / five rights concepts (educational)"
+      ],
+      "tier": "must",
+      "safetyCritical": true,
+      "scope": {
+        "industries": [
+          "pharmacy"
+        ],
+        "modes": [
+          "explain",
+          "socratic",
+          "practice",
+          "quiz",
+          "scenario",
+          "career"
+        ],
+        "topicHints": [
+          "dose",
+          "drug",
+          "order",
+          "patient",
+          "dispense",
+          "allergy"
+        ]
+      }
+    },
+    {
+      "verifiedOn": "2026-08-06",
+      "reviewBy": "2027-02-06",
+      "id": "pharmacy-habit-core",
+      "title": "Allergy and interaction pause",
+      "statement": "Pause for allergy and interaction checks flagged by system or history. Clarify with prescriber/pharmacist per policy—do not override casually.",
+      "limits": "Clinical decision support rules are system-specific.",
+      "sources": [
+        "Medication safety pause (educational)"
+      ],
+      "tier": "when_relevant",
+      "scope": {
+        "industries": [
+          "pharmacy"
+        ],
+        "modes": [
+          "explain",
+          "practice",
+          "scenario",
+          "socratic",
+          "quiz"
+        ],
+        "topicHints": [
+          "allergy",
+          "interaction",
+          "flag",
+          "override"
+        ]
+      }
+    },
+    {
+      "verifiedOn": "2026-08-06",
+      "reviewBy": "2027-02-06",
+      "id": "pharmacy-career-credential-check",
+      "title": "Credential path — Pharmacy",
+      "statement": "Before promising a career outcome in Pharmacy, check the real credential, license, or apprenticeship path where you live. Requirements differ by region and change over time.",
+      "limits": "Not career counseling or a guarantee of employment. Confirm with official boards, unions, or schools.",
+      "sources": [
+        "State/provincial licensing boards (look up locally)",
+        "Employer or apprenticeship program requirements"
+      ],
+      "tier": "when_relevant",
+      "scope": {
+        "industries": [
+          "pharmacy"
+        ],
+        "modes": [
+          "career",
+          "explain"
+        ],
+        "topicHints": [
+          "license",
+          "cert",
+          "career",
+          "apprentice",
+          "school",
+          "job"
+        ]
+      }
+    },
+    {
+      "verifiedOn": "2026-08-06",
+      "reviewBy": "2027-02-06",
+      "id": "software-must-core",
+      "title": "Don’t ship untested critical paths",
+      "statement": "Before release, verify the change with tests or a clear checklist for the critical path. “It works on my machine” is not a release criterion for production.",
+      "limits": "Org CI/CD and change-management rules vary.",
+      "sources": [
+        "Software delivery hygiene (educational)"
+      ],
+      "tier": "must",
+      "safetyCritical": false,
+      "scope": {
+        "industries": [
+          "software"
+        ],
+        "modes": [
+          "explain",
+          "socratic",
+          "practice",
+          "quiz",
+          "scenario",
+          "career"
+        ],
+        "topicHints": [
+          "test",
+          "deploy",
+          "bug",
+          "release",
+          "production",
+          "review"
+        ]
+      }
+    },
+    {
+      "verifiedOn": "2026-08-06",
+      "reviewBy": "2027-02-06",
+      "id": "software-habit-core",
+      "title": "Small diffs, clear intent",
+      "statement": "Prefer small changes with a clear purpose and a way to roll back. Large mystery commits create outages.",
+      "limits": "Team branching models differ.",
+      "sources": [
+        "Engineering change hygiene (educational)"
+      ],
+      "tier": "when_relevant",
+      "scope": {
+        "industries": [
+          "software"
+        ],
+        "modes": [
+          "explain",
+          "practice",
+          "scenario",
+          "socratic",
+          "quiz"
+        ],
+        "topicHints": [
+          "pr",
+          "commit",
+          "rollback",
+          "review"
+        ]
+      }
+    },
+    {
+      "verifiedOn": "2026-08-06",
+      "reviewBy": "2027-02-06",
+      "id": "software-career-credential-check",
+      "title": "Credential path — Software Engineering",
+      "statement": "Before promising a career outcome in Software Engineering, check the real credential, license, or apprenticeship path where you live. Requirements differ by region and change over time.",
+      "limits": "Not career counseling or a guarantee of employment. Confirm with official boards, unions, or schools.",
+      "sources": [
+        "State/provincial licensing boards (look up locally)",
+        "Employer or apprenticeship program requirements"
+      ],
+      "tier": "when_relevant",
+      "scope": {
+        "industries": [
+          "software"
+        ],
+        "modes": [
+          "career",
+          "explain"
+        ],
+        "topicHints": [
+          "license",
+          "cert",
+          "career",
+          "apprentice",
+          "school",
+          "job"
+        ]
+      }
+    },
+    {
+      "verifiedOn": "2026-08-06",
+      "reviewBy": "2027-02-06",
+      "id": "cybersecurity-must-core",
+      "title": "Least privilege and no shared admin",
+      "statement": "Grant only needed access; remove access when roles end. Shared admin accounts and permanent elevated rights create lasting risk.",
+      "limits": "Protective concept only—not an attack tutorial.",
+      "sources": [
+        "NIST least privilege concepts (educational summary)"
+      ],
+      "tier": "must",
+      "safetyCritical": false,
+      "scope": {
+        "industries": [
+          "cybersecurity"
+        ],
+        "modes": [
+          "explain",
+          "socratic",
+          "practice",
+          "quiz",
+          "scenario",
+          "career"
+        ],
+        "topicHints": [
+          "access",
+          "admin",
+          "password",
+          "phishing",
+          "log",
+          "privilege"
+        ]
+      }
+    },
+    {
+      "verifiedOn": "2026-08-06",
+      "reviewBy": "2027-02-06",
+      "id": "cybersecurity-habit-core",
+      "title": "Log enough to learn",
+      "statement": "Keep simple, time-stamped records of access changes and security-relevant events so incidents can be reconstructed without guessing.",
+      "limits": "Retention and monitoring tools are org-specific.",
+      "sources": [
+        "Logging hygiene (educational)"
+      ],
+      "tier": "when_relevant",
+      "scope": {
+        "industries": [
+          "cybersecurity"
+        ],
+        "modes": [
+          "explain",
+          "practice",
+          "scenario",
+          "socratic",
+          "quiz"
+        ],
+        "topicHints": [
+          "log",
+          "audit",
+          "incident",
+          "timestamp"
+        ]
+      }
+    },
+    {
+      "verifiedOn": "2026-08-06",
+      "reviewBy": "2027-02-06",
+      "id": "cybersecurity-career-credential-check",
+      "title": "Credential path — Cybersecurity",
+      "statement": "Before promising a career outcome in Cybersecurity, check the real credential, license, or apprenticeship path where you live. Requirements differ by region and change over time.",
+      "limits": "Not career counseling or a guarantee of employment. Confirm with official boards, unions, or schools.",
+      "sources": [
+        "State/provincial licensing boards (look up locally)",
+        "Employer or apprenticeship program requirements"
+      ],
+      "tier": "when_relevant",
+      "scope": {
+        "industries": [
+          "cybersecurity"
+        ],
+        "modes": [
+          "career",
+          "explain"
+        ],
+        "topicHints": [
+          "license",
+          "cert",
+          "career",
+          "apprentice",
+          "school",
+          "job"
+        ]
+      }
+    },
+    {
+      "verifiedOn": "2026-08-06",
+      "reviewBy": "2027-02-06",
+      "id": "it-support-must-core",
+      "title": "Reproduce, then change",
+      "statement": "Reproduce the issue and capture facts before major changes. Document what you did so the next tech is not guessing.",
+      "limits": "Ticket systems and escalation paths are org-specific.",
+      "sources": [
+        "ITIL-style incident hygiene (educational)"
+      ],
+      "tier": "must",
+      "safetyCritical": false,
+      "scope": {
+        "industries": [
+          "it-support"
+        ],
+        "modes": [
+          "explain",
+          "socratic",
+          "practice",
+          "quiz",
+          "scenario",
+          "career"
+        ],
+        "topicHints": [
+          "ticket",
+          "password",
+          "network",
+          "reproduce",
+          "escalat"
+        ]
+      }
+    },
+    {
+      "verifiedOn": "2026-08-06",
+      "reviewBy": "2027-02-06",
+      "id": "it-support-habit-core",
+      "title": "Password resets with identity proof",
+      "statement": "Reset credentials only after identity checks required by policy. Social engineering often starts with urgency and name-dropping.",
+      "limits": "Identity proofing steps are org-specific.",
+      "sources": [
+        "Help desk identity verification (educational)"
+      ],
+      "tier": "when_relevant",
+      "scope": {
+        "industries": [
+          "it-support"
+        ],
+        "modes": [
+          "explain",
+          "practice",
+          "scenario",
+          "socratic",
+          "quiz"
+        ],
+        "topicHints": [
+          "reset",
+          "identity",
+          "mfa",
+          "urgent"
+        ]
+      }
+    },
+    {
+      "verifiedOn": "2026-08-06",
+      "reviewBy": "2027-02-06",
+      "id": "it-support-career-credential-check",
+      "title": "Credential path — IT Support",
+      "statement": "Before promising a career outcome in IT Support, check the real credential, license, or apprenticeship path where you live. Requirements differ by region and change over time.",
+      "limits": "Not career counseling or a guarantee of employment. Confirm with official boards, unions, or schools.",
+      "sources": [
+        "State/provincial licensing boards (look up locally)",
+        "Employer or apprenticeship program requirements"
+      ],
+      "tier": "when_relevant",
+      "scope": {
+        "industries": [
+          "it-support"
+        ],
+        "modes": [
+          "career",
+          "explain"
+        ],
+        "topicHints": [
+          "license",
+          "cert",
+          "career",
+          "apprentice",
+          "school",
+          "job"
+        ]
+      }
+    },
+    {
+      "verifiedOn": "2026-08-06",
+      "reviewBy": "2027-02-06",
+      "id": "data-must-core",
+      "title": "Define the question before the number",
+      "statement": "Write the decision question and metric definition before querying. Wrong filters and silent missing data create confident false stories.",
+      "limits": "Governance and privacy rules are org- and law-specific.",
+      "sources": [
+        "Analytics quality habits (educational)"
+      ],
+      "tier": "must",
+      "safetyCritical": false,
+      "scope": {
+        "industries": [
+          "data"
+        ],
+        "modes": [
+          "explain",
+          "socratic",
+          "practice",
+          "quiz",
+          "scenario",
+          "career"
+        ],
+        "topicHints": [
+          "metric",
+          "query",
+          "bias",
+          "filter",
+          "dashboard",
+          "sample"
+        ]
+      }
+    },
+    {
+      "verifiedOn": "2026-08-06",
+      "reviewBy": "2027-02-06",
+      "id": "data-habit-core",
+      "title": "Show the grain and filter",
+      "statement": "State the data grain, date range, and major filters with every number. Otherwise people compare unlike things.",
+      "limits": "Warehouse semantics are org-specific.",
+      "sources": [
+        "Analytics documentation habit (educational)"
+      ],
+      "tier": "when_relevant",
+      "scope": {
+        "industries": [
+          "data"
+        ],
+        "modes": [
+          "explain",
+          "practice",
+          "scenario",
+          "socratic",
+          "quiz"
+        ],
+        "topicHints": [
+          "grain",
+          "filter",
+          "date range",
+          "definition"
+        ]
+      }
+    },
+    {
+      "verifiedOn": "2026-08-06",
+      "reviewBy": "2027-02-06",
+      "id": "data-career-credential-check",
+      "title": "Credential path — Data & Analytics",
+      "statement": "Before promising a career outcome in Data & Analytics, check the real credential, license, or apprenticeship path where you live. Requirements differ by region and change over time.",
+      "limits": "Not career counseling or a guarantee of employment. Confirm with official boards, unions, or schools.",
+      "sources": [
+        "State/provincial licensing boards (look up locally)",
+        "Employer or apprenticeship program requirements"
+      ],
+      "tier": "when_relevant",
+      "scope": {
+        "industries": [
+          "data"
+        ],
+        "modes": [
+          "career",
+          "explain"
+        ],
+        "topicHints": [
+          "license",
+          "cert",
+          "career",
+          "apprentice",
+          "school",
+          "job"
+        ]
+      }
+    },
+    {
+      "verifiedOn": "2026-08-06",
+      "reviewBy": "2027-02-06",
+      "id": "cnc-must-core",
+      "title": "Secure work and prove offsets",
+      "statement": "Secure the workpiece, verify tools and offsets, and keep hands clear of motion paths. Prove the first article before a production run.",
+      "limits": "Machine-specific procedures and guarding rules apply.",
+      "sources": [
+        "Machine shop safety awareness (educational)"
+      ],
+      "tier": "must",
+      "safetyCritical": true,
+      "scope": {
+        "industries": [
+          "cnc"
+        ],
+        "modes": [
+          "explain",
+          "socratic",
+          "practice",
+          "quiz",
+          "scenario",
+          "career"
+        ],
+        "topicHints": [
+          "offset",
+          "tool",
+          "workhold",
+          "first article",
+          "spindle"
+        ]
+      }
+    },
+    {
+      "verifiedOn": "2026-08-06",
+      "reviewBy": "2027-02-06",
+      "id": "cnc-habit-core",
+      "title": "First article before batch",
+      "statement": "Inspect the first part against print critical dimensions before running a full batch.",
+      "limits": "Sampling plans are org-specific.",
+      "sources": [
+        "First-article discipline (educational)"
+      ],
+      "tier": "when_relevant",
+      "scope": {
+        "industries": [
+          "cnc"
+        ],
+        "modes": [
+          "explain",
+          "practice",
+          "scenario",
+          "socratic",
+          "quiz"
+        ],
+        "topicHints": [
+          "first article",
+          "tolerance",
+          "batch",
+          "print"
+        ]
+      }
+    },
+    {
+      "verifiedOn": "2026-08-06",
+      "reviewBy": "2027-02-06",
+      "id": "cnc-career-credential-check",
+      "title": "Credential path — CNC & Manufacturing",
+      "statement": "Before promising a career outcome in CNC & Manufacturing, check the real credential, license, or apprenticeship path where you live. Requirements differ by region and change over time.",
+      "limits": "Not career counseling or a guarantee of employment. Confirm with official boards, unions, or schools.",
+      "sources": [
+        "State/provincial licensing boards (look up locally)",
+        "Employer or apprenticeship program requirements"
+      ],
+      "tier": "when_relevant",
+      "scope": {
+        "industries": [
+          "cnc"
+        ],
+        "modes": [
+          "career",
+          "explain"
+        ],
+        "topicHints": [
+          "license",
+          "cert",
+          "career",
+          "apprentice",
+          "school",
+          "job"
+        ]
+      }
+    },
+    {
+      "verifiedOn": "2026-08-06",
+      "reviewBy": "2027-02-06",
+      "id": "quality-must-core",
+      "title": "Stop escape of defects",
+      "statement": "When a defect could reach a customer or create a safety issue, contain first, then analyze. Do not “ship and sort later” for safety-critical issues.",
+      "limits": "Quality system procedures are org-specific.",
+      "sources": [
+        "Basic quality containment practice (educational)"
+      ],
+      "tier": "must",
+      "safetyCritical": false,
+      "scope": {
+        "industries": [
+          "quality"
+        ],
+        "modes": [
+          "explain",
+          "socratic",
+          "practice",
+          "quiz",
+          "scenario",
+          "career"
+        ],
+        "topicHints": [
+          "defect",
+          "ncr",
+          "contain",
+          "root cause",
+          "escape"
+        ]
+      }
+    },
+    {
+      "verifiedOn": "2026-08-06",
+      "reviewBy": "2027-02-06",
+      "id": "quality-habit-core",
+      "title": "Write the nonconformance clearly",
+      "statement": "Record requirement, actual, quantity, and disposition path. Vague NCRs cannot be fixed or trended.",
+      "limits": "QMS forms differ.",
+      "sources": [
+        "NCR writing practice (educational)"
+      ],
+      "tier": "when_relevant",
+      "scope": {
+        "industries": [
+          "quality"
+        ],
+        "modes": [
+          "explain",
+          "practice",
+          "scenario",
+          "socratic",
+          "quiz"
+        ],
+        "topicHints": [
+          "ncr",
+          "disposition",
+          "requirement",
+          "actual"
+        ]
+      }
+    },
+    {
+      "verifiedOn": "2026-08-06",
+      "reviewBy": "2027-02-06",
+      "id": "quality-career-credential-check",
+      "title": "Credential path — Quality Assurance",
+      "statement": "Before promising a career outcome in Quality Assurance, check the real credential, license, or apprenticeship path where you live. Requirements differ by region and change over time.",
+      "limits": "Not career counseling or a guarantee of employment. Confirm with official boards, unions, or schools.",
+      "sources": [
+        "State/provincial licensing boards (look up locally)",
+        "Employer or apprenticeship program requirements"
+      ],
+      "tier": "when_relevant",
+      "scope": {
+        "industries": [
+          "quality"
+        ],
+        "modes": [
+          "career",
+          "explain"
+        ],
+        "topicHints": [
+          "license",
+          "cert",
+          "career",
+          "apprentice",
+          "school",
+          "job"
+        ]
+      }
+    },
+    {
+      "verifiedOn": "2026-08-06",
+      "reviewBy": "2027-02-06",
+      "id": "accounting-must-core",
+      "title": "Separate duties and support entries",
+      "statement": "Keep recording, custody, and approval appropriately separated where possible. Every material entry should have support you can re-find later.",
+      "limits": "Not CPA advice. GAAP/IFRS and tax rules require qualified professionals.",
+      "sources": [
+        "Internal control concepts (educational)"
+      ],
+      "tier": "must",
+      "safetyCritical": false,
+      "scope": {
+        "industries": [
+          "accounting"
+        ],
+        "modes": [
+          "explain",
+          "socratic",
+          "practice",
+          "quiz",
+          "scenario",
+          "career"
+        ],
+        "topicHints": [
+          "journal",
+          "reconcile",
+          "audit",
+          "fraud",
+          "support",
+          "approval"
+        ]
+      }
+    },
+    {
+      "verifiedOn": "2026-08-06",
+      "reviewBy": "2027-02-06",
+      "id": "accounting-habit-core",
+      "title": "Reconcile to the source",
+      "statement": "Tie balances to source systems or statements. Unexplained plugs hide errors and fraud risk.",
+      "limits": "Not audit or tax advice.",
+      "sources": [
+        "Reconciliation discipline (educational)"
+      ],
+      "tier": "when_relevant",
+      "scope": {
+        "industries": [
+          "accounting"
+        ],
+        "modes": [
+          "explain",
+          "practice",
+          "scenario",
+          "socratic",
+          "quiz"
+        ],
+        "topicHints": [
+          "reconcile",
+          "plug",
+          "balance",
+          "statement"
+        ]
+      }
+    },
+    {
+      "verifiedOn": "2026-08-06",
+      "reviewBy": "2027-02-06",
+      "id": "accounting-career-credential-check",
+      "title": "Credential path — Accounting",
+      "statement": "Before promising a career outcome in Accounting, check the real credential, license, or apprenticeship path where you live. Requirements differ by region and change over time.",
+      "limits": "Not career counseling or a guarantee of employment. Confirm with official boards, unions, or schools.",
+      "sources": [
+        "State/provincial licensing boards (look up locally)",
+        "Employer or apprenticeship program requirements"
+      ],
+      "tier": "when_relevant",
+      "scope": {
+        "industries": [
+          "accounting"
+        ],
+        "modes": [
+          "career",
+          "explain"
+        ],
+        "topicHints": [
+          "license",
+          "cert",
+          "career",
+          "apprentice",
+          "school",
+          "job"
+        ]
+      }
+    },
+    {
+      "verifiedOn": "2026-08-06",
+      "reviewBy": "2027-02-06",
+      "id": "sales-must-core",
+      "title": "Truthful commitments",
+      "statement": "Do not promise delivery, features, or pricing you cannot support. Document what the customer was told.",
+      "limits": "Contract and compliance rules are company- and jurisdiction-specific.",
+      "sources": [
+        "Ethical sales practice (educational)"
+      ],
+      "tier": "must",
+      "safetyCritical": false,
+      "scope": {
+        "industries": [
+          "sales"
+        ],
+        "modes": [
+          "explain",
+          "socratic",
+          "practice",
+          "quiz",
+          "scenario",
+          "career"
+        ],
+        "topicHints": [
+          "promise",
+          "crm",
+          "quote",
+          "discount",
+          "handoff"
+        ]
+      }
+    },
+    {
+      "verifiedOn": "2026-08-06",
+      "reviewBy": "2027-02-06",
+      "id": "sales-habit-core",
+      "title": "CRM truthfulness",
+      "statement": "Log stage and next step honestly. Fake pipeline hides forecast risk.",
+      "limits": "CRM fields are company-specific.",
+      "sources": [
+        "Pipeline hygiene (educational)"
+      ],
+      "tier": "when_relevant",
+      "scope": {
+        "industries": [
+          "sales"
+        ],
+        "modes": [
+          "explain",
+          "practice",
+          "scenario",
+          "socratic",
+          "quiz"
+        ],
+        "topicHints": [
+          "crm",
+          "stage",
+          "forecast",
+          "next step"
+        ]
+      }
+    },
+    {
+      "verifiedOn": "2026-08-06",
+      "reviewBy": "2027-02-06",
+      "id": "sales-career-credential-check",
+      "title": "Credential path — Sales",
+      "statement": "Before promising a career outcome in Sales, check the real credential, license, or apprenticeship path where you live. Requirements differ by region and change over time.",
+      "limits": "Not career counseling or a guarantee of employment. Confirm with official boards, unions, or schools.",
+      "sources": [
+        "State/provincial licensing boards (look up locally)",
+        "Employer or apprenticeship program requirements"
+      ],
+      "tier": "when_relevant",
+      "scope": {
+        "industries": [
+          "sales"
+        ],
+        "modes": [
+          "career",
+          "explain"
+        ],
+        "topicHints": [
+          "license",
+          "cert",
+          "career",
+          "apprentice",
+          "school",
+          "job"
+        ]
+      }
+    },
+    {
+      "verifiedOn": "2026-08-06",
+      "reviewBy": "2027-02-06",
+      "id": "project-management-must-core",
+      "title": "Surface risk early",
+      "statement": "Write risks and blockers while there is still time to act. Silent schedule hope is not a plan.",
+      "limits": "Methodology (Agile/waterfall) varies by org.",
+      "sources": [
+        "PM risk communication habits (educational)"
+      ],
+      "tier": "must",
+      "safetyCritical": false,
+      "scope": {
+        "industries": [
+          "project-management"
+        ],
+        "modes": [
+          "explain",
+          "socratic",
+          "practice",
+          "quiz",
+          "scenario",
+          "career"
+        ],
+        "topicHints": [
+          "risk",
+          "blocker",
+          "schedule",
+          "scope",
+          "stakeholder"
+        ]
+      }
+    },
+    {
+      "verifiedOn": "2026-08-06",
+      "reviewBy": "2027-02-06",
+      "id": "project-management-habit-core",
+      "title": "Single source of schedule truth",
+      "statement": "Keep one agreed schedule artifact. Side spreadsheets without owners create false confidence.",
+      "limits": "Tooling varies.",
+      "sources": [
+        "Schedule hygiene (educational)"
+      ],
+      "tier": "when_relevant",
+      "scope": {
+        "industries": [
+          "project-management"
+        ],
+        "modes": [
+          "explain",
+          "practice",
+          "scenario",
+          "socratic",
+          "quiz"
+        ],
+        "topicHints": [
+          "schedule",
+          "baseline",
+          "owner",
+          "milestone"
+        ]
+      }
+    },
+    {
+      "verifiedOn": "2026-08-06",
+      "reviewBy": "2027-02-06",
+      "id": "project-management-career-credential-check",
+      "title": "Credential path — Project Management",
+      "statement": "Before promising a career outcome in Project Management, check the real credential, license, or apprenticeship path where you live. Requirements differ by region and change over time.",
+      "limits": "Not career counseling or a guarantee of employment. Confirm with official boards, unions, or schools.",
+      "sources": [
+        "State/provincial licensing boards (look up locally)",
+        "Employer or apprenticeship program requirements"
+      ],
+      "tier": "when_relevant",
+      "scope": {
+        "industries": [
+          "project-management"
+        ],
+        "modes": [
+          "career",
+          "explain"
+        ],
+        "topicHints": [
+          "license",
+          "cert",
+          "career",
+          "apprentice",
+          "school",
+          "job"
+        ]
+      }
+    },
+    {
+      "verifiedOn": "2026-08-06",
+      "reviewBy": "2027-02-06",
+      "id": "culinary-must-core",
+      "title": "Time and temperature",
+      "statement": "Keep cold foods cold and hot foods hot per policy. Separate raw and ready-to-eat paths. When time/temp control is lost, follow discard or corrective rules—do not guess.",
+      "limits": "Health department codes and restaurant SOPs govern.",
+      "sources": [
+        "Food safety time/temperature concepts (educational)"
+      ],
+      "tier": "must",
+      "safetyCritical": true,
+      "scope": {
+        "industries": [
+          "culinary"
+        ],
+        "modes": [
+          "explain",
+          "socratic",
+          "practice",
+          "quiz",
+          "scenario",
+          "career"
+        ],
+        "topicHints": [
+          "temp",
+          "raw",
+          "allergy",
+          "sanitize",
+          "cool"
+        ]
+      }
+    },
+    {
+      "verifiedOn": "2026-08-06",
+      "reviewBy": "2027-02-06",
+      "id": "culinary-habit-core",
+      "title": "Allergy communication",
+      "statement": "Treat allergy requests as safety-critical. Confirm ingredients and cross-contact risk; do not guess.",
+      "limits": "Menu systems and labeling laws vary.",
+      "sources": [
+        "Allergen awareness (educational)"
+      ],
+      "tier": "when_relevant",
+      "scope": {
+        "industries": [
+          "culinary"
+        ],
+        "modes": [
+          "explain",
+          "practice",
+          "scenario",
+          "socratic",
+          "quiz"
+        ],
+        "topicHints": [
+          "allergy",
+          "cross contact",
+          "ingredient"
+        ]
+      }
+    },
+    {
+      "verifiedOn": "2026-08-06",
+      "reviewBy": "2027-02-06",
+      "id": "culinary-career-credential-check",
+      "title": "Credential path — Culinary",
+      "statement": "Before promising a career outcome in Culinary, check the real credential, license, or apprenticeship path where you live. Requirements differ by region and change over time.",
+      "limits": "Not career counseling or a guarantee of employment. Confirm with official boards, unions, or schools.",
+      "sources": [
+        "State/provincial licensing boards (look up locally)",
+        "Employer or apprenticeship program requirements"
+      ],
+      "tier": "when_relevant",
+      "scope": {
+        "industries": [
+          "culinary"
+        ],
+        "modes": [
+          "career",
+          "explain"
+        ],
+        "topicHints": [
+          "license",
+          "cert",
+          "career",
+          "apprentice",
+          "school",
+          "job"
+        ]
+      }
+    },
+    {
+      "verifiedOn": "2026-08-06",
+      "reviewBy": "2027-02-06",
+      "id": "hospitality-must-core",
+      "title": "Guest safety and honesty",
+      "statement": "If a guest could be harmed (allergy, wet floor, security issue), act and escalate. Do not hide service failures that create risk.",
+      "limits": "Brand standards and local law vary.",
+      "sources": [
+        "Hospitality safety/service recovery (educational)"
+      ],
+      "tier": "must",
+      "safetyCritical": false,
+      "scope": {
+        "industries": [
+          "hospitality"
+        ],
+        "modes": [
+          "explain",
+          "socratic",
+          "practice",
+          "quiz",
+          "scenario",
+          "career"
+        ],
+        "topicHints": [
+          "guest",
+          "complaint",
+          "allergy",
+          "safety",
+          "security"
+        ]
+      }
+    },
+    {
+      "verifiedOn": "2026-08-06",
+      "reviewBy": "2027-02-06",
+      "id": "hospitality-habit-core",
+      "title": "Service recovery with ownership",
+      "statement": "Acknowledge the issue, state what you will do, and give a time or owner. Empty apologies without action erode trust.",
+      "limits": "Compensation authority is brand-specific.",
+      "sources": [
+        "Service recovery (educational)"
+      ],
+      "tier": "when_relevant",
+      "scope": {
+        "industries": [
+          "hospitality"
+        ],
+        "modes": [
+          "explain",
+          "practice",
+          "scenario",
+          "socratic",
+          "quiz"
+        ],
+        "topicHints": [
+          "complaint",
+          "recovery",
+          "comp",
+          "owner"
+        ]
+      }
+    },
+    {
+      "verifiedOn": "2026-08-06",
+      "reviewBy": "2027-02-06",
+      "id": "hospitality-career-credential-check",
+      "title": "Credential path — Hospitality",
+      "statement": "Before promising a career outcome in Hospitality, check the real credential, license, or apprenticeship path where you live. Requirements differ by region and change over time.",
+      "limits": "Not career counseling or a guarantee of employment. Confirm with official boards, unions, or schools.",
+      "sources": [
+        "State/provincial licensing boards (look up locally)",
+        "Employer or apprenticeship program requirements"
+      ],
+      "tier": "when_relevant",
+      "scope": {
+        "industries": [
+          "hospitality"
+        ],
+        "modes": [
+          "career",
+          "explain"
+        ],
+        "topicHints": [
+          "license",
+          "cert",
+          "career",
+          "apprentice",
+          "school",
+          "job"
+        ]
+      }
+    },
+    {
+      "verifiedOn": "2026-08-06",
+      "reviewBy": "2027-02-06",
+      "id": "law-enforcement-must-core",
+      "title": "Lawful authority and reporting truth",
+      "statement": "Act only within legal authority and policy. Report what you observed, what you did, and what remains unknown—without inventing facts.",
+      "limits": "Educational only—not legal advice or tactics training. Agency policy and law control.",
+      "sources": [
+        "Public safety reporting integrity concepts (educational)"
+      ],
+      "tier": "must",
+      "safetyCritical": true,
+      "scope": {
+        "industries": [
+          "law-enforcement"
+        ],
+        "modes": [
+          "explain",
+          "socratic",
+          "practice",
+          "quiz",
+          "scenario",
+          "career"
+        ],
+        "topicHints": [
+          "report",
+          "use of force",
+          "evidence",
+          "policy",
+          "witness"
+        ]
+      }
+    },
+    {
+      "verifiedOn": "2026-08-06",
+      "reviewBy": "2027-02-06",
+      "id": "law-enforcement-habit-core",
+      "title": "Contemporaneous notes",
+      "statement": "Record important observations close to the time of the event. Memory decays; invented detail is misconduct.",
+      "limits": "Agency report systems govern.",
+      "sources": [
+        "Report writing integrity (educational)"
+      ],
+      "tier": "when_relevant",
+      "scope": {
+        "industries": [
+          "law-enforcement"
+        ],
+        "modes": [
+          "explain",
+          "practice",
+          "scenario",
+          "socratic",
+          "quiz"
+        ],
+        "topicHints": [
+          "notes",
+          "report",
+          "timeline",
+          "observation"
+        ]
+      }
+    },
+    {
+      "verifiedOn": "2026-08-06",
+      "reviewBy": "2027-02-06",
+      "id": "law-enforcement-career-credential-check",
+      "title": "Credential path — Law Enforcement",
+      "statement": "Before promising a career outcome in Law Enforcement, check the real credential, license, or apprenticeship path where you live. Requirements differ by region and change over time.",
+      "limits": "Not career counseling or a guarantee of employment. Confirm with official boards, unions, or schools.",
+      "sources": [
+        "State/provincial licensing boards (look up locally)",
+        "Employer or apprenticeship program requirements"
+      ],
+      "tier": "when_relevant",
+      "scope": {
+        "industries": [
+          "law-enforcement"
+        ],
+        "modes": [
+          "career",
+          "explain"
+        ],
+        "topicHints": [
+          "license",
+          "cert",
+          "career",
+          "apprentice",
+          "school",
+          "job"
+        ]
+      }
+    },
+    {
+      "verifiedOn": "2026-08-06",
+      "reviewBy": "2027-02-06",
+      "id": "teaching-must-core",
+      "title": "Student safety and accurate records",
+      "statement": "Protect student safety and privacy. Keep grades and incident notes factual and timely. Escalate safeguarding concerns per required channels.",
+      "limits": "FERPA/state rules and district policy govern; not legal advice.",
+      "sources": [
+        "Educator professional practice (educational)"
+      ],
+      "tier": "must",
+      "safetyCritical": false,
+      "scope": {
+        "industries": [
+          "teaching"
+        ],
+        "modes": [
+          "explain",
+          "socratic",
+          "practice",
+          "quiz",
+          "scenario",
+          "career"
+        ],
+        "topicHints": [
+          "student",
+          "grade",
+          "safety",
+          "privacy",
+          "behavior"
+        ]
+      }
+    },
+    {
+      "verifiedOn": "2026-08-06",
+      "reviewBy": "2027-02-06",
+      "id": "teaching-habit-core",
+      "title": "Document behavior factually",
+      "statement": "Describe observable behavior and time, not labels or insults. Facts support fair follow-up.",
+      "limits": "District forms and laws apply.",
+      "sources": [
+        "Educator documentation (educational)"
+      ],
+      "tier": "when_relevant",
+      "scope": {
+        "industries": [
+          "teaching"
+        ],
+        "modes": [
+          "explain",
+          "practice",
+          "scenario",
+          "socratic",
+          "quiz"
+        ],
+        "topicHints": [
+          "behavior",
+          "incident",
+          "parent",
+          "note"
+        ]
+      }
+    },
+    {
+      "verifiedOn": "2026-08-06",
+      "reviewBy": "2027-02-06",
+      "id": "teaching-career-credential-check",
+      "title": "Credential path — Teaching",
+      "statement": "Before promising a career outcome in Teaching, check the real credential, license, or apprenticeship path where you live. Requirements differ by region and change over time.",
+      "limits": "Not career counseling or a guarantee of employment. Confirm with official boards, unions, or schools.",
+      "sources": [
+        "State/provincial licensing boards (look up locally)",
+        "Employer or apprenticeship program requirements"
+      ],
+      "tier": "when_relevant",
+      "scope": {
+        "industries": [
+          "teaching"
+        ],
+        "modes": [
+          "career",
+          "explain"
+        ],
+        "topicHints": [
+          "license",
+          "cert",
+          "career",
+          "apprentice",
+          "school",
+          "job"
+        ]
+      }
+    },
+    {
+      "verifiedOn": "2026-08-06",
+      "reviewBy": "2027-02-06",
+      "id": "cdl-must-core",
+      "title": "Hours, inspection, and impairment",
+      "statement": "Do not drive impaired or past legal hours-of-service limits. Complete required inspections and report defects that make the vehicle unsafe.",
+      "limits": "FMCSA and carrier policies control; this is educational awareness.",
+      "sources": [
+        "FMCSA safety concepts (educational summary)"
+      ],
+      "tier": "must",
+      "safetyCritical": true,
+      "scope": {
+        "industries": [
+          "cdl"
+        ],
+        "modes": [
+          "explain",
+          "socratic",
+          "practice",
+          "quiz",
+          "scenario",
+          "career"
+        ],
+        "topicHints": [
+          "hours",
+          "inspection",
+          "fatigue",
+          "load",
+          "dot"
+        ]
+      }
+    },
+    {
+      "verifiedOn": "2026-08-06",
+      "reviewBy": "2027-02-06",
+      "id": "cdl-habit-core",
+      "title": "Pre-trip is not optional",
+      "statement": "Complete required pre-trip checks. Defects that affect control, tires, lights, or securement must be addressed before travel.",
+      "limits": "CVSA/FMCSA details are regulatory—verify current rules.",
+      "sources": [
+        "Pre-trip inspection awareness (educational)"
+      ],
+      "tier": "when_relevant",
+      "scope": {
+        "industries": [
+          "cdl"
+        ],
+        "modes": [
+          "explain",
+          "practice",
+          "scenario",
+          "socratic",
+          "quiz"
+        ],
+        "topicHints": [
+          "pre-trip",
+          "defect",
+          "tire",
+          "brake",
+          "light"
+        ]
+      }
+    },
+    {
+      "verifiedOn": "2026-08-06",
+      "reviewBy": "2027-02-06",
+      "id": "cdl-career-credential-check",
+      "title": "Credential path — CDL / Trucking",
+      "statement": "Before promising a career outcome in CDL / Trucking, check the real credential, license, or apprenticeship path where you live. Requirements differ by region and change over time.",
+      "limits": "Not career counseling or a guarantee of employment. Confirm with official boards, unions, or schools.",
+      "sources": [
+        "State/provincial licensing boards (look up locally)",
+        "Employer or apprenticeship program requirements"
+      ],
+      "tier": "when_relevant",
+      "scope": {
+        "industries": [
+          "cdl"
+        ],
+        "modes": [
+          "career",
+          "explain"
+        ],
+        "topicHints": [
+          "license",
+          "cert",
+          "career",
+          "apprentice",
+          "school",
+          "job"
+        ]
+      }
+    },
+    {
+      "verifiedOn": "2026-08-06",
+      "reviewBy": "2027-02-06",
+      "id": "aviation-must-core",
+      "title": "Checklist and go/no-go discipline",
+      "statement": "Use required checklists. If a limit, weather, or maintenance item is outside approved bounds, do not “push on” without the proper authority and procedure.",
+      "limits": "FARs, ops specs, and aircraft manuals govern. Not flight instruction.",
+      "sources": [
+        "Aviation safety culture / checklist discipline (educational)"
+      ],
+      "tier": "must",
+      "safetyCritical": true,
+      "scope": {
+        "industries": [
+          "aviation"
+        ],
+        "modes": [
+          "explain",
+          "socratic",
+          "practice",
+          "quiz",
+          "scenario",
+          "career"
+        ],
+        "topicHints": [
+          "checklist",
+          "weather",
+          "maintenance",
+          "go no-go",
+          "brief"
+        ]
+      }
+    },
+    {
+      "verifiedOn": "2026-08-06",
+      "reviewBy": "2027-02-06",
+      "id": "aviation-habit-core",
+      "title": "Brief the threats",
+      "statement": "Before flight or maintenance task, brief the main threats and mitigations for this day—not a generic speech.",
+      "limits": "Ops manuals define briefing standards.",
+      "sources": [
+        "Threat and error management awareness (educational)"
+      ],
+      "tier": "when_relevant",
+      "scope": {
+        "industries": [
+          "aviation"
+        ],
+        "modes": [
+          "explain",
+          "practice",
+          "scenario",
+          "socratic",
+          "quiz"
+        ],
+        "topicHints": [
+          "brief",
+          "threat",
+          "weather",
+          "crew"
+        ]
+      }
+    },
+    {
+      "verifiedOn": "2026-08-06",
+      "reviewBy": "2027-02-06",
+      "id": "aviation-career-credential-check",
+      "title": "Credential path — Aviation",
+      "statement": "Before promising a career outcome in Aviation, check the real credential, license, or apprenticeship path where you live. Requirements differ by region and change over time.",
+      "limits": "Not career counseling or a guarantee of employment. Confirm with official boards, unions, or schools.",
+      "sources": [
+        "State/provincial licensing boards (look up locally)",
+        "Employer or apprenticeship program requirements"
+      ],
+      "tier": "when_relevant",
+      "scope": {
+        "industries": [
+          "aviation"
+        ],
+        "modes": [
+          "career",
+          "explain"
+        ],
+        "topicHints": [
+          "license",
+          "cert",
+          "career",
+          "apprentice",
+          "school",
+          "job"
+        ]
+      }
+    },
+    {
+      "verifiedOn": "2026-08-06",
+      "reviewBy": "2027-02-06",
+      "id": "design-must-core",
+      "title": "Accessibility and truth in presentation",
+      "statement": "Design so critical information is readable and usable. Do not hide material limitations in fine print users cannot reasonably use.",
+      "limits": "WCAG/legal requirements vary by product and region.",
+      "sources": [
+        "Accessibility awareness (educational)"
+      ],
+      "tier": "must",
+      "safetyCritical": false,
+      "scope": {
+        "industries": [
+          "design"
+        ],
+        "modes": [
+          "explain",
+          "socratic",
+          "practice",
+          "quiz",
+          "scenario",
+          "career"
+        ],
+        "topicHints": [
+          "contrast",
+          "type",
+          "user",
+          "accessibility",
+          "layout"
+        ]
+      }
+    },
+    {
+      "verifiedOn": "2026-08-06",
+      "reviewBy": "2027-02-06",
+      "id": "design-habit-core",
+      "title": "Design for the worst readable case",
+      "statement": "Check critical text and controls at small sizes and poor lighting. Pretty mockups can hide unusable UI.",
+      "limits": "Platform guidelines vary.",
+      "sources": [
+        "UI readability practice (educational)"
+      ],
+      "tier": "when_relevant",
+      "scope": {
+        "industries": [
+          "design"
+        ],
+        "modes": [
+          "explain",
+          "practice",
+          "scenario",
+          "socratic",
+          "quiz"
+        ],
+        "topicHints": [
+          "mobile",
+          "type size",
+          "contrast",
+          "usability"
+        ]
+      }
+    },
+    {
+      "verifiedOn": "2026-08-06",
+      "reviewBy": "2027-02-06",
+      "id": "design-career-credential-check",
+      "title": "Credential path — Design",
+      "statement": "Before promising a career outcome in Design, check the real credential, license, or apprenticeship path where you live. Requirements differ by region and change over time.",
+      "limits": "Not career counseling or a guarantee of employment. Confirm with official boards, unions, or schools.",
+      "sources": [
+        "State/provincial licensing boards (look up locally)",
+        "Employer or apprenticeship program requirements"
+      ],
+      "tier": "when_relevant",
+      "scope": {
+        "industries": [
+          "design"
+        ],
+        "modes": [
+          "career",
+          "explain"
+        ],
+        "topicHints": [
+          "license",
+          "cert",
+          "career",
+          "apprentice",
+          "school",
+          "job"
+        ]
+      }
+    },
+    {
+      "verifiedOn": "2026-08-06",
+      "reviewBy": "2027-02-06",
+      "id": "video-must-core",
+      "title": "Consent, safety, and credits",
+      "statement": "Get needed permissions for people and locations. Keep sets safe (power, rigging, traffic). Credit sources honestly; do not present others’ work as yours.",
+      "limits": "Release forms and union/rules are production-specific.",
+      "sources": [
+        "Production safety & rights awareness (educational)"
+      ],
+      "tier": "must",
+      "safetyCritical": false,
+      "scope": {
+        "industries": [
+          "video"
+        ],
+        "modes": [
+          "explain",
+          "socratic",
+          "practice",
+          "quiz",
+          "scenario",
+          "career"
+        ],
+        "topicHints": [
+          "release",
+          "set",
+          "power",
+          "credit",
+          "shot list"
+        ]
+      }
+    },
+    {
+      "verifiedOn": "2026-08-06",
+      "reviewBy": "2027-02-06",
+      "id": "video-habit-core",
+      "title": "Shot list before roll",
+      "statement": "Arrive with a shot list and audio plan. Rolling without intent burns time and misses coverage.",
+      "limits": "Documentary vs scripted workflows differ.",
+      "sources": [
+        "Production planning (educational)"
+      ],
+      "tier": "when_relevant",
+      "scope": {
+        "industries": [
+          "video"
+        ],
+        "modes": [
+          "explain",
+          "practice",
+          "scenario",
+          "socratic",
+          "quiz"
+        ],
+        "topicHints": [
+          "shot list",
+          "coverage",
+          "audio",
+          "b-roll"
+        ]
+      }
+    },
+    {
+      "verifiedOn": "2026-08-06",
+      "reviewBy": "2027-02-06",
+      "id": "video-career-credential-check",
+      "title": "Credential path — Video Production",
+      "statement": "Before promising a career outcome in Video Production, check the real credential, license, or apprenticeship path where you live. Requirements differ by region and change over time.",
+      "limits": "Not career counseling or a guarantee of employment. Confirm with official boards, unions, or schools.",
+      "sources": [
+        "State/provincial licensing boards (look up locally)",
+        "Employer or apprenticeship program requirements"
+      ],
+      "tier": "when_relevant",
+      "scope": {
+        "industries": [
+          "video"
+        ],
+        "modes": [
+          "career",
+          "explain"
+        ],
+        "topicHints": [
+          "license",
+          "cert",
+          "career",
+          "apprentice",
+          "school",
+          "job"
+        ]
+      }
+    },
+    {
+      "verifiedOn": "2026-08-06",
+      "reviewBy": "2027-02-06",
+      "id": "energy-must-core",
+      "title": "Energy isolation",
+      "statement": "Before service, isolate hazardous energy (electrical, pressure, mechanical) per procedure and verify zero energy state. Never defeat interlocks casually.",
+      "limits": "Plant procedures and LOTO programs are site-specific.",
+      "sources": [
+        "Hazardous energy control concepts (educational)"
+      ],
+      "tier": "must",
+      "safetyCritical": true,
+      "scope": {
+        "industries": [
+          "energy"
+        ],
+        "modes": [
+          "explain",
+          "socratic",
+          "practice",
+          "quiz",
+          "scenario",
+          "career"
+        ],
+        "topicHints": [
+          "isolation",
+          "pressure",
+          "voltage",
+          "loto",
+          "interlock"
+        ]
+      }
+    },
+    {
+      "verifiedOn": "2026-08-06",
+      "reviewBy": "2027-02-06",
+      "id": "energy-habit-core",
+      "title": "Permit to work awareness",
+      "statement": "High-risk tasks often need a permit-to-work. Starting without required permits is a process failure, not heroism.",
+      "limits": "Permit systems are site-specific.",
+      "sources": [
+        "Permit-to-work concepts (educational)"
+      ],
+      "tier": "when_relevant",
+      "scope": {
+        "industries": [
+          "energy"
+        ],
+        "modes": [
+          "explain",
+          "practice",
+          "scenario",
+          "socratic",
+          "quiz"
+        ],
+        "topicHints": [
+          "permit",
+          "confined",
+          "hot work",
+          "isolation"
+        ]
+      }
+    },
+    {
+      "verifiedOn": "2026-08-06",
+      "reviewBy": "2027-02-06",
+      "id": "energy-career-credential-check",
+      "title": "Credential path — Energy & Utilities",
+      "statement": "Before promising a career outcome in Energy & Utilities, check the real credential, license, or apprenticeship path where you live. Requirements differ by region and change over time.",
+      "limits": "Not career counseling or a guarantee of employment. Confirm with official boards, unions, or schools.",
+      "sources": [
+        "State/provincial licensing boards (look up locally)",
+        "Employer or apprenticeship program requirements"
+      ],
+      "tier": "when_relevant",
+      "scope": {
+        "industries": [
+          "energy"
+        ],
+        "modes": [
+          "career",
+          "explain"
+        ],
+        "topicHints": [
+          "license",
+          "cert",
+          "career",
+          "apprentice",
+          "school",
+          "job"
+        ]
+      }
+    },
+    {
+      "verifiedOn": "2026-08-06",
+      "reviewBy": "2027-02-06",
+      "id": "agriculture-must-core",
+      "title": "Machine and chemical caution",
+      "statement": "Shut down and secure equipment before clearing jams. Follow label and PPE rules for chemicals. Fatigue and rush harvests raise injury risk.",
+      "limits": "EPA labels and farm SOPs govern chemical use.",
+      "sources": [
+        "Agricultural equipment/chemical safety awareness (educational)"
+      ],
+      "tier": "must",
+      "safetyCritical": true,
+      "scope": {
+        "industries": [
+          "agriculture"
+        ],
+        "modes": [
+          "explain",
+          "socratic",
+          "practice",
+          "quiz",
+          "scenario",
+          "career"
+        ],
+        "topicHints": [
+          "pto",
+          "chemical",
+          "ppe",
+          "jam",
+          "livestock"
+        ]
+      }
+    },
+    {
+      "verifiedOn": "2026-08-06",
+      "reviewBy": "2027-02-06",
+      "id": "agriculture-habit-core",
+      "title": "Guard and PTO caution",
+      "statement": "Keep guards in place. PTO and pinch points injure quickly—shut down before clearing.",
+      "limits": "Equipment manuals govern.",
+      "sources": [
+        "Ag equipment safety (educational)"
+      ],
+      "tier": "when_relevant",
+      "scope": {
+        "industries": [
+          "agriculture"
+        ],
+        "modes": [
+          "explain",
+          "practice",
+          "scenario",
+          "socratic",
+          "quiz"
+        ],
+        "topicHints": [
+          "pto",
+          "guard",
+          "pinch",
+          "auger"
+        ]
+      }
+    },
+    {
+      "verifiedOn": "2026-08-06",
+      "reviewBy": "2027-02-06",
+      "id": "agriculture-career-credential-check",
+      "title": "Credential path — Agriculture",
+      "statement": "Before promising a career outcome in Agriculture, check the real credential, license, or apprenticeship path where you live. Requirements differ by region and change over time.",
+      "limits": "Not career counseling or a guarantee of employment. Confirm with official boards, unions, or schools.",
+      "sources": [
+        "State/provincial licensing boards (look up locally)",
+        "Employer or apprenticeship program requirements"
+      ],
+      "tier": "when_relevant",
+      "scope": {
+        "industries": [
+          "agriculture"
+        ],
+        "modes": [
+          "career",
+          "explain"
+        ],
+        "topicHints": [
+          "license",
+          "cert",
+          "career",
+          "apprentice",
+          "school",
+          "job"
+        ]
+      }
+    },
+    {
+      "verifiedOn": "2026-08-06",
+      "reviewBy": "2027-02-06",
+      "id": "automotive-must-core",
+      "title": "Support the vehicle, control energy",
+      "statement": "Support vehicles with approved stands—not jacks alone. Disconnect or isolate energy as required before work that could move parts or airbags.",
+      "limits": "OEM procedures and shop policy control.",
+      "sources": [
+        "Automotive shop safety awareness (educational)"
+      ],
+      "tier": "must",
+      "safetyCritical": true,
+      "scope": {
+        "industries": [
+          "automotive"
+        ],
+        "modes": [
+          "explain",
+          "socratic",
+          "practice",
+          "quiz",
+          "scenario",
+          "career"
+        ],
+        "topicHints": [
+          "jack",
+          "stand",
+          "battery",
+          "lift",
+          "torque"
+        ]
+      }
+    },
+    {
+      "verifiedOn": "2026-08-06",
+      "reviewBy": "2027-02-06",
+      "id": "automotive-habit-core",
+      "title": "Torque critical fasteners",
+      "statement": "Use specified torque on critical fasteners (wheels, suspension, engine). Guessing torque creates comebacks and hazards.",
+      "limits": "OEM specs control.",
+      "sources": [
+        "Shop torque discipline (educational)"
+      ],
+      "tier": "when_relevant",
+      "scope": {
+        "industries": [
+          "automotive"
+        ],
+        "modes": [
+          "explain",
+          "practice",
+          "scenario",
+          "socratic",
+          "quiz"
+        ],
+        "topicHints": [
+          "torque",
+          "wheel",
+          "spec",
+          "fastener"
+        ]
+      }
+    },
+    {
+      "verifiedOn": "2026-08-06",
+      "reviewBy": "2027-02-06",
+      "id": "automotive-career-credential-check",
+      "title": "Credential path — Automotive",
+      "statement": "Before promising a career outcome in Automotive, check the real credential, license, or apprenticeship path where you live. Requirements differ by region and change over time.",
+      "limits": "Not career counseling or a guarantee of employment. Confirm with official boards, unions, or schools.",
+      "sources": [
+        "State/provincial licensing boards (look up locally)",
+        "Employer or apprenticeship program requirements"
+      ],
+      "tier": "when_relevant",
+      "scope": {
+        "industries": [
+          "automotive"
+        ],
+        "modes": [
+          "career",
+          "explain"
+        ],
+        "topicHints": [
+          "license",
+          "cert",
+          "career",
+          "apprentice",
+          "school",
+          "job"
+        ]
+      }
+    },
+    {
+      "verifiedOn": "2026-08-06",
+      "reviewBy": "2027-02-06",
+      "id": "logistics-must-core",
+      "title": "Load securement and fatigue",
+      "statement": "Secure loads per rule and inspect before travel. Do not accept fatigue or damaged equipment as “normal.” Report issues that affect public roads.",
+      "limits": "DOT and carrier rules apply.",
+      "sources": [
+        "Load securement / fatigue awareness (educational)"
+      ],
+      "tier": "must",
+      "safetyCritical": false,
+      "scope": {
+        "industries": [
+          "logistics"
+        ],
+        "modes": [
+          "explain",
+          "socratic",
+          "practice",
+          "quiz",
+          "scenario",
+          "career"
+        ],
+        "topicHints": [
+          "load",
+          "strap",
+          "dock",
+          "fatigue",
+          "manifest"
+        ]
+      }
+    },
+    {
+      "verifiedOn": "2026-08-06",
+      "reviewBy": "2027-02-06",
+      "id": "logistics-habit-core",
+      "title": "Dock and pedestrian awareness",
+      "statement": "Control trailer creep, chock as required, and watch for pedestrians on docks. Speed in yards is a safety control.",
+      "limits": "Yard rules are site-specific.",
+      "sources": [
+        "Dock safety awareness (educational)"
+      ],
+      "tier": "when_relevant",
+      "scope": {
+        "industries": [
+          "logistics"
+        ],
+        "modes": [
+          "explain",
+          "practice",
+          "scenario",
+          "socratic",
+          "quiz"
+        ],
+        "topicHints": [
+          "dock",
+          "chock",
+          "pedestrian",
+          "yard"
+        ]
+      }
+    },
+    {
+      "verifiedOn": "2026-08-06",
+      "reviewBy": "2027-02-06",
+      "id": "logistics-career-credential-check",
+      "title": "Credential path — Logistics",
+      "statement": "Before promising a career outcome in Logistics, check the real credential, license, or apprenticeship path where you live. Requirements differ by region and change over time.",
+      "limits": "Not career counseling or a guarantee of employment. Confirm with official boards, unions, or schools.",
+      "sources": [
+        "State/provincial licensing boards (look up locally)",
+        "Employer or apprenticeship program requirements"
+      ],
+      "tier": "when_relevant",
+      "scope": {
+        "industries": [
+          "logistics"
+        ],
+        "modes": [
+          "career",
+          "explain"
+        ],
+        "topicHints": [
+          "license",
+          "cert",
+          "career",
+          "apprentice",
+          "school",
+          "job"
+        ]
+      }
+    },
+    {
+      "verifiedOn": "2026-08-06",
+      "reviewBy": "2027-02-06",
+      "id": "civic-intelligence-must-core",
+      "title": "Primary sources and jurisdiction",
+      "statement": "Prefer primary public records and state the jurisdiction. Separate what the document says from what you infer. Do not dox private individuals.",
+      "limits": "Not legal advice. Public-records rules vary by state.",
+      "sources": [
+        "Public records literacy (educational)"
+      ],
+      "tier": "must",
+      "safetyCritical": false,
+      "scope": {
+        "industries": [
+          "civic-intelligence"
+        ],
+        "modes": [
+          "explain",
+          "socratic",
+          "practice",
+          "quiz",
+          "scenario",
+          "career"
+        ],
+        "topicHints": [
+          "permit",
+          "parcel",
+          "record",
+          "jurisdiction",
+          "hearing"
+        ]
+      }
+    },
+    {
+      "verifiedOn": "2026-08-06",
+      "reviewBy": "2027-02-06",
+      "id": "civic-intelligence-habit-core",
+      "title": "Cite the document",
+      "statement": "When making a public claim, cite the document type, date, and jurisdiction. Screenshots without provenance are weak evidence.",
+      "limits": "Not legal advice.",
+      "sources": [
+        "Evidence citation habit (educational)"
+      ],
+      "tier": "when_relevant",
+      "scope": {
+        "industries": [
+          "civic-intelligence"
+        ],
+        "modes": [
+          "explain",
+          "practice",
+          "scenario",
+          "socratic",
+          "quiz"
+        ],
+        "topicHints": [
+          "cite",
+          "ordinance",
+          "minute",
+          "agenda",
+          "parcel"
+        ]
+      }
+    },
+    {
+      "verifiedOn": "2026-08-06",
+      "reviewBy": "2027-02-06",
+      "id": "civic-intelligence-career-credential-check",
+      "title": "Credential path — Civic Intelligence",
+      "statement": "Before promising a career outcome in Civic Intelligence, check the real credential, license, or apprenticeship path where you live. Requirements differ by region and change over time.",
+      "limits": "Not career counseling or a guarantee of employment. Confirm with official boards, unions, or schools.",
+      "sources": [
+        "State/provincial licensing boards (look up locally)",
+        "Employer or apprenticeship program requirements"
+      ],
+      "tier": "when_relevant",
+      "scope": {
+        "industries": [
+          "civic-intelligence"
+        ],
+        "modes": [
+          "career",
+          "explain"
+        ],
+        "topicHints": [
+          "license",
+          "cert",
+          "career",
+          "apprentice",
+          "school",
+          "job"
+        ]
+      }
+    },
+    {
+      "verifiedOn": "2026-08-06",
+      "reviewBy": "2027-02-06",
+      "id": "media-literacy-must-core",
+      "title": "Claim hygiene",
+      "statement": "Label evidence vs inference vs assumption. Check who benefits from a frame. Do not amplify unverified harm claims as fact.",
+      "limits": "Educational media literacy—not a newsroom policy.",
+      "sources": [
+        "Evidence-labeling / media literacy practice (educational)"
+      ],
+      "tier": "must",
+      "safetyCritical": false,
+      "scope": {
+        "industries": [
+          "media-literacy"
+        ],
+        "modes": [
+          "explain",
+          "socratic",
+          "practice",
+          "quiz",
+          "scenario",
+          "career"
+        ],
+        "topicHints": [
+          "claim",
+          "source",
+          "frame",
+          "viral",
+          "headline"
+        ]
+      }
+    },
+    {
+      "verifiedOn": "2026-08-06",
+      "reviewBy": "2027-02-06",
+      "id": "media-literacy-habit-core",
+      "title": "Slow the share",
+      "statement": "Before resharing shocking claims, check original source, date, and whether the clip is cropped to change meaning.",
+      "limits": "Educational habit—not platform policy.",
+      "sources": [
+        "Lateral reading / media literacy (educational)"
+      ],
+      "tier": "when_relevant",
+      "scope": {
+        "industries": [
+          "media-literacy"
+        ],
+        "modes": [
+          "explain",
+          "practice",
+          "scenario",
+          "socratic",
+          "quiz"
+        ],
+        "topicHints": [
+          "share",
+          "viral",
+          "crop",
+          "source",
+          "date"
+        ]
+      }
+    },
+    {
+      "verifiedOn": "2026-08-06",
+      "reviewBy": "2027-02-06",
+      "id": "media-literacy-career-credential-check",
+      "title": "Credential path — Media Literacy & Narrative Analysis",
+      "statement": "Before promising a career outcome in Media Literacy & Narrative Analysis, check the real credential, license, or apprenticeship path where you live. Requirements differ by region and change over time.",
+      "limits": "Not career counseling or a guarantee of employment. Confirm with official boards, unions, or schools.",
+      "sources": [
+        "State/provincial licensing boards (look up locally)",
+        "Employer or apprenticeship program requirements"
+      ],
+      "tier": "when_relevant",
+      "scope": {
+        "industries": [
+          "media-literacy"
+        ],
+        "modes": [
+          "career",
+          "explain"
+        ],
+        "topicHints": [
+          "license",
+          "cert",
+          "career",
+          "apprentice",
+          "school",
+          "job"
+        ]
+      }
+    }
+  ]
+}

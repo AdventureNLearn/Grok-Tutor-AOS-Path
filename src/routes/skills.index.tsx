@@ -40,8 +40,8 @@ function SkillsPage() {
         <h1 className="text-3xl font-semibold tracking-tight">Thinking tools</h1>
         <p className="mt-2 text-muted leading-relaxed">
           Turn these on during a lesson when you want a stronger habit — checking evidence,
-          reading public stories carefully, navigating civic work, or practicing like a
-          professional. Grouped by how they help you learn.
+          reading sources carefully, or practicing like a professional. Grouped by how they
+          help you learn.
         </p>
       </div>
 
@@ -53,12 +53,12 @@ function SkillsPage() {
         </Button>
         <Button asChild variant="outline" size="sm">
           <a href={AOS_SOURCE.publicUrl} target="_blank" rel="noreferrer">
-            Public civic frameworks
+            Public education libraries
           </a>
         </Button>
         <Button asChild variant="outline" size="sm">
           <a href={AOS_SOURCE.lpinUrl} target="_blank" rel="noreferrer">
-            LPIN field tools
+            Related field libraries
           </a>
         </Button>
       </div>

@@ -20,7 +20,7 @@ export type AppUser = {
 export const DEV_USER: AppUser = {
   id: "dev-user",
   displayName: "Dev User",
-  primaryEmail: "dev@example.com",
+  primaryEmail: "local-dev-user",
   profileImageUrl: null,
   isDevFallback: true,
 };

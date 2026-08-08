@@ -1,20 +1,31 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { ExternalLink } from "lucide-react";
+import { toast } from "sonner";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { AOS_SOURCE } from "@/lib/aos-skills";
+import { useHiveEditStore } from "@/lib/hive-edit-store";
+import { HOST_MATRIX } from "@/lib/host-matrix";
 
 export const Route = createFileRoute("/path")({
   component: PathPage,
 });
 
 function PathPage() {
+  const setShape = useHiveEditStore((s) => s.setShape);
+  const setPlayOrchestration = useHiveEditStore((s) => s.setPlayOrchestration);
+  const setEditMode = useHiveEditStore((s) => s.setEditMode);
+
   return (
     <div className="mx-auto max-w-3xl px-4 py-10">
       <h1 className="text-3xl font-semibold tracking-tight">How to get started</h1>
       <p className="mt-2 text-muted leading-relaxed">
-        You are already in the live prototype. Use the steps below when you want your own copy or
-        deeper library notes.
+        You are already in Grok Tutor. Use the steps below to learn here, open your own copy, or go
+        deeper in the library. New here? Start with{" "}
+        <Link to="/help" className="text-teal underline-offset-2 hover:underline">
+          How to use
+        </Link>
+        .
       </p>
 
       <ol className="mt-10 space-y-6">
@@ -78,8 +89,62 @@ function PathPage() {
             <span className="text-muted">[say your goal]</span>
           </blockquote>
           <p className="mt-3 text-sm text-muted">
-            That is the human version of turning on Sovereign Lens, Evidence Gate, and a working
-            notebook together.
+            That is the human version of a clear frame, an evidence check, and a short notebook
+            together.
+          </p>
+        </li>
+
+        <li className="rounded-[var(--radius-xl)] border border-border bg-surface p-5">
+          <div className="text-xs font-medium text-teal uppercase tracking-wide">Integrity 101</div>
+          <h2 className="mt-1 font-semibold text-lg tracking-tight">
+            Evidence · Inference · Assumption
+          </h2>
+          <p className="mt-2 text-sm text-muted leading-relaxed">
+            Load the Integrity Triangle on the hive, play orchestration, then open Learn. Label
+            every claim: what you saw (evidence), what you reason (inference), what you are guessing
+            (assumption). Supported / Unproven / Disputed — human final call.
+          </p>
+          <div className="mt-3 flex flex-wrap gap-2">
+            <Button
+              size="sm"
+              variant="teal"
+              type="button"
+              onClick={() => {
+                setShape("integrity-triangle");
+                setPlayOrchestration(true);
+                setEditMode(true);
+                toast.success("Integrity Triangle loaded — return to the hive");
+              }}
+            >
+              Load Integrity Triangle
+            </Button>
+            <Button
+              size="sm"
+              variant="secondary"
+              type="button"
+              onClick={() => {
+                setShape("claim-diamond");
+                setPlayOrchestration(true);
+                setEditMode(true);
+                toast.success("Claim Diamond loaded — return to the hive");
+              }}
+            >
+              Load Claim Diamond
+            </Button>
+            <Button asChild size="sm" variant="outline">
+              <Link to="/tutor">Open Learn</Link>
+            </Button>
+          </div>
+        </li>
+
+        <li className="rounded-[var(--radius-xl)] border border-border bg-surface p-5">
+          <div className="text-xs font-medium text-teal uppercase tracking-wide">Hosts</div>
+          <h2 className="mt-1 font-semibold text-lg tracking-tight">Where this product lives</h2>
+          <p className="mt-2 text-sm text-muted leading-relaxed">
+            <strong className="text-fg">{HOST_MATRIX.samples.label}</strong> is the main public
+            samples track. <strong className="text-fg">{HOST_MATRIX.lineage.label}</strong> is the
+            earlier tutor surface kept for history. This local build may include features that are
+            not on every public host yet.
           </p>
         </li>
 

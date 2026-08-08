@@ -18,10 +18,15 @@ import {
 import { tutorChat } from "@/lib/tutor-api";
 import { useTutorStore, type ChatMessage } from "@/lib/store";
 import { cn } from "@/lib/utils";
+import { isMemeLane, parseTutorLane } from "@/lib/tutor-lane";
+import { getShapeDef, useHiveEditStore } from "@/lib/hive-edit-store";
 
 const searchSchema = z.object({
   industry: z.string().optional(),
   skill: z.string().optional(),
+  lane: z.string().optional(),
+  /** Floating desk iframe surface — kept so validateSearch does not strip it */
+  surface: z.string().optional(),
 });
 
 export const Route = createFileRoute("/tutor")({
@@ -43,6 +48,8 @@ const LEVELS = ["beginner", "intermediate", "advanced"] as const;
 function TutorPage() {
   const search = Route.useSearch();
   const chatFn = useServerFn(tutorChat);
+  const lane = parseTutorLane(search.lane);
+  const meme = isMemeLane(lane);
   const {
     addSession,
     appendMessage,
@@ -73,6 +80,9 @@ function TutorPage() {
   const [started, setStarted] = useState(false);
   const bottomRef = useRef<HTMLDivElement>(null);
   const startRef = useRef<number>(Date.now());
+  const onLearnEvent = useHiveEditStore((s) => s.onLearnEvent);
+  const shapeId = useHiveEditStore((s) => s.shapeId);
+  const phaseCount = Math.max(1, getShapeDef(shapeId).phases.length || 4);
 
   const industry = getIndustry(industryId);
   const recommended = useMemo(() => {
@@ -127,6 +137,7 @@ function TutorPage() {
     setMessages([]);
     setStarted(true);
     startRef.current = Date.now();
+    onLearnEvent("session_start", phaseCount);
     setInput(
       topic
         ? `I want to learn: ${topic}`
@@ -179,6 +190,7 @@ function TutorPage() {
     appendMessage(sid, userMsg);
     setInput("");
     setBusy(true);
+    onLearnEvent("user_turn", phaseCount);
 
     try {
       const result = await chatFn({
@@ -188,6 +200,7 @@ function TutorPage() {
           mode,
           skillIds,
           topic: topic || undefined,
+          lane,
           messages: next
             .filter((m) => m.role === "user" || m.role === "assistant")
             .map((m) => ({
@@ -206,6 +219,7 @@ function TutorPage() {
         };
         setMessages((m) => [...m, aMsg]);
         appendMessage(sid, aMsg);
+        onLearnEvent("assistant_turn", phaseCount);
         const mins = Math.max(1, Math.round((Date.now() - startRef.current) / 60000));
         updateSession(sid, { minutes: mins });
       } else {
@@ -224,6 +238,7 @@ function TutorPage() {
       updateSession(sessionId, { minutes: mins });
       addMinutes(mins);
     }
+    onLearnEvent("session_end", phaseCount);
     setSessionId(null);
     setMessages([]);
     setStarted(false);
@@ -231,12 +246,31 @@ function TutorPage() {
   }
 
   return (
-    <div className="mx-auto max-w-6xl px-4 py-6 sm:py-8">
+    <div
+      className={cn(
+        "mx-auto max-w-6xl px-4 py-6 sm:py-8",
+        meme && "tutor-meme-lane",
+      )}
+    >
+      {meme ? (
+        <div className="mb-4 rounded-md border-4 border-yellow-400 bg-zinc-950 px-4 py-3 shadow-[4px_4px_0_#000]">
+          <p className="text-xs font-black uppercase tracking-widest text-yellow-400">
+            ITSHABBENING meme mode · not the professional tutor UI
+          </p>
+          <p className="mt-1 text-sm text-zinc-300">
+            Same safety facts. Different voice. If you wanted LinkedIn calm, leave this lane.
+          </p>
+        </div>
+      ) : null}
       <div className="flex flex-col sm:flex-row sm:items-end sm:justify-between gap-3 mb-6">
         <div>
-          <h1 className="text-2xl sm:text-3xl font-semibold tracking-tight">Learn</h1>
+          <h1 className="text-2xl sm:text-3xl font-semibold tracking-tight">
+            {meme ? "Learn (unhinged)" : "Learn"}
+          </h1>
           <p className="text-sm text-muted mt-1">
-            Field, level, mode, and optional thinking tools. Guest questions left today:{" "}
+            {meme
+              ? "Pick a job, pick a mode, ask like a normal person. Guest questions left today: "
+              : "Field, level, mode, and optional thinking tools. Guest questions left today: "}
             <span className="text-fg tabular-nums">{guestRemaining()}</span> / {guestLimit()}
           </p>
         </div>
@@ -306,7 +340,10 @@ function TutorPage() {
                 <button
                   key={m.id}
                   type="button"
-                  onClick={() => setMode(m.id)}
+                  onClick={() => {
+                    setMode(m.id);
+                    if (m.id !== mode) onLearnEvent("mode_change", phaseCount);
+                  }}
                   className={cn(
                     "h-9 rounded-[var(--radius-sm)] border text-xs px-2",
                     mode === m.id

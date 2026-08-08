@@ -450,14 +450,14 @@ export const INDUSTRIES: Industry[] = [
   },
   {
     id: "civic-intelligence",
-    name: "Civic Intelligence",
+    name: "Public Information Literacy",
     sector: "public",
-    blurb: "Reading public records, permits, and how decisions get made.",
+    blurb: "Reading original documents carefully and separating facts from guesses.",
     topics: [
-      "Public records",
-      "How permits work",
-      "Simple oversight checks",
-      "Who influences a decision",
+      "Primary sources",
+      "How approvals work (general)",
+      "Simple checklists for claims",
+      "Who can decide (public roles)",
       "Labeling facts vs guesses",
     ],
     aosAffinity: [

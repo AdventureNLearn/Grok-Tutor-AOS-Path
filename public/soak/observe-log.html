@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Q1 · Soak log (complete suites)</title>
+  <style>
+    html, body { margin: 0; height: 100%; background: #05060a; color: #f2f4f8; font-family: "Segoe UI", system-ui, sans-serif; }
+    body { padding: 10px 12px 14px; overflow: auto; }
+    .pill { display: inline-flex; align-items: center; gap: 8px; font-size: 11px; letter-spacing: 0.1em; text-transform: uppercase; color: #a78bfa; border: 1px solid rgba(167,139,250,0.35); background: rgba(167,139,250,0.1); border-radius: 999px; padding: 4px 10px; margin-bottom: 8px; }
+    .pulse { width: 9px; height: 9px; border-radius: 50%; background: #6b7385; }
+    .pulse.on { background: #4ade80; animation: p 1.1s ease-out infinite; }
+    @keyframes p { 70% { box-shadow: 0 0 0 8px rgba(74,222,128,0); } }
+    h1 { margin: 0 0 6px; font-size: 18px; }
+    .meta { color: #9aa3b5; font-size: 12px; margin-bottom: 8px; }
+    .meter { height: 8px; background: #1a1f2b; border-radius: 99px; overflow: hidden; margin: 0 0 10px; }
+    .meter > i { display: block; height: 100%; width: 0; background: linear-gradient(90deg,#5eead4,#a78bfa); transition: width .3s; }
+    .stats { display: grid; grid-template-columns: repeat(3,1fr); gap: 6px; margin-bottom: 10px; }
+    .stat { border: 1px solid #1e2433; border-radius: 8px; padding: 6px 8px; background: #0c0e14; }
+    .stat b { display: block; font-size: 18px; color: #5eead4; }
+    .stat span { font-size: 10px; letter-spacing: .08em; text-transform: uppercase; color: #8b93a7; }
+    .msg { font-size: 13px; color: #9aa3b5; margin: 0 0 10px; line-height: 1.4; }
+    .msg strong { color: #f2f4f8; }
+    #err { display: none; color: #fde68a; background: rgba(251,191,36,.1); border-left: 3px solid #fbbf24; padding: 8px; margin-bottom: 8px; border-radius: 0 8px 8px 0; font-size: 13px; }
+    table { width: 100%; border-collapse: collapse; font-size: 12px; }
+    th, td { text-align: left; padding: 4px 5px; border-bottom: 1px solid #1a1f2b; }
+    th { color: #8b93a7; font-size: 10px; text-transform: uppercase; position: sticky; top: 0; background: #05060a; }
+    tr.ok td { color: #86efac; } tr.soft td { color: #fde68a; } tr.bad td { color: #fca5a5; }
+    tr.head td { color: #c4b5fd; font-weight: 700; background: rgba(167,139,250,.08); }
+  </style>
+</head>
+<body>
+  <div class="pill"><span class="pulse" id="pulse"></span> Q1 · automated soak log · no clicks needed</div>
+  <h1>Complete-suite test log</h1>
+  <p class="meta" id="hb">—</p>
+  <div id="err"></div>
+  <div class="meter"><i id="bar"></i></div>
+  <div class="stats" id="stats"></div>
+  <p class="msg" id="msg">Waiting for soak…</p>
+  <table>
+    <thead><tr><th>Time</th><th>Suite / check</th><th>St</th><th>ms</th><th>Note</th></tr></thead>
+    <tbody id="rows"></tbody>
+  </table>
+  <script>
+    const pulse = document.getElementById("pulse");
+    const bar = document.getElementById("bar");
+    const stats = document.getElementById("stats");
+    const msg = document.getElementById("msg");
+    const rows = document.getElementById("rows");
+    const err = document.getElementById("err");
+    const hb = document.getElementById("hb");
+    let lastCycle = -1;
+    let lastHb = 0;
+    let tickBusy = false;
+    function esc(s){return String(s??"").replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;");}
+    async function tick(){
+      if (tickBusy) return; // never pile up hung fetches
+      tickBusy = true;
+      const clock = new Date().toLocaleTimeString();
+      hb.textContent = "Clock " + clock + " · feed /soak/LIVE.json";
+      const ac = new AbortController();
+      const to = setTimeout(function(){ ac.abort(); }, 2500);
+      try {
+        const res = await fetch("/soak/LIVE.json?t="+Date.now(), { cache: "no-store", signal: ac.signal });
+        if (!res.ok) throw new Error("LIVE.json " + res.status);
+        const s = await res.json();
+        err.style.display = "none";
+        const hbMs = s.heartbeat || Date.parse(s.updatedAt||"") || 0;
+        const ageSec = hbMs ? Math.max(0, (Date.now() - hbMs) / 1000) : 999;
+        const stale = ageSec > 40;
+        pulse.classList.toggle("on", !stale);
+        if (stale) {
+          err.style.display = "block";
+          err.textContent = "Feed stale ("+Math.round(ageSec)+"s) — watchdog should restart soak shortly";
+        }
+        const minutes = s.minutes || 60;
+        const elapsed = s.elapsedMs || 0;
+        const pct = Math.min(100, (elapsed / (minutes * 60000)) * 100);
+        bar.style.width = pct.toFixed(1) + "%";
+        const elM = Math.floor(elapsed/60000), elS = Math.floor((elapsed%60000)/1000);
+        const sys = s.systemTotals || {};
+        stats.innerHTML =
+          '<div class="stat"><b>'+(s.lessonsWritten??s.cycles??0)+'</b><span>active lessons</span></div>'+
+          '<div class="stat"><b>'+(sys.uniqueLessons??'—')+'</b><span>system unique</span></div>'+
+          '<div class="stat"><b>'+(sys.duplicatesRemoved??0)+'</b><span>dupes removed</span></div>'+
+          '<div class="stat"><b>'+(s.pass??0)+'</b><span>pass</span></div>'+
+          '<div class="stat"><b>'+(s.soft??0)+'</b><span>soft</span></div>'+
+          '<div class="stat"><b>'+elM+':'+String(elS).padStart(2,'0')+'</b><span>elapsed</span></div>';
+        const moved = (s.cycles??0) !== lastCycle;
+        lastCycle = s.cycles ?? 0;
+        lastHb = hbMs;
+        const cov = s.coverage || {};
+        const modePct = cov.modePct || {};
+        const shapePct = cov.shapePct || {};
+        const modeLine = Object.keys(modePct).length
+          ? Object.keys(modePct).map(function(k){ return k+':'+modePct[k]+'%'; }).join(' · ')
+          : '';
+        const shapeLine = Object.keys(shapePct).length
+          ? Object.keys(shapePct).slice(0,6).map(function(k){ return k+':'+shapePct[k]+'%'; }).join(' · ')
+          : '';
+        msg.innerHTML = '<strong>'+esc(s.engine||'soak')+'</strong> · lap <strong>'+(s.suitesComplete??0)+
+          '</strong> · phase <strong>'+esc(s.currentPhase||'—')+
+          '</strong> · lessons <strong>'+(s.lessonsWritten??'—')+'</strong> · '+esc(s.lastMessage||'—')+
+          (moved?' · <span style="color:#4ade80">live</span>':'')+
+          (modeLine?'<br/><span style="color:#8b93a7;font-size:11px">modes '+esc(modeLine)+'</span>':'')+
+          (shapeLine?'<br/><span style="color:#8b93a7;font-size:11px">shapes '+esc(shapeLine)+'</span>':'')+
+          (cov.balanceHint?'<br/><span style="color:#a78bfa;font-size:11px">'+esc(cov.balanceHint)+'</span>':'');
+        const recent = (s.recent||[]).slice().reverse();
+        rows.innerHTML = recent.length ? recent.map(function(r){
+          const cls = r.kind==='suite'?'head':(r.pass?(r.soft?'soft':'ok'):'bad');
+          return '<tr class="'+cls+'"><td>'+esc(r.t)+'</td><td>'+esc(r.name)+'</td><td>'+esc(r.status)+
+            '</td><td>'+esc(r.ms)+'</td><td>'+esc(r.reason)+'</td></tr>';
+        }).join('') : '<tr><td colspan="5">Waiting for soak process…</td></tr>';
+      } catch (e) {
+        pulse.classList.remove("on");
+        err.style.display = "block";
+        const msg = (e && e.name === "AbortError") ? "fetch timeout" : (e.message||e);
+        err.textContent = "Log idle: " + msg + " — watchdog restarts soak if stalled";
+      } finally {
+        clearTimeout(to);
+        tickBusy = false;
+      }
+    }
+    tick();
+    setInterval(tick, 1200);
+  </script>
+</body>
+</html>

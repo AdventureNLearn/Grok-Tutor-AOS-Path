@@ -4,6 +4,7 @@ import {
   createRootRoute,
   HeadContent,
   Scripts,
+  useRouterState,
 } from "@tanstack/react-router";
 import { CreatedWithGrokBanner } from "@/components/created-with-grok-banner";
 import { AppShell } from "@/components/layout";
@@ -19,14 +20,14 @@ export const Route = createRootRoute({
       {
         name: "description",
         content:
-          "Trade and professional tutoring with careful thinking tools — evidence, practice, and safety-first craft learning.",
+          "Craft and professional tutoring with The Hive, sample lessons, live sessions, and thinking tools — evidence, practice, and safety-first learning.",
       },
       { property: "og:title", content: "Grok Tutor" },
       {
         property: "og:description",
-        content: "Learn any trade or profession with honest, evidence-first tutoring.",
+        content: "Learn a craft with Grok Tutor and The Hive — samples, live sessions, and thinking tools.",
       },
-      { name: "theme-color", content: "#0a0a0b" },
+      { name: "theme-color", content: "#05060a" },
     ],
     links: [
       { rel: "stylesheet", href: appCss },
@@ -36,14 +37,36 @@ export const Route = createRootRoute({
   component: RootComponent,
 });
 
+function useIsDeskSurface(): boolean {
+  const location = useRouterState({ select: (s) => s.location });
+  const searchObj = location.search as Record<string, unknown> | undefined;
+  if (searchObj && typeof searchObj === "object" && searchObj.surface === "desk") {
+    return true;
+  }
+  const href = String((location as { href?: string }).href ?? "");
+  if (href.includes("surface=desk")) return true;
+  if (typeof window !== "undefined") {
+    try {
+      return new URLSearchParams(window.location.search).get("surface") === "desk";
+    } catch {
+      return false;
+    }
+  }
+  return false;
+}
+
 function RootComponent() {
+  const deskSurface = useIsDeskSurface();
+
   return (
     <RootDocument>
-      <CreatedWithGrokBanner />
+      {!deskSurface ? <CreatedWithGrokBanner /> : null}
       <AppShell>
         <Outlet />
       </AppShell>
-      <Toaster theme="dark" position="bottom-right" richColors closeButton />
+      {!deskSurface ? (
+        <Toaster theme="dark" position="bottom-right" richColors closeButton />
+      ) : null}
     </RootDocument>
   );
 }

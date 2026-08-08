@@ -3,24 +3,46 @@ import { Clock, StickyNote, Trash2 } from "lucide-react";
 import { useTutorStore } from "@/lib/store";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
-import { useState } from "react";
+import { useMemo, useState } from "react";
 
 export const Route = createFileRoute("/progress")({
   component: ProgressPage,
 });
 
 function ProgressPage() {
-  const { sessions, notes, totalMinutes, addNote, removeNote } = useTutorStore();
+  const sessionsRaw = useTutorStore((s) => s.sessions);
+  const notesRaw = useTutorStore((s) => s.notes);
+  const totalMinutes = useTutorStore((s) => s.totalMinutes);
+  const addNote = useTutorStore((s) => s.addNote);
+  const removeNote = useTutorStore((s) => s.removeNote);
+
+  const sessions = useMemo(
+    () => (Array.isArray(sessionsRaw) ? sessionsRaw : []),
+    [sessionsRaw],
+  );
+  const notes = useMemo(
+    () => (Array.isArray(notesRaw) ? notesRaw : []),
+    [notesRaw],
+  );
+
   const [title, setTitle] = useState("");
   const [body, setBody] = useState("");
 
-  const sessionMinutes = sessions.reduce((a, s) => a + (s.minutes || 0), 0);
-  const displayMinutes = Math.max(totalMinutes, sessionMinutes);
+  const sessionMinutes = sessions.reduce(
+    (a, s) => a + (typeof s?.minutes === "number" ? s.minutes : 0),
+    0,
+  );
+  const displayMinutes = Math.max(
+    typeof totalMinutes === "number" ? totalMinutes : 0,
+    sessionMinutes,
+  );
 
   return (
     <div className="mx-auto max-w-6xl px-4 py-10">
       <h1 className="text-3xl font-semibold tracking-tight">Progress</h1>
-      <p className="mt-2 text-muted">Saved in this browser. Lessons and notes stay on your device.</p>
+      <p className="mt-2 text-muted">
+        Saved in this browser. Lessons and notes stay on your device.
+      </p>
 
       <div className="mt-8 grid sm:grid-cols-3 gap-3">
         <div className="rounded-[var(--radius-xl)] border border-border bg-surface p-5">
@@ -53,31 +75,45 @@ function ProgressPage() {
           </p>
         ) : (
           <ul className="space-y-2">
-            {sessions.slice(0, 20).map((s) => (
-              <li
-                key={s.id}
-                className="rounded-[var(--radius-lg)] border border-border bg-surface px-4 py-3 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-2"
-              >
-                <div>
-                  <div className="font-medium text-sm">{s.industryName}</div>
-                  <div className="text-xs text-subtle mt-0.5">
-                    {new Date(s.createdAt).toLocaleString()} · {s.messages.length} messages ·{" "}
-                    {s.minutes || 0} min
+            {sessions.slice(0, 20).map((s) => {
+              const messages = Array.isArray(s.messages) ? s.messages : [];
+              const skillIds = Array.isArray(s.skillIds) ? s.skillIds : [];
+              const created =
+                typeof s.createdAt === "number"
+                  ? new Date(s.createdAt).toLocaleString()
+                  : "—";
+              return (
+                <li
+                  key={s.id}
+                  className="rounded-[var(--radius-lg)] border border-border bg-surface px-4 py-3 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-2"
+                >
+                  <div>
+                    <div className="font-medium text-sm">
+                      {s.industryName || "Lesson"}
+                    </div>
+                    <div className="text-xs text-subtle mt-0.5">
+                      {created} · {messages.length} messages · {s.minutes || 0}{" "}
+                      min
+                    </div>
+                    <div className="mt-1.5 flex flex-wrap gap-1">
+                      {s.mode ? (
+                        <Badge className="capitalize">{s.mode}</Badge>
+                      ) : null}
+                      {s.level ? (
+                        <Badge variant="outline" className="capitalize">
+                          {s.level}
+                        </Badge>
+                      ) : null}
+                      {skillIds.slice(0, 3).map((id) => (
+                        <Badge key={id} variant="teal">
+                          {id}
+                        </Badge>
+                      ))}
+                    </div>
                   </div>
-                  <div className="mt-1.5 flex flex-wrap gap-1">
-                    <Badge className="capitalize">{s.mode}</Badge>
-                    <Badge variant="outline" className="capitalize">
-                      {s.level}
-                    </Badge>
-                    {s.skillIds.slice(0, 3).map((id) => (
-                      <Badge key={id} variant="teal">
-                        {id}
-                      </Badge>
-                    ))}
-                  </div>
-                </div>
-              </li>
-            ))}
+                </li>
+              );
+            })}
           </ul>
         )}
       </section>
