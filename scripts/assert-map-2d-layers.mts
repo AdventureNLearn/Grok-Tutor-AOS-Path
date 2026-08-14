@@ -271,6 +271,109 @@ if (MAP_STAY_OFF_LABELS.some((name) => new RegExp(`acr:\\s*["']${name.slice(0, 3
   throw new Error("Stay-OFF must not get an acronym on the map");
 }
 
+/** Extract a single CSS rule body. Rejects suffix matches (button, is-phone). */
+function cssRule(css: string, selector: string): string {
+  const needle = `${selector} {`;
+  let from = 0;
+  while (from < css.length) {
+    const idx = css.indexOf(needle, from);
+    if (idx < 0) break;
+    const prev = css[idx - 1] ?? "\n";
+    if (/[A-Za-z0-9._)#\]]/.test(prev)) {
+      from = idx + needle.length;
+      continue;
+    }
+    const open = css.indexOf("{", idx);
+    const close = css.indexOf("}", open);
+    if (open < 0 || close < 0) break;
+    return css.slice(open + 1, close);
+  }
+  throw new Error(`Missing CSS rule ${selector}`);
+}
+
+function cssDecl(block: string, prop: string): string | null {
+  const m = block.match(new RegExp(`(?:^|;)\\s*${prop}\\s*:\\s*([^;]+)`, "i"));
+  return m ? m[1]!.trim() : null;
+}
+
+function leadingRem(value: string): number | null {
+  const m = value.match(/([0-9]*\.?[0-9]+)\s*rem/);
+  return m ? Number(m[1]) : null;
+}
+
+function assertPainted(block: string, label: string) {
+  const display = cssDecl(block, "display");
+  if (display === "none") {
+    throw new Error(`${label} is display:none — switcher must paint`);
+  }
+  if (cssDecl(block, "visibility") === "hidden") {
+    throw new Error(`${label} is visibility:hidden — switcher must paint`);
+  }
+  const opacity = cssDecl(block, "opacity");
+  if (opacity && /^0(?:\.0+)?$/.test(opacity)) {
+    throw new Error(`${label} is opacity:0 — switcher must paint`);
+  }
+  if (cssDecl(block, "pointer-events") === "none") {
+    throw new Error(`${label} is pointer-events:none — learner must click layers`);
+  }
+  const clip = cssDecl(block, "clip") ?? cssDecl(block, "clip-path");
+  if (clip && clip !== "none" && clip !== "auto") {
+    throw new Error(`${label} is clipped (${clip}) — switcher must paint`);
+  }
+  for (const dim of ["height", "width", "font-size"] as const) {
+    const raw = cssDecl(block, dim);
+    if (raw && /^0(?:px|rem|em)?$/.test(raw)) {
+      throw new Error(`${label} has ${dim}:0 — zero-size switcher must fail`);
+    }
+  }
+  const scale = cssDecl(block, "transform");
+  if (scale && /scale\(\s*0(?:\.0+)?\s*\)/.test(scale)) {
+    throw new Error(`${label} is scale(0) — zero-size switcher must fail`);
+  }
+}
+
+const css = src("src/styles.css");
+const layersRule = cssRule(css, ".hive-map-2d-layers");
+const layerBtnRule = cssRule(css, ".hive-map-2d-layers button");
+assertPainted(layersRule, ".hive-map-2d-layers");
+assertPainted(layerBtnRule, ".hive-map-2d-layers button");
+
+if (!/hive-map-2d-layers/.test(mapSrc)) {
+  throw new Error("Layer switcher must stay mounted on the 2D map");
+}
+if (/className="hive-map-2d-layers"[^>]*(?:\bsr-only\b|visually-hidden|\bhidden\b|aria-hidden)/.test(mapSrc)) {
+  throw new Error("Layer switcher must not be hidden or screen-reader-only");
+}
+
+const top = cssDecl(layersRule, "top");
+if (top && top !== "auto") {
+  const rem = leadingRem(top);
+  if (rem == null || rem < 3.5) {
+    throw new Error(
+      `Layer switcher top "${top}" sits under the 3.5rem topbar — hidden/clipped for the learner`,
+    );
+  }
+} else if (!cssDecl(layersRule, "bottom")) {
+  throw new Error("Layer switcher must set bottom or a top that clears the 3.5rem topbar");
+}
+
+const minH = leadingRem(cssDecl(layersRule, "min-height") ?? "");
+const minW = leadingRem(cssDecl(layersRule, "min-width") ?? "");
+if (minH == null || minH < 1 || minW == null || minW < 8) {
+  throw new Error("Layer switcher must declare min-height ≥ 1rem and min-width ≥ 8rem");
+}
+const btnMinH = leadingRem(cssDecl(layerBtnRule, "min-height") ?? "");
+if (btnMinH == null || btnMinH < 1) {
+  throw new Error("Layer chips must declare min-height ≥ 1rem so they are not zero-size");
+}
+const btnColor = cssDecl(layerBtnRule, "color");
+if (!btnColor || /transparent|rgba\(\s*0\s*,\s*0\s*,\s*0\s*,\s*0\s*\)/.test(btnColor)) {
+  throw new Error("Layer chips must have a visible color");
+}
+if (!cssDecl(layersRule, "background") || !cssDecl(layerBtnRule, "background")) {
+  throw new Error("Layer switcher must paint a background so chips read on the map");
+}
+
 for (const name of [
   "docs/RELEASE-SPRINT-STATUS.md",
   "docs/RELEASE-HIVE-INTEGRATION.md",

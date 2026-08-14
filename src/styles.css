@@ -3228,25 +3228,42 @@ button.iso-chip { cursor: pointer; }
   background-size: 28px 24px;
   mask-image: radial-gradient(ellipse 75% 60% at 50% 45%, #000 20%, transparent 75%);
 }
+/*
+ * Lower chrome band — not top: 0.3rem (that painted under the 3.5rem
+ * frosted topbar). Stays clear of the three door cards in the field.
+ */
 .hive-map-2d-layers {
   position: absolute;
-  top: 0.3rem;
+  top: auto;
+  bottom: 5.5rem;
   left: 50%;
   transform: translateX(-50%);
   z-index: 6;
   display: flex;
   flex-wrap: wrap;
   justify-content: center;
+  align-items: center;
   gap: 0.28rem;
-  max-width: min(52rem, 96vw);
-  padding: 0 0.35rem;
+  max-width: min(40rem, calc(100vw - 14rem));
+  min-width: 12rem;
+  min-height: 1.7rem;
+  padding: 0.28rem 0.45rem;
+  border-radius: 1.15rem;
+  border: 1px solid rgba(255, 255, 255, 0.14);
+  background: rgba(8, 10, 18, 0.82);
+  color: rgba(226, 232, 240, 0.94);
+  backdrop-filter: blur(16px) saturate(1.2);
+  pointer-events: auto;
+  visibility: visible;
+  opacity: 1;
 }
 .hive-map-2d-layers button {
   border: 1px solid rgba(120, 96, 255, 0.28);
   background: rgba(12, 14, 22, 0.72);
-  color: rgba(200, 208, 224, 0.88);
+  color: rgba(226, 232, 240, 0.94);
   border-radius: 999px;
-  padding: 0.22rem 0.58rem;
+  padding: 0.28rem 0.62rem;
+  min-height: 1.45rem;
   font-size: 0.68rem;
   font-weight: 650;
   letter-spacing: 0.01em;
@@ -3260,7 +3277,7 @@ button.iso-chip { cursor: pointer; }
   color: #f8fafc;
 }
 .hive-map-2d.has-layers {
-  padding-top: 6.1rem;
+  padding-bottom: 8.2rem;
 }
 .hive-map-2d-bloom {
   position: absolute;
@@ -3454,10 +3471,15 @@ button.iso-chip { cursor: pointer; }
   padding: 4.1rem 0.2rem calc(5.5rem + env(safe-area-inset-bottom, 0px));
 }
 .hive-map-2d.has-layers.is-wide {
-  padding-top: 5.6rem;
+  padding-bottom: 7.6rem;
 }
 .hive-map-2d.has-layers.is-phone {
-  padding-top: 6.4rem;
+  padding-bottom: calc(8.8rem + env(safe-area-inset-bottom, 0px));
+}
+.hive-map-2d.is-phone .hive-map-2d-layers {
+  top: auto;
+  bottom: calc(4.6rem + env(safe-area-inset-bottom, 0px));
+  max-width: calc(100vw - 0.85rem);
 }
 .tutor-view-toggle {
   display: inline-flex;
@@ -3962,6 +3984,14 @@ button.iso-chip { cursor: pointer; }
     /* 44px-class touch targets */
     min-height: 2.75rem;
     padding: 0.55rem 0.55rem;
+  }
+  .hive-map-2d-layers {
+    top: auto;
+    bottom: calc(4.6rem + env(safe-area-inset-bottom, 0px));
+    max-width: calc(100vw - 0.85rem);
+  }
+  .hive-map-2d.has-layers {
+    padding-bottom: calc(8.8rem + env(safe-area-inset-bottom, 0px));
   }
   .tutor-topbar-brand span span:last-child {
     display: none; /* hide tagline on narrow */
