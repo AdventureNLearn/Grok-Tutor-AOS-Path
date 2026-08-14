@@ -3228,6 +3228,40 @@ button.iso-chip { cursor: pointer; }
   background-size: 28px 24px;
   mask-image: radial-gradient(ellipse 75% 60% at 50% 45%, #000 20%, transparent 75%);
 }
+.hive-map-2d-layers {
+  position: absolute;
+  top: 0.3rem;
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 6;
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 0.28rem;
+  max-width: min(52rem, 96vw);
+  padding: 0 0.35rem;
+}
+.hive-map-2d-layers button {
+  border: 1px solid rgba(120, 96, 255, 0.28);
+  background: rgba(12, 14, 22, 0.72);
+  color: rgba(200, 208, 224, 0.88);
+  border-radius: 999px;
+  padding: 0.22rem 0.58rem;
+  font-size: 0.68rem;
+  font-weight: 650;
+  letter-spacing: 0.01em;
+  line-height: 1.2;
+  cursor: pointer;
+  touch-action: manipulation;
+}
+.hive-map-2d-layers button.is-on {
+  border-color: color-mix(in srgb, var(--layer-c, #5eead4) 70%, white);
+  background: color-mix(in srgb, var(--layer-c, #5eead4) 18%, rgba(12, 14, 22, 0.8));
+  color: #f8fafc;
+}
+.hive-map-2d.has-layers {
+  padding-top: 6.1rem;
+}
 .hive-map-2d-bloom {
   position: absolute;
   left: 50%;
@@ -3419,6 +3453,12 @@ button.iso-chip { cursor: pointer; }
 .hive-map-2d.is-phone {
   padding: 4.1rem 0.2rem calc(5.5rem + env(safe-area-inset-bottom, 0px));
 }
+.hive-map-2d.has-layers.is-wide {
+  padding-top: 5.6rem;
+}
+.hive-map-2d.has-layers.is-phone {
+  padding-top: 6.4rem;
+}
 .tutor-view-toggle {
   display: inline-flex;
   gap: 0.2rem;
@@ -3480,6 +3520,13 @@ button.iso-chip { cursor: pointer; }
   box-shadow:
     0 0 22px color-mix(in srgb, var(--c, #a78bfa) 28%, transparent),
     inset 0 0 0 1px color-mix(in srgb, var(--c, #a78bfa) 36%, transparent);
+}
+.hive-map-2d-comb.map-card .acr {
+  letter-spacing: 0.02em;
+  text-transform: none;
+}
+.hive-map-2d-comb.map-card .ttl:empty {
+  display: none;
 }
 .hive-map-2d-comb.lesson .acr {
   letter-spacing: 0.02em;

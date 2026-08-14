@@ -22,6 +22,7 @@ export function assembleHiveField(opts: {
   const sitting = firstSliceTrackById(opts.sittingLessonId);
 
   // Learner idle: three first-slice combs only. No rooms, no skill carpet.
+  // Sector-layer cards paint on the 2D map — they are not a fourth idle comb.
   if (!opts.editMode && !opts.examplesOn) {
     return { workspaces: firstSlice, skills: [], industries: [] };
   }

@@ -31,6 +31,7 @@ import {
 } from "./hive-orchestration-sim";
 import type { HiveNodeStyle } from "./hive-node-style";
 import type { HiveNode } from "./tutor-hive-map";
+import { sitFromMapCard as interpretMapCard } from "./map-2d-layers";
 import {
   resolveSitting,
   sitFromNamedPack as interpretNamedPack,
@@ -88,6 +89,8 @@ type HiveEditState = {
   setActiveLessonId: (id: string | null) => void;
   /** Ask / named pack — sits a covered industry. Fail-closed fields do not sit. */
   sitFromNamedPack: (query: string) => SitFromNamedPackResult;
+  /** Sector-layer card — same sit path as ask / named-pack. */
+  sitFromMapCard: (industryId: string) => SitFromNamedPackResult;
   setShape: (id: HiveShapeId) => void;
   setNodeStyle: (style: HiveNodeStyle) => void;
   setReasoningDepth: (depth: ReasoningDepth) => void;
@@ -191,6 +194,11 @@ export const useHiveEditStore = create<HiveEditState>()(
       },
       sitFromNamedPack(query) {
         const result = interpretNamedPack(query);
+        if (result.ok) set({ activeLessonId: result.sitId });
+        return result;
+      },
+      sitFromMapCard(industryId) {
+        const result = interpretMapCard(industryId);
         if (result.ok) set({ activeLessonId: result.sitId });
         return result;
       },

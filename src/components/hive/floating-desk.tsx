@@ -277,7 +277,7 @@ export function FloatingDeskWindow({ desk, focused }: Props) {
         onPointerCancel={onDragEnd}
       >
         <GripHorizontal className="tutor-desk-grip" aria-hidden />
-        {showLearnerDeskAcr(desk.title) ? (
+        {showLearnerDeskAcr(desk.title) && desk.acr ? (
           <span className="tutor-desk-acr" style={{ color: desk.color }}>
             {desk.acr}
           </span>
