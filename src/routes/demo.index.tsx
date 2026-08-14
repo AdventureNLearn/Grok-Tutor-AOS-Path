@@ -5,6 +5,7 @@ import { Button } from "@/components/ui/button";
 import { Card, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { demoStats, industryDemoIndex, MODE_META } from "@/lib/demo-lessons";
 import { SECTORS } from "@/lib/industries";
+import { filterStayOffFromCatalog } from "@/lib/no-demo-catalog-from-hive";
 
 export const Route = createFileRoute("/demo/")({
   component: DemoIndexPage,
@@ -12,7 +13,7 @@ export const Route = createFileRoute("/demo/")({
 
 function DemoIndexPage() {
   const stats = demoStats();
-  const groups = industryDemoIndex();
+  const groups = filterStayOffFromCatalog(industryDemoIndex());
 
   return (
     <div className="mx-auto max-w-6xl px-4 py-10">

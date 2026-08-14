@@ -10,13 +10,16 @@ import {
   type DemoLesson,
 } from "@/lib/demo-lessons";
 import { getIndustry } from "@/lib/industries";
+import { catalogMayListIndustry } from "@/lib/no-demo-catalog-from-hive";
 import { cn } from "@/lib/utils";
 
 export const Route = createFileRoute("/demo/$industryId")({
   loader: ({ params }) => {
     const industry = getIndustry(params.industryId);
     const lessons = lessonsForIndustry(params.industryId);
-    if (!industry || !lessons.length) throw notFound();
+    if (!industry || !lessons.length || !catalogMayListIndustry(params.industryId)) {
+      throw notFound();
+    }
     return { industry, lessons };
   },
   component: DemoIndustryPage,

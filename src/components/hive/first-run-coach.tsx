@@ -4,7 +4,6 @@
  */
 import { useEffect, useState } from "react";
 import { BookOpen, Hexagon, Sparkles, X } from "lucide-react";
-import { useHiveDeskStore } from "@/lib/hive-desk-store";
 
 const KEY = "grok-tutor-first-run-coach-v1";
 
@@ -34,7 +33,6 @@ const STEPS = [
 export function FirstRunCoach() {
   const [open, setOpen] = useState(false);
   const [step, setStep] = useState(0);
-  const openRoute = useHiveDeskStore((s) => s.openRoute);
 
   useEffect(() => {
     try {
@@ -81,15 +79,8 @@ export function FirstRunCoach() {
             </button>
           ) : (
             <>
-              <button
-                type="button"
-                className="tutor-coach-primary"
-                onClick={() => {
-                  openRoute("/demo", "Sample lessons", "#a78bfa", "SMP");
-                  dismiss();
-                }}
-              >
-                Open Samples
+              <button type="button" className="tutor-coach-primary" onClick={dismiss}>
+                Start on the hive
               </button>
               <button type="button" className="tutor-coach-ghost" onClick={dismiss}>
                 Start exploring
