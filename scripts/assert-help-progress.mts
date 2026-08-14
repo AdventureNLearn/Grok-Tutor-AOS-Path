@@ -8,6 +8,7 @@ import { readFileSync } from "node:fs";
 import { dirname, join } from "node:path";
 import { fileURLToPath } from "node:url";
 import {
+  HELP_ASK_LINE,
   HELP_HIVE_LINE,
   HELP_IDLE_MATCH,
   HELP_PROGRESS_LINE,
@@ -56,6 +57,12 @@ if (!helpSrc.includes(HELP_HIVE_LINE) && !helpSrc.includes("HELP_HIVE_LINE") && 
 }
 if (!helpSrc.includes("HELP_WORK_LINE") || !helpSrc.includes("HELP_IDLE_MATCH")) {
   throw new Error("Help page must use sitting-field + idle-match copy");
+}
+if (!helpSrc.includes("HELP_ASK_LINE")) {
+  throw new Error("Help must mention ask / named pack without adding an idle comb");
+}
+if (helpCopyLeaksOffSliceFields(HELP_ASK_LINE)) {
+  throw new Error("Ask copy must not list nursing / software / construction as this sitting");
 }
 if (!helpSrc.includes("HELP_PROGRESS_LINE")) {
   throw new Error("Help Progress step must use honest sitting-light copy");

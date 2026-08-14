@@ -176,7 +176,7 @@ function ProgressPage() {
         </div>
         {lessonRows.length === 0 ? (
           <p className="text-sm text-muted border border-dashed border-border rounded-[var(--radius-lg)] p-6">
-            No lessons yet. Sit Electrical, Plumbing, or HVAC when you are ready.
+            No lessons yet. Sit Electrical, Plumbing, or HVAC, or ask for a covered pack.
           </p>
         ) : (
           <ul className="space-y-2">

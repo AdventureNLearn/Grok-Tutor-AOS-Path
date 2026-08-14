@@ -39,6 +39,7 @@ import { cn } from "@/lib/utils";
 import type { TutorHive3D } from "./tutor-hive3d";
 import { HiveEditPanel } from "./hive-edit-panel";
 import { FirstRunCoach } from "./first-run-coach";
+import { HiveAsk } from "./hive-ask";
 import { HiveMap2D } from "./hive-map-2d";
 import { OrchestrationSimPanel } from "./orchestration-sim-panel";
 
@@ -858,6 +859,7 @@ export function HiveWorkspace({ className }: Props) {
                 ? "Edit — operator sculpt. Learners use Tools to attach a lens and Path to play the lesson."
                 : "Three first-slice lessons. Click a comb to open a desk. Path walks this sitting's seven habits."}
             </p>
+            {editMode ? null : <HiveAsk />}
           </div>
         </div>
         <div className="tutor-hive-status" data-health={serverOk ? "ok" : "offline"}>
