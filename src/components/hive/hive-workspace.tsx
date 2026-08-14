@@ -11,6 +11,10 @@ import { Maximize2, Minus, Pencil, Plus, Sparkles } from "lucide-react";
 import { hiveHudSummary, type HiveNode } from "@/lib/tutor-hive-map";
 import { assembleHiveField } from "@/lib/hive-idle-field";
 import {
+  industryIdFromMapCard,
+  mapCardDeskHref,
+} from "@/lib/map-2d-layers";
+import {
   learnerIdleHeaderMeta,
   learnerStatusLastMessage,
 } from "@/lib/learner-desk-chrome";
@@ -104,6 +108,7 @@ export function HiveWorkspace({ className }: Props) {
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const apiRef = useRef<TutorHive3D | null>(null);
   const openFromNode = useHiveDeskStore((s) => s.openFromNode);
+  const openRoute = useHiveDeskStore((s) => s.openRoute);
   const desks = useHiveDeskStore((s) => s.desks);
   const lastMessage = useHiveDeskStore((s) => s.lastMessage);
 
@@ -122,6 +127,7 @@ export function HiveWorkspace({ className }: Props) {
   const setEditMode = useHiveEditStore((s) => s.setEditMode);
   const setFieldMode = useHiveEditStore((s) => s.setFieldMode);
   const setActiveLessonId = useHiveEditStore((s) => s.setActiveLessonId);
+  const sitFromMapCard = useHiveEditStore((s) => s.sitFromMapCard);
   const activeLessonId = useHiveEditStore((s) => s.activeLessonId);
   const attachedLensId = useHiveEditStore((s) => s.attachedLensId);
   const setShape = useHiveEditStore((s) => s.setShape);
@@ -726,6 +732,19 @@ export function HiveWorkspace({ className }: Props) {
       selectNode(node.id);
       return;
     }
+    const cardIndustry = industryIdFromMapCard(node.id);
+    if (cardIndustry) {
+      // Same sit path as ask / named-pack. Not a /demo catalog.
+      const sat = sitFromMapCard(cardIndustry);
+      if (sat.ok) {
+        try {
+          openRoute(mapCardDeskHref(sat.industryId), sat.pairing, node.color, "");
+        } catch {
+          /* desk open must never crash the Hive */
+        }
+      }
+      return;
+    }
     // Desk opens only from a learner click — never on idle mount / Path Play.
     // Sit first-slice only (Electrical / Plumbing / HVAC). Civic is off this sitting.
     const sitId = sitLessonIdFromNode(node.id);
@@ -831,6 +850,7 @@ export function HiveWorkspace({ className }: Props) {
           shapeId={shapeId}
           qualityTier={quality.tier}
           note={mapNote}
+          learnerLayers={!editMode && !examplesOn}
           onSelect={handleNode}
           onHover={setHover}
         />

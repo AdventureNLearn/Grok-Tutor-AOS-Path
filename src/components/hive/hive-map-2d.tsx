@@ -2,10 +2,22 @@
  * 2D Hive map — full comb field with reasoning-shape positions.
  * This is the accessible product surface: same shapes, desks, phases, and
  * orchestration as 3D, without WebGL. Designed for basic hardware first.
+ * Learner sector layers paint short-label cards. Door stays the three
+ * first-slice combs. Layer switch does not open /demo or /explore.
  */
 import { useEffect, useMemo, useRef, useState, type CSSProperties } from "react";
 import type { HiveNode } from "@/lib/tutor-hive-map";
 import type { Vec3 } from "@/lib/hive-layout-shapes";
+import {
+  DOOR_LAYER_ID,
+  MAP_SECTOR_LAYERS,
+  cardsForLayer,
+  industryIdFromMapCard,
+  isMapLayerCardId,
+  mapCardNodesForLayer,
+  mapCardPositions,
+  type MapLayerId,
+} from "@/lib/map-2d-layers";
 import {
   layoutTier,
   mapBoardSize,
@@ -36,6 +48,8 @@ type Props = {
   shapeId?: string;
   qualityTier?: string;
   note?: string | null;
+  /** Learner may switch sector layers. Off in Edit / examples. */
+  learnerLayers?: boolean;
   onSelect: (node: HiveNode) => void;
   onHover?: (node: HiveNode | null) => void;
 };
@@ -86,12 +100,14 @@ export function HiveMap2D({
   shapeId,
   qualityTier,
   note,
+  learnerLayers = false,
   onSelect,
   onHover,
 }: Props) {
   const shellRef = useRef<HTMLDivElement>(null);
   const [tier, setTier] = useState<HiveLayoutTier>("desktop");
   const [board, setBoard] = useState({ width: 800, height: 480, combScale: 1 });
+  const [layerId, setLayerId] = useState<MapLayerId>(DOOR_LAYER_ID);
 
   useEffect(() => {
     const el = shellRef.current;
@@ -108,9 +124,22 @@ export function HiveMap2D({
     return () => ro.disconnect();
   }, []);
 
+  const sectorCards = useMemo(
+    () => (learnerLayers ? mapCardNodesForLayer(layerId) : []),
+    [learnerLayers, layerId],
+  );
+  const sectorPositions = useMemo(
+    () => (learnerLayers ? mapCardPositions(cardsForLayer(layerId)) : {}),
+    [learnerLayers, layerId],
+  );
+  const paintDoor = !learnerLayers || layerId === DOOR_LAYER_ID;
   const all = useMemo(
-    () => [...workspaces, ...industries, ...skills],
-    [workspaces, industries, skills],
+    () => (paintDoor ? [...workspaces, ...industries, ...skills] : sectorCards),
+    [paintDoor, workspaces, industries, skills, sectorCards],
+  );
+  const layoutPositions = useMemo(
+    () => (paintDoor ? positions : { ...positions, ...sectorPositions }),
+    [paintDoor, positions, sectorPositions],
   );
   const phaseSet = new Set(phaseNodeIds);
   const openSet = new Set(openIds);
@@ -127,12 +156,12 @@ export function HiveMap2D({
     >();
     all.forEach((n, i) => {
       map.set(n.id, {
-        ...project(positions[n.id], i, all.length, fieldSpan),
+        ...project(layoutPositions[n.id], i, all.length, fieldSpan),
         node: n,
       });
     });
     return map;
-  }, [all, positions, fieldSpan]);
+  }, [all, layoutPositions, fieldSpan]);
 
   const edgePaths = useMemo(() => {
     if (!flowEdges.length) return [] as { key: string; d: string; kind: string }[];
@@ -156,11 +185,13 @@ export function HiveMap2D({
   return (
     <div
       ref={shellRef}
-      className={cn("hive-map-2d", `is-${tier}`)}
+      className={cn("hive-map-2d", `is-${tier}`, learnerLayers && "has-layers")}
       data-testid="hive-map-2d"
       data-tier={tier}
       data-quality={qualityTier || "balanced"}
       data-shape={shapeId || "honeycomb"}
+      data-map-layer={learnerLayers ? layerId : undefined}
+      data-map-cards={String(all.length)}
       style={
         {
           ["--map-comb-scale" as string]: String(combPx),
@@ -170,6 +201,40 @@ export function HiveMap2D({
     >
       <div className="hive-map-2d-lattice" aria-hidden />
       <div className="hive-map-2d-bloom" aria-hidden />
+
+      {learnerLayers ? (
+        <div
+          className="hive-map-2d-layers"
+          data-testid="hive-map-layers"
+          role="radiogroup"
+          aria-label="Sector layers"
+        >
+          <button
+            type="button"
+            role="radio"
+            aria-checked={layerId === DOOR_LAYER_ID}
+            className={cn(layerId === DOOR_LAYER_ID && "is-on")}
+            data-map-layer-id={DOOR_LAYER_ID}
+            onClick={() => setLayerId(DOOR_LAYER_ID)}
+          >
+            Door
+          </button>
+          {MAP_SECTOR_LAYERS.map((layer) => (
+            <button
+              key={layer.id}
+              type="button"
+              role="radio"
+              aria-checked={layerId === layer.id}
+              className={cn(layerId === layer.id && "is-on")}
+              data-map-layer-id={layer.id}
+              style={{ ["--layer-c" as string]: layer.color }}
+              onClick={() => setLayerId(layer.id)}
+            >
+              {layer.label}
+            </button>
+          ))}
+        </div>
+      ) : null}
 
       <div
         className="hive-map-2d-board"
@@ -213,6 +278,7 @@ export function HiveMap2D({
                 "hive-map-2d-comb",
                 n.kind,
                 n.id.startsWith("lesson:") && "lesson",
+                isMapLayerCardId(n.id) && "map-card",
                 inPhase && "is-phase",
                 isOpen && "is-open",
                 isSel && "is-selected",
@@ -229,7 +295,15 @@ export function HiveMap2D({
                 } as CSSProperties
               }
               title={n.description}
-              aria-label={n.meta ? n.meta : `${n.acr} ${n.title}`}
+              aria-label={
+                isMapLayerCardId(n.id)
+                  ? n.acr
+                  : n.meta
+                    ? n.meta
+                    : `${n.acr} ${n.title}`
+              }
+              data-map-card={isMapLayerCardId(n.id) ? industryIdFromMapCard(n.id) : undefined}
+              data-card-label={isMapLayerCardId(n.id) ? n.acr : undefined}
               onClick={() => onSelect(n)}
               onMouseEnter={() => onHover?.(n)}
               onMouseLeave={() => onHover?.(null)}

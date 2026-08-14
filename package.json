@@ -38,6 +38,7 @@
     "test:help-progress": "tsx scripts/assert-help-progress.mts",
     "test:reach-industry": "tsx scripts/assert-reach-covered-industry.mts",
     "test:no-demo-catalog": "tsx scripts/assert-no-demo-catalog-from-hive.mts",
+    "test:map-2d-layers": "tsx scripts/assert-map-2d-layers.mts",
     "test:reasoning": "npm.cmd exec -- tsx scripts/reasoning-track-corpus.mts",
     "test:spectrum": "npm.cmd exec -- tsx scripts/full-spectrum-reasoning-pipeline.mts",
     "test:morning": "node scripts/e2e-morning-suite.mjs",
