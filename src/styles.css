@@ -3437,9 +3437,14 @@ button.iso-chip { cursor: pointer; }
 }
 .hive-map-2d-comb.lesson {
   min-width: calc(5.6rem * var(--map-comb-scale, 1));
+  max-width: calc(8.4rem * var(--map-comb-scale, 1));
   box-shadow:
     0 0 22px color-mix(in srgb, var(--c, #a78bfa) 28%, transparent),
     inset 0 0 0 1px color-mix(in srgb, var(--c, #a78bfa) 36%, transparent);
+}
+.hive-map-2d-comb.lesson .acr {
+  letter-spacing: 0.02em;
+  font-size: calc(0.58rem * min(1.15, var(--map-comb-scale, 1)));
 }
 
 .tutor-hive-root.is-phone .tutor-hive-lenses {

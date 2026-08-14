@@ -164,6 +164,22 @@ function industryFieldPosition(
   );
 }
 
+/** Fit a learner word (Electrical, Plumbing, HVAC) — do not clip to 3-letter codes. */
+function fitSpriteText(
+  ctx: CanvasRenderingContext2D,
+  text: string,
+  startPx: number,
+  maxWidth: number,
+  weight: number | string = "bold",
+) {
+  let size = startPx;
+  ctx.font = `${weight} ${size}px Segoe UI, system-ui, sans-serif`;
+  while (size > 14 && ctx.measureText(text).width > maxWidth) {
+    size -= 2;
+    ctx.font = `${weight} ${size}px Segoe UI, system-ui, sans-serif`;
+  }
+}
+
 function makeAcrSprite(
   acr: string,
   color: THREE.Color,
@@ -183,15 +199,18 @@ function makeAcrSprite(
   ctx.clearRect(0, 0, canvas.width, canvas.height);
   const col = `#${color.getHexString()}`;
 
+  const label = String(acr || "");
+  const sub = opts.sub ? String(opts.sub) : "";
+
   if (galactic) {
-    // No card chrome — soft ACR only (titles live in the HUD hover panel)
+    // Soft industry word under the body — full titles live in the hover HUD
     ctx.textAlign = "center";
     ctx.textBaseline = "middle";
     ctx.shadowColor = col;
     ctx.shadowBlur = 14;
     ctx.fillStyle = col;
-    ctx.font = "bold 42px Segoe UI, system-ui, sans-serif";
-    ctx.fillText(String(acr || "").slice(0, 4), 128, 64);
+    fitSpriteText(ctx, label, 42, 220);
+    ctx.fillText(label, 128, 64);
     ctx.shadowBlur = 0;
   } else if (big) {
     ctx.fillStyle = "rgba(6,8,14,0.68)";
@@ -206,12 +225,12 @@ function makeAcrSprite(
     ctx.textAlign = "center";
     ctx.textBaseline = "middle";
     ctx.fillStyle = col;
-    ctx.font = "bold 44px Segoe UI, system-ui, sans-serif";
-    ctx.fillText(String(acr || "").slice(0, 10), 256, 100);
-    if (opts.sub) {
+    fitSpriteText(ctx, label, 44, 400);
+    ctx.fillText(label, 256, 100);
+    if (sub) {
       ctx.fillStyle = "#f2f4f8";
-      ctx.font = "600 26px Segoe UI, system-ui, sans-serif";
-      ctx.fillText(String(opts.sub).slice(0, 18), 256, 160);
+      fitSpriteText(ctx, sub, 26, 400, 600);
+      ctx.fillText(sub, 256, 160);
     }
   } else {
     ctx.fillStyle = "rgba(6,8,14,0.6)";
@@ -223,8 +242,8 @@ function makeAcrSprite(
     ctx.textAlign = "center";
     ctx.textBaseline = "middle";
     ctx.fillStyle = col;
-    ctx.font = "bold 34px Segoe UI, system-ui, sans-serif";
-    ctx.fillText(String(acr || "").slice(0, 4), 128, 80);
+    fitSpriteText(ctx, label, 34, 190);
+    ctx.fillText(label, 128, 80);
   }
   const tex = new THREE.CanvasTexture(canvas);
   tex.colorSpace = THREE.SRGBColorSpace;
