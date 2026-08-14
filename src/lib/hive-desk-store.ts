@@ -1,6 +1,7 @@
 import { create } from "zustand";
 import { persist } from "zustand/middleware";
 import { toast } from "sonner";
+import { learnerDeskAcr, learnerDeskTitle } from "./learner-desk-chrome";
 import type { HiveNode } from "./tutor-hive-map";
 
 /** Hard cap — each selection opens its own window; never swaps content. */
@@ -415,9 +416,9 @@ export const useHiveDeskStore = create<HiveDeskState>()(
         }
         return get().openRoute(
           node.href || "/skills",
-          node.title || "Desk",
+          learnerDeskTitle(node),
           node.color,
-          node.acr,
+          learnerDeskAcr(node),
         );
       },
 

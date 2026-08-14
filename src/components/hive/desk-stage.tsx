@@ -13,6 +13,8 @@ import {
   useHiveDeskStore,
   type DeskLayoutMode,
 } from "@/lib/hive-desk-store";
+import { useHiveEditStore } from "@/lib/hive-edit-store";
+import { showOperatorDeskDock } from "@/lib/learner-desk-chrome";
 import { FloatingDeskWindow } from "./floating-desk";
 
 const LAYOUTS: {
@@ -72,8 +74,12 @@ export function DeskStage() {
   const removeBookmark = useHiveDeskStore((s) => s.removeBookmark);
   const clearBookmarks = useHiveDeskStore((s) => s.clearBookmarks);
 
+  const editMode = useHiveEditStore((s) => s.editMode);
   const open = desks.length > 0;
-  const showDock = desks.length > 0 || bookmarks.length > 0;
+  // Learner desk is a lesson. Tile / Split / 1/10 / Close all stay on operator edit.
+  const showDock =
+    showOperatorDeskDock(editMode) &&
+    (desks.length > 0 || bookmarks.length > 0);
 
   return (
     <>

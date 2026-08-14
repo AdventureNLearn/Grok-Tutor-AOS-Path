@@ -11,6 +11,10 @@ import { Maximize2, Minus, Pencil, Plus, Sparkles } from "lucide-react";
 import { hiveHudSummary, type HiveNode } from "@/lib/tutor-hive-map";
 import { assembleHiveField } from "@/lib/hive-idle-field";
 import {
+  learnerIdleHeaderMeta,
+  learnerStatusLastMessage,
+} from "@/lib/learner-desk-chrome";
+import {
   buildReasoningLessonCombs,
   firstSliceTrackById,
   lessonNodeId,
@@ -177,6 +181,8 @@ export function HiveWorkspace({ className }: Props) {
   const skills = fieldSkills;
   const industries = fieldIndustries;
   const summary = useMemo(() => hiveHudSummary(), []);
+  const idleHeaderMeta = editMode ? null : learnerIdleHeaderMeta();
+  const operatorStatus = learnerStatusLastMessage(editMode, lastMessage);
 
   const phases = useMemo(
     () => phasesFor(fieldWorkspaces, fieldSkills, fieldIndustries),
@@ -842,7 +848,11 @@ export function HiveWorkspace({ className }: Props) {
           <span className="tutor-hive-mark" aria-hidden />
           <div>
             <h1>Grok Tutor · The Hive</h1>
-            <p className="tutor-hive-meta">{summary.label}</p>
+            {editMode ? (
+              <p className="tutor-hive-meta">{summary.sittingLabel}</p>
+            ) : idleHeaderMeta ? (
+              <p className="tutor-hive-meta">{idleHeaderMeta}</p>
+            ) : null}
             <p className="tutor-hive-sub">
               {editMode
                 ? "Edit — operator sculpt. Learners use Tools to attach a lens and Path to play the lesson."
@@ -886,7 +896,7 @@ export function HiveWorkspace({ className }: Props) {
           {playOrchestration && activePhase
             ? ` · ${activePhase.acr} ${activePhase.label}`
             : null}
-          {lastMessage ? ` · ${lastMessage}` : null}
+          {operatorStatus ? ` · ${operatorStatus}` : null}
         </div>
       </div>
 
