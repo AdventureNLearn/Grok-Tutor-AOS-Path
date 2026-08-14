@@ -38,3 +38,31 @@ attachments/
 artifacts/
 AGENTS.md
 startup.sh
+
+# Soak live feed (operator machine only — metrics JSON)
+public/soak/LIVE.json
+
+# ── Mega corpus / pipeline artifacts (never commit) ─────────────────
+# Multi-million lesson trees, harvest exports, polish dumps
+public/corpus/
+public-dev/
+!public-dev/README.md
+!public-dev/safe.html
+public-release/
+!public-release/README.md
+
+# Local sim / audit dumps under scripts
+scripts/sim-output/
+scripts/corpus-quality-report.json
+
+# Operator Edge profiles / local launcher state
+edge-tutor-*/
+.logs/
+
+# Large machine-generated inventory dumps (optional re-export)
+docs/READY-PUBLIC-BY-INDUSTRY.json
+docs/READY-PUBLIC-CLEAN.csv
+
+# Backups from salvage
+**/*.pre-salvage.bak
+

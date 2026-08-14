@@ -1,7 +1,8 @@
 import {
   BookOpen,
+  CircleHelp,
   Compass,
-  GraduationCap,
+  Hexagon,
   Layers,
   Library,
   LineChart,
@@ -9,153 +10,311 @@ import {
   Route,
   X,
 } from "lucide-react";
-import { useState } from "react";
-import { Link, useRouterState } from "@tanstack/react-router";
+import { lazy, Suspense, useEffect, useState } from "react";
+import { Link, useNavigate, useRouterState } from "@tanstack/react-router";
 import { cn } from "@/lib/utils";
-import { AOS_SOURCE } from "@/lib/aos-skills";
 import { Button } from "./ui/button";
+import { DeskStage } from "./hive/desk-stage";
+import { useHiveDeskStore } from "@/lib/hive-desk-store";
 
-const NAV: { to: string; label: string; icon: typeof GraduationCap }[] = [
-  { to: "/", label: "Home", icon: GraduationCap },
-  { to: "/explore", label: "Industries", icon: Compass },
-  { to: "/tutor", label: "Learn", icon: BookOpen },
-  { to: "/demo", label: "Samples", icon: Library },
-  { to: "/skills", label: "Thinking tools", icon: Layers },
-  { to: "/progress", label: "Progress", icon: LineChart },
-  { to: "/path", label: "Get started", icon: Route },
+const HiveWorkspace = lazy(() =>
+  import("./hive/hive-workspace").then((m) => ({ default: m.HiveWorkspace })),
+);
+
+/** Professional product nav only. Meme surfaces: /itshabbening, /meme-village. */
+const NAV: {
+  href: string;
+  label: string;
+  icon: typeof Hexagon;
+  title: string;
+  color: string;
+  acr: string;
+}[] = [
+  { href: "/tutor", label: "Learn", icon: BookOpen, title: "Live session", color: "#2dd4bf", acr: "LRN" },
+  { href: "/demo", label: "Samples", icon: Library, title: "Sample lessons", color: "#a78bfa", acr: "SMP" },
+  { href: "/explore", label: "Industries", icon: Compass, title: "Industries", color: "#60a5fa", acr: "IND" },
+  { href: "/skills", label: "Tools", icon: Layers, title: "Thinking tools", color: "#fbbf24", acr: "THK" },
+  { href: "/progress", label: "Progress", icon: LineChart, title: "Progress", color: "#4ade80", acr: "PRG" },
+  { href: "/path", label: "Path", icon: Route, title: "Your path", color: "#f472b6", acr: "PTH" },
+  { href: "/help", label: "Help", icon: CircleHelp, title: "How to use", color: "#94a3b8", acr: "HLP" },
+  {
+    href: "/labs/cad",
+    label: "Plan Lab",
+    icon: Layers,
+    title: "Plan Lab · MAC + PartMode",
+    color: "#38bdf8",
+    acr: "CAD",
+  },
 ];
+
+/**
+ * Desk iframes load routes with ?surface=desk.
+ * Must be true on FIRST paint (SSR + client).
+ */
+function useDeskSurface(): boolean {
+  const location = useRouterState({ select: (s) => s.location });
+
+  const searchObj = location.search as Record<string, unknown> | undefined;
+  if (searchObj && typeof searchObj === "object" && searchObj.surface === "desk") {
+    return true;
+  }
+
+  const href = String((location as { href?: string }).href ?? "");
+  if (href.includes("surface=desk")) return true;
+
+  const searchStr = String((location as { searchStr?: string }).searchStr ?? "");
+  if (searchStr.includes("surface=desk")) return true;
+
+  if (typeof window !== "undefined") {
+    try {
+      if (new URLSearchParams(window.location.search).get("surface") === "desk") {
+        return true;
+      }
+    } catch {
+      /* ignore */
+    }
+  }
+
+  return false;
+}
+
+function useSafeLanding(): boolean {
+  const location = useRouterState({ select: (s) => s.location });
+  const searchObj = location.search as Record<string, unknown> | undefined;
+  if (searchObj && (searchObj.safe === "1" || searchObj.view === "safe")) return true;
+  const href = String((location as { href?: string }).href ?? "");
+  if (href.includes("safe=1") || href.includes("view=safe")) return true;
+  if (typeof window !== "undefined") {
+    try {
+      const p = new URLSearchParams(window.location.search);
+      if (p.get("safe") === "1" || p.get("view") === "safe") return true;
+    } catch {
+      /* ignore */
+    }
+  }
+  return false;
+}
 
 export function AppShell({ children }: { children: React.ReactNode }) {
   const pathname = useRouterState({ select: (s) => s.location.pathname });
+  const navigate = useNavigate();
+  const deskSurface = useDeskSurface();
+  const safeLanding = useSafeLanding();
   const [open, setOpen] = useState(false);
+  const desks = useHiveDeskStore((s) => s.desks);
 
-  return (
-    <div className="min-h-dvh flex flex-col">
-      <header className="sticky top-0 z-40 border-b border-border bg-[color-mix(in_oklab,var(--color-bg)_92%,transparent)] backdrop-blur-md">
-        <div className="mx-auto flex h-14 max-w-6xl items-center justify-between gap-3 px-4">
-          <Link to={"/" as any} className="flex items-center gap-2.5 min-w-0">
-            <span className="flex h-8 w-8 items-center justify-center rounded-[var(--radius-sm)] border border-border bg-elevated">
-              <GraduationCap className="h-4 w-4 text-teal" />
-            </span>
-            <span className="truncate">
-              <span className="block text-sm font-semibold tracking-tight">Grok Tutor</span>
-              <span className="block text-[11px] text-subtle leading-none">
-                Live prototype · craft learning
-              </span>
-            </span>
-          </Link>
+  // Drop legacy desk storage that crashed after tabs→href migration
+  useEffect(() => {
+    try {
+      localStorage.removeItem("grok-tutor-hive-desks-v1");
+    } catch {
+      /* ignore */
+    }
+  }, []);
 
-          <nav className="hidden lg:flex items-center gap-0.5">
+  // Embed mode — only the selected route content (desk iframes)
+  if (deskSurface) {
+    return (
+      <div className="tutor-desk-embed min-h-dvh bg-bg text-fg">{children}</div>
+    );
+  }
+
+  const isHiveHome = pathname === "/";
+
+  function go(href: string) {
+    setOpen(false);
+    // Prefer full navigation for Learn — SPA navigate + server-fn bugs were
+    // leaving a blank crash on /tutor. Hard navigation is reliable.
+    if (href === "/tutor" || href.startsWith("/tutor?")) {
+      window.location.assign(href);
+      return;
+    }
+    void navigate({ to: href as any });
+  }
+
+  const topbar = (
+    <header className={cn("tutor-topbar", !isHiveHome && "tutor-topbar-page")}>
+      <div className="tutor-topbar-inner">
+        <button
+          type="button"
+          className="tutor-topbar-brand text-left"
+          onClick={() => go("/")}
+          title="Grok Tutor · The Hive"
+        >
+          <span className="tutor-topbar-logo">
+            <Hexagon className="h-4 w-4 text-teal" />
+          </span>
+          <span>
+            <span className="block text-sm font-semibold tracking-tight">
+              Grok Tutor · The Hive
+            </span>
+            <span className="block text-[11px] text-subtle leading-none">
+              Craft learning · Plan Lab · library
+            </span>
+          </span>
+        </button>
+
+        <nav className="hidden lg:flex items-center gap-0.5">
+          {NAV.map((item) => {
+            const Icon = item.icon;
+            const active =
+              pathname === item.href || pathname.startsWith(item.href + "/");
+            return (
+              <button
+                key={item.href}
+                type="button"
+                className={cn(
+                  "inline-flex h-9 items-center gap-1.5 rounded-lg px-2.5 text-sm transition-colors",
+                  active
+                    ? "bg-elevated text-fg"
+                    : "text-muted hover:text-fg hover:bg-elevated/70",
+                )}
+                onClick={() => go(item.href)}
+              >
+                <Icon className="h-3.5 w-3.5" />
+                {item.label}
+              </button>
+            );
+          })}
+        </nav>
+
+        <div className="flex items-center gap-2">
+          <button
+            type="button"
+            className="hidden md:inline-flex text-[11px] text-subtle hover:text-muted px-1.5 transition-colors"
+            title="Third-party credits & lineage"
+            onClick={() => go("/credits")}
+          >
+            Credits
+          </button>
+          <Button
+            size="sm"
+            variant="teal"
+            className="hidden sm:inline-flex"
+            onClick={() => go("/tutor")}
+          >
+            Live session
+          </Button>
+          <Button
+            size="icon"
+            variant="ghost"
+            className="lg:hidden"
+            aria-label={open ? "Close menu" : "Open menu"}
+            onClick={() => setOpen((v) => !v)}
+          >
+            {open ? <X className="h-5 w-5" /> : <Menu className="h-5 w-5" />}
+          </Button>
+        </div>
+      </div>
+
+      {open ? (
+        <div className="lg:hidden border-t border-border/60 bg-surface/95 px-3 py-2 pb-[max(0.5rem,env(safe-area-inset-bottom))] backdrop-blur-md">
+          <div className="flex flex-col gap-0.5 max-h-[min(70dvh,28rem)] overflow-y-auto">
+            <button
+              type="button"
+              className="flex h-12 items-center gap-2 rounded-lg px-3 text-sm text-muted hover:bg-elevated hover:text-fg"
+              onClick={() => go("/")}
+            >
+              <Hexagon className="h-4 w-4" />
+              Hive home
+            </button>
             {NAV.map((item) => {
-              const active =
-                item.to === "/"
-                  ? pathname === "/"
-                  : pathname === item.to || pathname.startsWith(item.to + "/");
               const Icon = item.icon;
               return (
-                <Link
-                  key={item.to}
-                  to={item.to as any}
-                  className={cn(
-                    "inline-flex h-9 items-center gap-1.5 rounded-[var(--radius-sm)] px-2.5 text-sm transition-colors",
-                    active
-                      ? "bg-elevated text-fg"
-                      : "text-muted hover:text-fg hover:bg-elevated/70",
-                  )}
+                <button
+                  key={item.href}
+                  type="button"
+                  className="flex h-12 items-center gap-2 rounded-lg px-3 text-sm text-muted hover:bg-elevated hover:text-fg"
+                  onClick={() => go(item.href)}
                 >
-                  <Icon className="h-3.5 w-3.5" />
+                  <Icon className="h-4 w-4" />
                   {item.label}
-                </Link>
+                </button>
               );
             })}
-          </nav>
-
-          <div className="flex items-center gap-2">
-            <Button asChild size="sm" variant="teal" className="hidden sm:inline-flex">
-              <Link to="/tutor">Start learning</Link>
-            </Button>
-            <Button
-              size="icon"
-              variant="ghost"
-              className="lg:hidden"
-              aria-label={open ? "Close menu" : "Open menu"}
-              onClick={() => setOpen((v) => !v)}
+            <button
+              type="button"
+              className="flex h-12 items-center gap-2 rounded-lg px-3 text-sm text-muted hover:bg-elevated hover:text-fg"
+              onClick={() => go("/credits")}
             >
-              {open ? <X className="h-5 w-5" /> : <Menu className="h-5 w-5" />}
-            </Button>
+              Credits
+            </button>
+            <button
+              type="button"
+              className="flex h-12 items-center gap-2 rounded-lg px-3 text-sm font-medium text-teal hover:bg-elevated"
+              onClick={() => go("/tutor")}
+            >
+              Live session
+            </button>
           </div>
         </div>
+      ) : null}
+    </header>
+  );
 
-        {open ? (
-          <div className="lg:hidden border-t border-border bg-surface px-3 py-2">
-            <div className="flex flex-col gap-0.5">
-              {NAV.map((item) => {
-                const Icon = item.icon;
-                const active =
-                  item.to === "/"
-                    ? pathname === "/"
-                    : pathname === item.to || pathname.startsWith(item.to + "/");
-                return (
-                  <Link
-                    key={item.to}
-                    to={item.to as any}
-                    onClick={() => setOpen(false)}
-                    className={cn(
-                      "flex h-11 items-center gap-2 rounded-[var(--radius-sm)] px-3 text-sm",
-                      active ? "bg-elevated text-fg" : "text-muted",
-                    )}
-                  >
-                    <Icon className="h-4 w-4" />
-                    {item.label}
-                  </Link>
-                );
-              })}
-              <Link
-                to="/tutor"
-                onClick={() => setOpen(false)}
-                className="mt-1 flex h-11 items-center justify-center rounded-[var(--radius-md)] bg-teal text-accent-fg text-sm font-semibold"
-              >
-                Start learning
-              </Link>
-            </div>
-          </div>
-        ) : null}
-      </header>
+  // Hard safe landing — no canvas, no galaxy, no Hive workspace chunk
+  if (isHiveHome && safeLanding) {
+    return (
+      <div className="min-h-dvh bg-bg text-fg flex flex-col" data-safe="1">
+        {topbar}
+        <main className="mx-auto max-w-xl px-4 py-10">
+          <h1 className="text-2xl font-semibold tracking-tight">Grok Tutor · safe landing</h1>
+          <p className="mt-2 text-sm text-muted leading-relaxed">
+            The Hive canvas is off. This machine GPU-crashed Edge and Chrome on the map and 3D
+            views. Use the pages below.
+          </p>
+          <ul className="mt-6 space-y-2 text-sm">
+            {NAV.map((n) => (
+              <li key={n.href}>
+                <Link className="text-teal underline-offset-2 hover:underline" to={n.href as never}>
+                  {n.label} — {n.title}
+                </Link>
+              </li>
+            ))}
+          </ul>
+        </main>
+      </div>
+    );
+  }
 
-      <main className="flex-1">{children}</main>
-
-      <footer className="border-t border-border py-8">
-        <div className="mx-auto max-w-6xl px-4 flex flex-col sm:flex-row gap-4 sm:items-center sm:justify-between text-sm text-subtle">
-          <p>Grok Tutor live prototype — craft learning with thinking tools.</p>
-          <div className="flex flex-wrap gap-x-4 gap-y-1">
-            <Link to="/demo" className="hover:text-fg transition-colors">
-              Sample lessons
-            </Link>
-            <Link to="/path" className="hover:text-fg transition-colors">
-              Get started
-            </Link>
-            <Link to="/get-yours" className="hover:text-fg transition-colors">
-              Get your own
-            </Link>
-            <a
-              className="hover:text-fg transition-colors"
-              href={AOS_SOURCE.url}
-              target="_blank"
-              rel="noreferrer"
-            >
-              Adventure OS library
-            </a>
-            <a
-              className="hover:text-fg transition-colors"
-              href={AOS_SOURCE.originalTutorRef}
-              target="_blank"
-              rel="noreferrer"
-            >
-              Earlier build (reference)
-            </a>
-          </div>
+  // ── Hive home: 3D workspace + optional floating desks from comb clicks ──
+  if (isHiveHome) {
+    return (
+      <div
+        className={cn(
+          "tutor-immersive tutor-galaxy-skin tutor-gpu-safe",
+          desks.length > 0 && "has-desks",
+        )}
+      >
+        <div className="tutor-galaxy-layer is-global" aria-hidden />
+        <div className="tutor-hive-layer is-hero">
+          <Suspense fallback={<p className="p-6 text-sm text-subtle">Opening the hive…</p>}>
+            <HiveWorkspace />
+          </Suspense>
         </div>
-      </footer>
+        <DeskStage />
+        {topbar}
+        <main className="sr-only">
+          <h1>Grok Tutor · The Hive</h1>
+          <p>Craft learning workspace. Use the top navigation for full pages.</p>
+          <ul>
+            {NAV.map((n) => (
+              <li key={n.href}>
+                <Link to={n.href as any}>{n.title}</Link>
+              </li>
+            ))}
+          </ul>
+        </main>
+      </div>
+    );
+  }
+
+  // ── Full pages: real scrollable content (no desk redirect, no hidden main) ──
+  return (
+    <div className="tutor-page-shell tutor-galaxy-skin tutor-gpu-safe min-h-dvh bg-bg text-fg flex flex-col">
+      <div className="tutor-galaxy-layer is-global is-page" aria-hidden />
+      {topbar}
+      <main className="tutor-page-main flex-1 w-full relative z-[1]">{children}</main>
     </div>
   );
 }

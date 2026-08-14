@@ -10,21 +10,33 @@
 
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as IndexRouteImport } from './routes/index'
+import { Route as CreditsRouteImport } from './routes/credits'
 import { Route as DemoRouteImport } from './routes/demo'
 import { Route as ExploreRouteImport } from './routes/explore'
 import { Route as GetYoursRouteImport } from './routes/get-yours'
+import { Route as HelpRouteImport } from './routes/help'
+import { Route as ItshabbeningRouteImport } from './routes/itshabbening'
+import { Route as LibraryRouteImport } from './routes/library'
+import { Route as MemeVillageRouteImport } from './routes/meme-village'
 import { Route as PathRouteImport } from './routes/path'
 import { Route as ProgressRouteImport } from './routes/progress'
 import { Route as SkillsRouteImport } from './routes/skills'
 import { Route as TutorRouteImport } from './routes/tutor'
 import { Route as DemoIndexRouteImport } from './routes/demo.index'
 import { Route as DemoIndustryIdRouteImport } from './routes/demo.$industryId'
+import { Route as LabsCadRouteImport } from './routes/labs.cad'
 import { Route as SkillsIndexRouteImport } from './routes/skills.index'
 import { Route as SkillsSkillIdRouteImport } from './routes/skills.$skillId'
+import { Route as DemoReasonTrackIdRouteImport } from './routes/demo.reason.$trackId'
 
 const IndexRoute = IndexRouteImport.update({
   id: '/',
   path: '/',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const CreditsRoute = CreditsRouteImport.update({
+  id: '/credits',
+  path: '/credits',
   getParentRoute: () => rootRouteImport,
 } as any)
 const DemoRoute = DemoRouteImport.update({
@@ -40,6 +52,26 @@ const ExploreRoute = ExploreRouteImport.update({
 const GetYoursRoute = GetYoursRouteImport.update({
   id: '/get-yours',
   path: '/get-yours',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const HelpRoute = HelpRouteImport.update({
+  id: '/help',
+  path: '/help',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ItshabbeningRoute = ItshabbeningRouteImport.update({
+  id: '/itshabbening',
+  path: '/itshabbening',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const LibraryRoute = LibraryRouteImport.update({
+  id: '/library',
+  path: '/library',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const MemeVillageRoute = MemeVillageRouteImport.update({
+  id: '/meme-village',
+  path: '/meme-village',
   getParentRoute: () => rootRouteImport,
 } as any)
 const PathRoute = PathRouteImport.update({
@@ -72,6 +104,11 @@ const DemoIndustryIdRoute = DemoIndustryIdRouteImport.update({
   path: '/$industryId',
   getParentRoute: () => DemoRoute,
 } as any)
+const LabsCadRoute = LabsCadRouteImport.update({
+  id: '/labs/cad',
+  path: '/labs/cad',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const SkillsIndexRoute = SkillsIndexRouteImport.update({
   id: '/',
   path: '/',
@@ -82,100 +119,153 @@ const SkillsSkillIdRoute = SkillsSkillIdRouteImport.update({
   path: '/$skillId',
   getParentRoute: () => SkillsRoute,
 } as any)
+const DemoReasonTrackIdRoute = DemoReasonTrackIdRouteImport.update({
+  id: '/reason/$trackId',
+  path: '/reason/$trackId',
+  getParentRoute: () => DemoRoute,
+} as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
+  '/credits': typeof CreditsRoute
   '/demo': typeof DemoRouteWithChildren
   '/explore': typeof ExploreRoute
   '/get-yours': typeof GetYoursRoute
+  '/help': typeof HelpRoute
+  '/itshabbening': typeof ItshabbeningRoute
+  '/library': typeof LibraryRoute
+  '/meme-village': typeof MemeVillageRoute
   '/path': typeof PathRoute
   '/progress': typeof ProgressRoute
   '/skills': typeof SkillsRouteWithChildren
   '/tutor': typeof TutorRoute
   '/demo/$industryId': typeof DemoIndustryIdRoute
+  '/labs/cad': typeof LabsCadRoute
   '/skills/$skillId': typeof SkillsSkillIdRoute
   '/demo/': typeof DemoIndexRoute
   '/skills/': typeof SkillsIndexRoute
+  '/demo/reason/$trackId': typeof DemoReasonTrackIdRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
+  '/credits': typeof CreditsRoute
   '/explore': typeof ExploreRoute
   '/get-yours': typeof GetYoursRoute
+  '/help': typeof HelpRoute
+  '/itshabbening': typeof ItshabbeningRoute
+  '/library': typeof LibraryRoute
+  '/meme-village': typeof MemeVillageRoute
   '/path': typeof PathRoute
   '/progress': typeof ProgressRoute
   '/tutor': typeof TutorRoute
   '/demo/$industryId': typeof DemoIndustryIdRoute
+  '/labs/cad': typeof LabsCadRoute
   '/skills/$skillId': typeof SkillsSkillIdRoute
   '/demo': typeof DemoIndexRoute
   '/skills': typeof SkillsIndexRoute
+  '/demo/reason/$trackId': typeof DemoReasonTrackIdRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
+  '/credits': typeof CreditsRoute
   '/demo': typeof DemoRouteWithChildren
   '/explore': typeof ExploreRoute
   '/get-yours': typeof GetYoursRoute
+  '/help': typeof HelpRoute
+  '/itshabbening': typeof ItshabbeningRoute
+  '/library': typeof LibraryRoute
+  '/meme-village': typeof MemeVillageRoute
   '/path': typeof PathRoute
   '/progress': typeof ProgressRoute
   '/skills': typeof SkillsRouteWithChildren
   '/tutor': typeof TutorRoute
   '/demo/$industryId': typeof DemoIndustryIdRoute
+  '/labs/cad': typeof LabsCadRoute
   '/skills/$skillId': typeof SkillsSkillIdRoute
   '/demo/': typeof DemoIndexRoute
   '/skills/': typeof SkillsIndexRoute
+  '/demo/reason/$trackId': typeof DemoReasonTrackIdRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
   fullPaths:
     | '/'
+    | '/credits'
     | '/demo'
     | '/explore'
     | '/get-yours'
+    | '/help'
+    | '/itshabbening'
+    | '/library'
+    | '/meme-village'
     | '/path'
     | '/progress'
     | '/skills'
     | '/tutor'
     | '/demo/$industryId'
+    | '/labs/cad'
     | '/skills/$skillId'
     | '/demo/'
     | '/skills/'
+    | '/demo/reason/$trackId'
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
+    | '/credits'
     | '/explore'
     | '/get-yours'
+    | '/help'
+    | '/itshabbening'
+    | '/library'
+    | '/meme-village'
     | '/path'
     | '/progress'
     | '/tutor'
     | '/demo/$industryId'
+    | '/labs/cad'
     | '/skills/$skillId'
     | '/demo'
     | '/skills'
+    | '/demo/reason/$trackId'
   id:
     | '__root__'
     | '/'
+    | '/credits'
     | '/demo'
     | '/explore'
     | '/get-yours'
+    | '/help'
+    | '/itshabbening'
+    | '/library'
+    | '/meme-village'
     | '/path'
     | '/progress'
     | '/skills'
     | '/tutor'
     | '/demo/$industryId'
+    | '/labs/cad'
     | '/skills/$skillId'
     | '/demo/'
     | '/skills/'
+    | '/demo/reason/$trackId'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
+  CreditsRoute: typeof CreditsRoute
   DemoRoute: typeof DemoRouteWithChildren
   ExploreRoute: typeof ExploreRoute
   GetYoursRoute: typeof GetYoursRoute
+  HelpRoute: typeof HelpRoute
+  ItshabbeningRoute: typeof ItshabbeningRoute
+  LibraryRoute: typeof LibraryRoute
+  MemeVillageRoute: typeof MemeVillageRoute
   PathRoute: typeof PathRoute
   ProgressRoute: typeof ProgressRoute
   SkillsRoute: typeof SkillsRouteWithChildren
   TutorRoute: typeof TutorRoute
+  LabsCadRoute: typeof LabsCadRoute
 }
 
 declare module '@tanstack/react-router' {
@@ -185,6 +275,13 @@ declare module '@tanstack/react-router' {
       path: '/'
       fullPath: '/'
       preLoaderRoute: typeof IndexRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/credits': {
+      id: '/credits'
+      path: '/credits'
+      fullPath: '/credits'
+      preLoaderRoute: typeof CreditsRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/demo': {
@@ -206,6 +303,34 @@ declare module '@tanstack/react-router' {
       path: '/get-yours'
       fullPath: '/get-yours'
       preLoaderRoute: typeof GetYoursRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/help': {
+      id: '/help'
+      path: '/help'
+      fullPath: '/help'
+      preLoaderRoute: typeof HelpRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/itshabbening': {
+      id: '/itshabbening'
+      path: '/itshabbening'
+      fullPath: '/itshabbening'
+      preLoaderRoute: typeof ItshabbeningRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/library': {
+      id: '/library'
+      path: '/library'
+      fullPath: '/library'
+      preLoaderRoute: typeof LibraryRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/meme-village': {
+      id: '/meme-village'
+      path: '/meme-village'
+      fullPath: '/meme-village'
+      preLoaderRoute: typeof MemeVillageRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/path': {
@@ -250,6 +375,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof DemoIndustryIdRouteImport
       parentRoute: typeof DemoRoute
     }
+    '/labs/cad': {
+      id: '/labs/cad'
+      path: '/labs/cad'
+      fullPath: '/labs/cad'
+      preLoaderRoute: typeof LabsCadRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/skills/': {
       id: '/skills/'
       path: '/'
@@ -264,17 +396,26 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof SkillsSkillIdRouteImport
       parentRoute: typeof SkillsRoute
     }
+    '/demo/reason/$trackId': {
+      id: '/demo/reason/$trackId'
+      path: '/reason/$trackId'
+      fullPath: '/demo/reason/$trackId'
+      preLoaderRoute: typeof DemoReasonTrackIdRouteImport
+      parentRoute: typeof DemoRoute
+    }
   }
 }
 
 interface DemoRouteChildren {
   DemoIndustryIdRoute: typeof DemoIndustryIdRoute
   DemoIndexRoute: typeof DemoIndexRoute
+  DemoReasonTrackIdRoute: typeof DemoReasonTrackIdRoute
 }
 
 const DemoRouteChildren: DemoRouteChildren = {
   DemoIndustryIdRoute: DemoIndustryIdRoute,
   DemoIndexRoute: DemoIndexRoute,
+  DemoReasonTrackIdRoute: DemoReasonTrackIdRoute,
 }
 
 const DemoRouteWithChildren = DemoRoute._addFileChildren(DemoRouteChildren)
@@ -294,13 +435,19 @@ const SkillsRouteWithChildren =
 
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
+  CreditsRoute: CreditsRoute,
   DemoRoute: DemoRouteWithChildren,
   ExploreRoute: ExploreRoute,
   GetYoursRoute: GetYoursRoute,
+  HelpRoute: HelpRoute,
+  ItshabbeningRoute: ItshabbeningRoute,
+  LibraryRoute: LibraryRoute,
+  MemeVillageRoute: MemeVillageRoute,
   PathRoute: PathRoute,
   ProgressRoute: ProgressRoute,
   SkillsRoute: SkillsRouteWithChildren,
   TutorRoute: TutorRoute,
+  LabsCadRoute: LabsCadRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)

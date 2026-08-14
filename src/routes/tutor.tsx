@@ -1,6 +1,5 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { useEffect, useMemo, useRef, useState } from "react";
-import { useServerFn } from "@tanstack/react-start";
 import { BookOpen, Layers, Loader2, Send, Sparkles, Trash2 } from "lucide-react";
 import { toast } from "sonner";
 import { z } from "zod";
@@ -15,13 +14,22 @@ import {
   skillsForIndustry,
   type TutorMode,
 } from "@/lib/aos-skills";
-import { tutorChat } from "@/lib/tutor-api";
+import {
+  offlineTutorReply,
+  tutorChat,
+  type TutorChatRequest,
+} from "@/lib/tutor-api";
 import { useTutorStore, type ChatMessage } from "@/lib/store";
 import { cn } from "@/lib/utils";
+import { isMemeLane, parseTutorLane } from "@/lib/tutor-lane";
+import { getShapeDef, useHiveEditStore } from "@/lib/hive-edit-store";
 
 const searchSchema = z.object({
   industry: z.string().optional(),
   skill: z.string().optional(),
+  lane: z.string().optional(),
+  /** Floating desk iframe surface — kept so validateSearch does not strip it */
+  surface: z.string().optional(),
 });
 
 export const Route = createFileRoute("/tutor")({
@@ -42,7 +50,11 @@ const LEVELS = ["beginner", "intermediate", "advanced"] as const;
 
 function TutorPage() {
   const search = Route.useSearch();
-  const chatFn = useServerFn(tutorChat);
+  // Do NOT use useServerFn — prebundled @tanstack/react-start crashes the
+  // browser (AsyncLocalStorage is not a constructor). Call createServerFn
+  // directly (plugin transforms to fetch) with offline fallback.
+  const lane = parseTutorLane(search.lane);
+  const meme = isMemeLane(lane);
   const {
     addSession,
     appendMessage,
@@ -58,13 +70,17 @@ function TutorPage() {
   const [mode, setMode] = useState<TutorMode>("explain");
   const [topic, setTopic] = useState("");
   const [skillIds, setSkillIds] = useState<string[]>(() => {
-    const base = foundationSkills()
-      .slice(0, 2)
-      .map((s) => s.id);
-    if (search.skill && AOS_SKILLS.some((s) => s.id === search.skill)) {
-      return Array.from(new Set([...base, search.skill]));
+    try {
+      const base = foundationSkills()
+        .slice(0, 2)
+        .map((s) => s.id);
+      if (search.skill && AOS_SKILLS.some((s) => s.id === search.skill)) {
+        return Array.from(new Set([...base, search.skill]));
+      }
+      return base.length ? base : [];
+    } catch {
+      return [];
     }
-    return base;
   });
   const [sessionId, setSessionId] = useState<string | null>(null);
   const [messages, setMessages] = useState<ChatMessage[]>([]);
@@ -73,6 +89,14 @@ function TutorPage() {
   const [started, setStarted] = useState(false);
   const bottomRef = useRef<HTMLDivElement>(null);
   const startRef = useRef<number>(Date.now());
+  const onLearnEvent = useHiveEditStore((s) => s.onLearnEvent);
+  const shapeId = useHiveEditStore((s) => s.shapeId);
+  let phaseCount = 4;
+  try {
+    phaseCount = Math.max(1, getShapeDef(shapeId).phases.length || 4);
+  } catch {
+    phaseCount = 4;
+  }
 
   const industry = getIndustry(industryId);
   const recommended = useMemo(() => {
@@ -127,6 +151,7 @@ function TutorPage() {
     setMessages([]);
     setStarted(true);
     startRef.current = Date.now();
+    onLearnEvent("session_start", phaseCount);
     setInput(
       topic
         ? `I want to learn: ${topic}`
@@ -179,37 +204,77 @@ function TutorPage() {
     appendMessage(sid, userMsg);
     setInput("");
     setBusy(true);
+    try {
+      onLearnEvent("user_turn", phaseCount);
+    } catch {
+      /* hive edit store optional */
+    }
+
+    const payload: TutorChatRequest = {
+      industryId,
+      level,
+      mode,
+      skillIds,
+      topic: topic || undefined,
+      lane,
+      messages: next
+        .filter((m) => m.role === "user" || m.role === "assistant")
+        .map((m) => ({
+          role: m.role as "user" | "assistant",
+          content: m.content,
+        })),
+    };
 
     try {
-      const result = await chatFn({
-        data: {
-          industryId,
-          level,
-          mode,
-          skillIds,
-          topic: topic || undefined,
-          messages: next
-            .filter((m) => m.role === "user" || m.role === "assistant")
-            .map((m) => ({
-              role: m.role as "user" | "assistant",
-              content: m.content,
-            })),
-        },
-      });
+      let text: string | null = null;
+      let offline = false;
+      try {
+        const result = await tutorChat({ data: payload });
+        if (result && typeof result === "object" && "text" in result && result.text) {
+          text = String(result.text);
+          offline = !!(result as { offline?: boolean }).offline;
+        } else if (
+          result &&
+          typeof result === "object" &&
+          "ok" in result &&
+          (result as { ok: boolean }).ok === false
+        ) {
+          text = offlineTutorReply(payload);
+          offline = true;
+        }
+      } catch {
+        // Server fn / network failed — still teach offline
+        text = offlineTutorReply(payload);
+        offline = true;
+      }
 
-      if ("text" in result && result.text) {
-        const aMsg: ChatMessage = {
-          id: crypto.randomUUID(),
-          role: "assistant",
-          content: result.text,
-          at: Date.now(),
-        };
-        setMessages((m) => [...m, aMsg]);
-        appendMessage(sid, aMsg);
-        const mins = Math.max(1, Math.round((Date.now() - startRef.current) / 60000));
-        updateSession(sid, { minutes: mins });
-      } else {
-        toast.error("I couldn't complete that turn. Try again.");
+      if (!text) {
+        text = offlineTutorReply(payload);
+        offline = true;
+      }
+
+      const aMsg: ChatMessage = {
+        id: crypto.randomUUID(),
+        role: "assistant",
+        content: text,
+        at: Date.now(),
+      };
+      setMessages((m) => [...m, aMsg]);
+      appendMessage(sid, aMsg);
+      try {
+        onLearnEvent("assistant_turn", phaseCount);
+      } catch {
+        /* ignore */
+      }
+      const mins = Math.max(
+        1,
+        Math.round((Date.now() - startRef.current) / 60000),
+      );
+      updateSession(sid, { minutes: mins });
+      if (offline) {
+        toast.message("Offline teaching mode", {
+          description: "Using built-in craft lessons (no live model this turn).",
+        });
       }
     } catch (e) {
       toast.error(e instanceof Error ? e.message : "Request failed");
@@ -224,6 +289,7 @@ function TutorPage() {
       updateSession(sessionId, { minutes: mins });
       addMinutes(mins);
     }
+    onLearnEvent("session_end", phaseCount);
     setSessionId(null);
     setMessages([]);
     setStarted(false);
@@ -231,12 +297,31 @@ function TutorPage() {
   }
 
   return (
-    <div className="mx-auto max-w-6xl px-4 py-6 sm:py-8">
+    <div
+      className={cn(
+        "mx-auto max-w-6xl px-4 py-6 sm:py-8",
+        meme && "tutor-meme-lane",
+      )}
+    >
+      {meme ? (
+        <div className="mb-4 rounded-md border-4 border-yellow-400 bg-zinc-950 px-4 py-3 shadow-[4px_4px_0_#000]">
+          <p className="text-xs font-black uppercase tracking-widest text-yellow-400">
+            ITSHABBENING meme mode · not the professional tutor UI
+          </p>
+          <p className="mt-1 text-sm text-zinc-300">
+            Same safety facts. Different voice. If you wanted LinkedIn calm, leave this lane.
+          </p>
+        </div>
+      ) : null}
       <div className="flex flex-col sm:flex-row sm:items-end sm:justify-between gap-3 mb-6">
         <div>
-          <h1 className="text-2xl sm:text-3xl font-semibold tracking-tight">Learn</h1>
+          <h1 className="text-2xl sm:text-3xl font-semibold tracking-tight">
+            {meme ? "Learn (unhinged)" : "Learn"}
+          </h1>
           <p className="text-sm text-muted mt-1">
-            Field, level, mode, and optional thinking tools. Guest questions left today:{" "}
+            {meme
+              ? "Pick a job, pick a mode, ask like a normal person. Guest questions left today: "
+              : "Field, level, mode, and optional thinking tools. Guest questions left today: "}
             <span className="text-fg tabular-nums">{guestRemaining()}</span> / {guestLimit()}
           </p>
         </div>
@@ -306,7 +391,10 @@ function TutorPage() {
                 <button
                   key={m.id}
                   type="button"
-                  onClick={() => setMode(m.id)}
+                  onClick={() => {
+                    setMode(m.id);
+                    if (m.id !== mode) onLearnEvent("mode_change", phaseCount);
+                  }}
                   className={cn(
                     "h-9 rounded-[var(--radius-sm)] border text-xs px-2",
                     mode === m.id

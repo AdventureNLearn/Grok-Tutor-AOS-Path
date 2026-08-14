@@ -54,20 +54,20 @@ export const INDUSTRY_PACKS: Record<string, IndustryDemoPack> = {
     quiz: [
       {
         prompt: "Someone wants power restored so they can paint. You have not verified the circuit is landed correctly. First move?",
-        choices: ["Restore power to keep peace", "Keep power off until you verify wire connections and protection", "Text the group chat only", "Leave for lunch"],
-        answerIndex: 1,
+        choices: ["Keep power off until you verify wire connections and protection", "Restore power to keep peace", "Text the group chat only", "Leave for lunch"],
+        answerIndex: 0,
         why: "Unverified energizing is how people get hurt and equipment burns.",
       },
       {
         prompt: "A good field update about an electrical problem includes:",
-        choices: ["Only \u201cit is broken\u201d", "Where, what you saw, stop or go, and who must decide", "Blame with no room number", "\u201cAll good\u201d with no detail"],
+        choices: ["Only “it is broken”", "Where, what you saw, stop or go, and who must decide", "Blame with no room number", "“All good” with no detail"],
         answerIndex: 1,
         why: "Place + facts + hold/go + owner of next action.",
       },
       {
         prompt: "Who usually requests the electrical inspection when the first-stage install is ready?",
-        choices: ["Any helper on the crew", "The site boss or the person they assign, when the area is ready", "The paint crew", "Whoever has free time"],
-        answerIndex: 1,
+        choices: ["Any helper on the crew", "The paint crew", "The site boss or the person they assign, when the area is ready", "Whoever has free time"],
+        answerIndex: 2,
         why: "Inspection requests need someone accountable for readiness.",
       },
     ],
@@ -108,14 +108,14 @@ export const INDUSTRY_PACKS: Record<string, IndustryDemoPack> = {
       },
       {
         prompt: "A clear plumbing update includes:",
-        choices: ["\u201cPipe bad\u201d", "Where, what you measured or saw, hold or go, who decides", "Only photos with no words", "A long story about the general contractor"],
-        answerIndex: 1,
+        choices: ["“Pipe bad”", "Only photos with no words", "Where, what you measured or saw, hold or go, who decides", "A long story about the general contractor"],
+        answerIndex: 2,
         why: "Busy leads need place + fact + hold/go + decision owner.",
       },
       {
         prompt: "Who usually calls in the plumbing rough inspection?",
-        choices: ["The drywall crew", "Site boss or assigned lead when tests pass and area is ready", "The homeowner\u2019s cousin", "Anyone free"],
-        answerIndex: 1,
+        choices: ["The drywall crew", "The homeowner’s cousin", "Anyone free", "Site boss or assigned lead when tests pass and area is ready"],
+        answerIndex: 3,
         why: "Readiness and accountability sit with supervision.",
       },
     ],
@@ -150,20 +150,20 @@ export const INDUSTRY_PACKS: Record<string, IndustryDemoPack> = {
     quiz: [
       {
         prompt: "Warm call. First checks?",
-        choices: ["Add refrigerant immediately", "Power, thermostat, filter, and obvious airflow problems", "Replace the whole unit", "Ignore and leave"],
-        answerIndex: 1,
+        choices: ["Add refrigerant immediately", "Replace the whole unit", "Power, thermostat, filter, and obvious airflow problems", "Ignore and leave"],
+        answerIndex: 2,
         why: "Airflow and simple power issues are first.",
       },
       {
         prompt: "A good service update includes:",
-        choices: ["Jargon only", "What you found, what you did, what is still open", "Nothing written", "Customer blame only"],
-        answerIndex: 1,
+        choices: ["Jargon only", "Nothing written", "Customer blame only", "What you found, what you did, what is still open"],
+        answerIndex: 3,
         why: "The next tech and the customer both need a clear trail.",
       },
       {
         prompt: "Who handles refrigerant recovery if you are not licensed?",
-        choices: ["You anyway", "A licensed technician", "The painter", "The general contractor\u2019s kid"],
-        answerIndex: 1,
+        choices: ["A licensed technician", "You anyway", "The painter", "The general contractor’s kid"],
+        answerIndex: 0,
         why: "Refrigerant handling has legal training requirements.",
       },
     ],
@@ -198,14 +198,14 @@ export const INDUSTRY_PACKS: Record<string, IndustryDemoPack> = {
     quiz: [
       {
         prompt: "Dirty steel with paint in the joint. First move?",
-        choices: ["Weld anyway", "Clean to procedure requirements before welding", "Paint over after", "Turn heat to max"],
-        answerIndex: 1,
+        choices: ["Weld anyway", "Paint over after", "Turn heat to max", "Clean to procedure requirements before welding"],
+        answerIndex: 3,
         why: "Contamination kills weld quality.",
       },
       {
         prompt: "A good weld hold message includes:",
-        choices: ["Nothing", "Where, what is out of procedure, that you stopped, what you need", "Only emojis", "Insults"],
-        answerIndex: 1,
+        choices: ["Where, what is out of procedure, that you stopped, what you need", "Nothing", "Only emojis", "Insults"],
+        answerIndex: 0,
         why: "Supervision needs facts to fix joint fit or procedure.",
       },
       {
@@ -246,8 +246,8 @@ export const INDUSTRY_PACKS: Record<string, IndustryDemoPack> = {
     quiz: [
       {
         prompt: "Trade is on site but the prerequisite trade is unfinished. Best move?",
-        choices: ["Let them improvise", "Stop, protect the schedule with a clear hold, re-sequence", "Hide the problem", "Send them home with no explanation"],
-        answerIndex: 1,
+        choices: ["Stop, protect the schedule with a clear hold, re-sequence", "Let them improvise", "Hide the problem", "Send them home with no explanation"],
+        answerIndex: 0,
         why: "Clear re-sequence beats silent chaos.",
       },
       {
@@ -258,8 +258,8 @@ export const INDUSTRY_PACKS: Record<string, IndustryDemoPack> = {
       },
       {
         prompt: "Who can release a safety hold on the site?",
-        choices: ["Any visitor", "The person with authority (usually site boss / safety)", "The delivery driver", "Social media comments"],
-        answerIndex: 1,
+        choices: ["Any visitor", "The delivery driver", "The person with authority (usually site boss / safety)", "Social media comments"],
+        answerIndex: 2,
         why: "Holds need real authority.",
       },
     ],
@@ -300,14 +300,14 @@ export const INDUSTRY_PACKS: Record<string, IndustryDemoPack> = {
       },
       {
         prompt: "A clear carpentry hold message includes:",
-        choices: ["Nothing", "Where, measured problem, that you stopped, decision needed", "Only \u201chelp\u201d", "A joke"],
-        answerIndex: 1,
+        choices: ["Nothing", "Only “help”", "Where, measured problem, that you stopped, decision needed", "A joke"],
+        answerIndex: 2,
         why: "Leads act on measurements.",
       },
       {
         prompt: "Who decides if the plan dimension or the delivered door wins when they conflict?",
-        choices: ["The person with a loudest voice on the radio", "Supervision / project decision \u2014 not a helper alone", "The lumber yard", "Coin flip"],
-        answerIndex: 1,
+        choices: ["The person with a loudest voice on the radio", "The lumber yard", "Coin flip", "Supervision / project decision — not a helper alone"],
+        answerIndex: 3,
         why: "Scope conflicts need authority.",
       },
     ],
@@ -342,20 +342,20 @@ export const INDUSTRY_PACKS: Record<string, IndustryDemoPack> = {
     quiz: [
       {
         prompt: "First action when condition changes?",
-        choices: ["Ignore until report", "Reassess and escalate per protocol", "Only tweet about staffing", "Change the chart to look better"],
-        answerIndex: 1,
+        choices: ["Ignore until report", "Only tweet about staffing", "Reassess and escalate per protocol", "Change the chart to look better"],
+        answerIndex: 2,
         why: "Reassess + escalate is the professional default.",
       },
       {
         prompt: "A clear handoff includes:",
-        choices: ["Gossip", "Situation, background, what you think is going on, what you need", "Only room number", "Nothing if you are tired"],
-        answerIndex: 1,
+        choices: ["Gossip", "Only room number", "Nothing if you are tired", "Situation, background, what you think is going on, what you need"],
+        answerIndex: 3,
         why: "Structure prevents lost information.",
       },
       {
         prompt: "Medication you are unsure about:",
-        choices: ["Give it anyway", "Hold and verify with resources/pharmacy/provider", "Ask a visitor", "Skip documentation"],
-        answerIndex: 1,
+        choices: ["Hold and verify with resources/pharmacy/provider", "Give it anyway", "Ask a visitor", "Skip documentation"],
+        answerIndex: 0,
         why: "Verification beats guessing with drugs.",
       },
     ],
@@ -390,14 +390,14 @@ export const INDUSTRY_PACKS: Record<string, IndustryDemoPack> = {
     quiz: [
       {
         prompt: "Unsafe scene. Best move?",
-        choices: ["Enter alone", "Stage and wait for the scene to be secured as trained", "Argue with bystanders first", "Leave and go home"],
-        answerIndex: 1,
+        choices: ["Enter alone", "Argue with bystanders first", "Leave and go home", "Stage and wait for the scene to be secured as trained"],
+        answerIndex: 3,
         why: "Scene safety is non-negotiable.",
       },
       {
         prompt: "Hospital handoff should include:",
-        choices: ["Only name", "What happened, findings, treatments, response, history you have", "Jokes", "Nothing \u2014 they can read the screen"],
-        answerIndex: 1,
+        choices: ["What happened, findings, treatments, response, history you have", "Only name", "Jokes", "Nothing — they can read the screen"],
+        answerIndex: 0,
         why: "Verbal handoff catches what screens miss.",
       },
       {
@@ -438,8 +438,8 @@ export const INDUSTRY_PACKS: Record<string, IndustryDemoPack> = {
     quiz: [
       {
         prompt: "Unclear dose. First move?",
-        choices: ["Guess the usual", "Hold and clarify with prescriber/pharmacist process", "Give half", "Ask another customer"],
-        answerIndex: 1,
+        choices: ["Hold and clarify with prescriber/pharmacist process", "Guess the usual", "Give half", "Ask another customer"],
+        answerIndex: 0,
         why: "Clarify before dispense.",
       },
       {
@@ -450,8 +450,8 @@ export const INDUSTRY_PACKS: Record<string, IndustryDemoPack> = {
       },
       {
         prompt: "High-risk med double-check is:",
-        choices: ["Optional when busy", "Required every time per procedure", "Only for new staff", "Only if you feel like it"],
-        answerIndex: 1,
+        choices: ["Optional when busy", "Only for new staff", "Required every time per procedure", "Only if you feel like it"],
+        answerIndex: 2,
         why: "Process exists for the busy days.",
       },
     ],
@@ -492,14 +492,14 @@ export const INDUSTRY_PACKS: Record<string, IndustryDemoPack> = {
       },
       {
         prompt: "Code review is for:",
-        choices: ["Insults", "Catching risk and sharing knowledge", "Delay only", "Formatting arguments only"],
-        answerIndex: 1,
+        choices: ["Insults", "Delay only", "Catching risk and sharing knowledge", "Formatting arguments only"],
+        answerIndex: 2,
         why: "Quality and learning.",
       },
       {
         prompt: "Secret keys belong in:",
-        choices: ["The repo", "A secret manager / env config not committed", "Screenshots", "Chat"],
-        answerIndex: 1,
+        choices: ["The repo", "Screenshots", "Chat", "A secret manager / env config not committed"],
+        answerIndex: 3,
         why: "Never commit secrets.",
       },
     ],
@@ -534,20 +534,20 @@ export const INDUSTRY_PACKS: Record<string, IndustryDemoPack> = {
     quiz: [
       {
         prompt: "Best password practice for work?",
-        choices: ["One shared sticky note", "Unique passwords + multi-factor login (password plus a second check) when offered", "Same password everywhere", "Text passwords to friends"],
-        answerIndex: 1,
+        choices: ["One shared sticky note", "Same password everywhere", "Unique passwords + multi-factor login (password plus a second check) when offered", "Text passwords to friends"],
+        answerIndex: 2,
         why: "Unique + multi-factor login (password plus a second check).",
       },
       {
         prompt: "Fake messages that try to steal access email asking for your password:",
-        choices: ["Reply with password", "Report via your process; do not enter secrets on surprise links", "Forward to everyone", "Ignore forever with no report"],
-        answerIndex: 1,
+        choices: ["Reply with password", "Forward to everyone", "Ignore forever with no report", "Report via your process; do not enter secrets on surprise links"],
+        answerIndex: 3,
         why: "Report and do not bite.",
       },
       {
         prompt: "Access when someone leaves the company:",
-        choices: ["Keep forever", "Remove promptly", "Give to their friend", "Post online"],
-        answerIndex: 1,
+        choices: ["Remove promptly", "Keep forever", "Give to their friend", "Post online"],
+        answerIndex: 0,
         why: "Offboarding matters.",
       },
     ],
@@ -582,14 +582,14 @@ export const INDUSTRY_PACKS: Record<string, IndustryDemoPack> = {
     quiz: [
       {
         prompt: "First step on a vague ticket?",
-        choices: ["Wipe and reinstall the computer immediately", "Reproduce and narrow scope", "Ignore", "Blame the user"],
-        answerIndex: 1,
+        choices: ["Wipe and reinstall the computer immediately", "Ignore", "Blame the user", "Reproduce and narrow scope"],
+        answerIndex: 3,
         why: "Reproduce first.",
       },
       {
         prompt: "Good ticket notes are:",
-        choices: ["Empty", "Clear steps and outcome so the next tech can follow", "Insults", "Secrets in plain text unnecessarily"],
-        answerIndex: 1,
+        choices: ["Clear steps and outcome so the next tech can follow", "Empty", "Insults", "Secrets in plain text unnecessarily"],
+        answerIndex: 0,
         why: "Handoff quality.",
       },
       {
@@ -630,20 +630,20 @@ export const INDUSTRY_PACKS: Record<string, IndustryDemoPack> = {
     quiz: [
       {
         prompt: "First step in analysis?",
-        choices: ["Make a 3D pie chart", "Define the question and metric", "Delete outliers silently", "Pick the answer leadership wants"],
-        answerIndex: 1,
+        choices: ["Define the question and metric", "Make a 3D pie chart", "Delete outliers silently", "Pick the answer leadership wants"],
+        answerIndex: 0,
         why: "Question first.",
       },
       {
         prompt: "A good chart title:",
-        choices: ["\u201cChart\u201d", "States what, when, and who is included", "Clickbait", "Nothing"],
+        choices: ["“Chart”", "States what, when, and who is included", "Clickbait", "Nothing"],
         answerIndex: 1,
         why: "Titles carry definition.",
       },
       {
         prompt: "Bias check means:",
-        choices: ["Ignore fairness", "Ask who is left out or miscounted", "Only political talk", "Never question data"],
-        answerIndex: 1,
+        choices: ["Ignore fairness", "Only political talk", "Ask who is left out or miscounted", "Never question data"],
+        answerIndex: 2,
         why: "Who is missing matters.",
       },
     ],
@@ -684,14 +684,14 @@ export const INDUSTRY_PACKS: Record<string, IndustryDemoPack> = {
       },
       {
         prompt: "First finished part means:",
-        choices: ["Last part only", "First measured part that proves the setup", "Scrap bin", "Break time"],
-        answerIndex: 1,
+        choices: ["Last part only", "Scrap bin", "First measured part that proves the setup", "Break time"],
+        answerIndex: 2,
         why: "Prove before production.",
       },
       {
         prompt: "Who updates the program when the print changes?",
-        choices: ["Anyone randomly", "Controlled process / authorized person", "The forklift driver", "A sticky note only"],
-        answerIndex: 1,
+        choices: ["Anyone randomly", "The forklift driver", "A sticky note only", "Controlled process / authorized person"],
+        answerIndex: 3,
         why: "Revision control matters.",
       },
     ],
@@ -726,20 +726,20 @@ export const INDUSTRY_PACKS: Record<string, IndustryDemoPack> = {
     quiz: [
       {
         prompt: "Failed critical test:",
-        choices: ["Ship", "Quarantine and escalate", "Delete data", "Average with good parts silently"],
-        answerIndex: 1,
+        choices: ["Ship", "Delete data", "Quarantine and escalate", "Average with good parts silently"],
+        answerIndex: 2,
         why: "Stop escape.",
       },
       {
         prompt: "Root cause seeks:",
-        choices: ["Blame only", "Why it happened so it will not repeat", "Overtime", "New logo"],
-        answerIndex: 1,
+        choices: ["Blame only", "Overtime", "New logo", "Why it happened so it will not repeat"],
+        answerIndex: 3,
         why: "Prevention.",
       },
       {
         prompt: "Honest records are:",
-        choices: ["Optional", "Required for trust and learning", "Only for auditors you like", "Rewritable after the fact without trail"],
-        answerIndex: 1,
+        choices: ["Required for trust and learning", "Optional", "Only for auditors you like", "Rewritable after the fact without trail"],
+        answerIndex: 0,
         why: "Integrity.",
       },
     ],
@@ -774,14 +774,14 @@ export const INDUSTRY_PACKS: Record<string, IndustryDemoPack> = {
     quiz: [
       {
         prompt: "Unexplained difference:",
-        choices: ["Delete", "Investigate and document", "Hide in revenue", "Wait 5 years"],
-        answerIndex: 1,
+        choices: ["Delete", "Hide in revenue", "Wait 5 years", "Investigate and document"],
+        answerIndex: 3,
         why: "Investigate.",
       },
       {
         prompt: "Splitting who handles money vs who records it means:",
-        choices: ["One person does everything", "Split custody, recording, and approval when possible", "No backups", "Share passwords"],
-        answerIndex: 1,
+        choices: ["Split custody, recording, and approval when possible", "One person does everything", "No backups", "Share passwords"],
+        answerIndex: 0,
         why: "Reduce fraud risk.",
       },
       {
@@ -822,8 +822,8 @@ export const INDUSTRY_PACKS: Record<string, IndustryDemoPack> = {
     quiz: [
       {
         prompt: "Discovery is:",
-        choices: ["Monologue", "Learning their problem before proposing", "Insulting competitors", "Ignoring budget"],
-        answerIndex: 1,
+        choices: ["Learning their problem before proposing", "Monologue", "Insulting competitors", "Ignoring budget"],
+        answerIndex: 0,
         why: "Learn first.",
       },
       {
@@ -834,8 +834,8 @@ export const INDUSTRY_PACKS: Record<string, IndustryDemoPack> = {
       },
       {
         prompt: "Ethical sales means:",
-        choices: ["Any close counts", "Honest fit and clear terms", "Hidden fees always", "Pressure only"],
-        answerIndex: 1,
+        choices: ["Any close counts", "Hidden fees always", "Honest fit and clear terms", "Pressure only"],
+        answerIndex: 2,
         why: "Trust compounds.",
       },
     ],
@@ -876,14 +876,14 @@ export const INDUSTRY_PACKS: Record<string, IndustryDemoPack> = {
       },
       {
         prompt: "Status should be:",
-        choices: ["Only green always", "Honest: done, next, risks", "Hidden", "Poetry"],
-        answerIndex: 1,
+        choices: ["Only green always", "Hidden", "Honest: done, next, risks", "Poetry"],
+        answerIndex: 2,
         why: "Honesty.",
       },
       {
         prompt: "The chain of tasks that sets the finish date is:",
-        choices: ["The office hallway", "The chain of tasks that sets the finish date", "Optional work", "Lunch"],
-        answerIndex: 1,
+        choices: ["The office hallway", "Optional work", "Lunch", "The chain of tasks that sets the finish date"],
+        answerIndex: 3,
         why: "Finish date drivers.",
       },
     ],
@@ -918,20 +918,20 @@ export const INDUSTRY_PACKS: Record<string, IndustryDemoPack> = {
     quiz: [
       {
         prompt: "Danger zone is roughly:",
-        choices: ["Frozen only", "Temperatures where bacteria grow fast \u2014 keep food out of it", "Only oven temps", "Irrelevant"],
-        answerIndex: 1,
+        choices: ["Frozen only", "Only oven temps", "Temperatures where bacteria grow fast — keep food out of it", "Irrelevant"],
+        answerIndex: 2,
         why: "Time/temp control.",
       },
       {
         prompt: "Cross-contamination means:",
-        choices: ["Pretty plating", "Germs moving from raw to ready food", "Salt and pepper", "Good mise"],
-        answerIndex: 1,
+        choices: ["Pretty plating", "Salt and pepper", "Good mise", "Germs moving from raw to ready food"],
+        answerIndex: 3,
         why: "Keep paths separate.",
       },
       {
         prompt: "When food safety conflicts with speed:",
-        choices: ["Speed wins", "Safety wins", "Coin flip", "Hide it"],
-        answerIndex: 1,
+        choices: ["Safety wins", "Speed wins", "Coin flip", "Hide it"],
+        answerIndex: 0,
         why: "Safety first.",
       },
     ],
@@ -966,14 +966,14 @@ export const INDUSTRY_PACKS: Record<string, IndustryDemoPack> = {
     quiz: [
       {
         prompt: "Service recovery starts with:",
-        choices: ["Blame", "Listen and own the experience", "Ignore", "Lecture the guest"],
-        answerIndex: 1,
+        choices: ["Blame", "Ignore", "Lecture the guest", "Listen and own the experience"],
+        answerIndex: 3,
         why: "Listen first.",
       },
       {
         prompt: "Shift handoff should include:",
-        choices: ["Nothing", "Open guest issues and VIP needs", "Gossip only", "Locker codes in public"],
-        answerIndex: 1,
+        choices: ["Open guest issues and VIP needs", "Nothing", "Gossip only", "Locker codes in public"],
+        answerIndex: 0,
         why: "Open loops.",
       },
       {
@@ -1014,8 +1014,8 @@ export const INDUSTRY_PACKS: Record<string, IndustryDemoPack> = {
     quiz: [
       {
         prompt: "Facts in a report are:",
-        choices: ["Guesses", "What you personally perceived or reliably sourced", "Rumors", "Jokes"],
-        answerIndex: 1,
+        choices: ["What you personally perceived or reliably sourced", "Guesses", "Rumors", "Jokes"],
+        answerIndex: 0,
         why: "Facts vs conclusions.",
       },
       {
@@ -1026,8 +1026,8 @@ export const INDUSTRY_PACKS: Record<string, IndustryDemoPack> = {
       },
       {
         prompt: "When unsure of legal authority:",
-        choices: ["Improvise force", "Slow down; get supervision/legal guidance per policy", "Ask social media", "Always escalate force"],
-        answerIndex: 1,
+        choices: ["Improvise force", "Ask social media", "Slow down; get supervision/legal guidance per policy", "Always escalate force"],
+        answerIndex: 2,
         why: "Training and policy.",
       },
     ],
@@ -1062,20 +1062,20 @@ export const INDUSTRY_PACKS: Record<string, IndustryDemoPack> = {
     quiz: [
       {
         prompt: "Learning goal should be:",
-        choices: ["Vague vibes", "Observable \u2014 what students will do", "Teacher activity only", "Hidden"],
+        choices: ["Vague vibes", "Observable — what students will do", "Teacher activity only", "Hidden"],
         answerIndex: 1,
         why: "Observable outcomes.",
       },
       {
         prompt: "Formative assessment is:",
-        choices: ["Only final exam", "Checks during learning", "Punishment", "Optional always"],
-        answerIndex: 1,
+        choices: ["Only final exam", "Punishment", "Checks during learning", "Optional always"],
+        answerIndex: 2,
         why: "During, not only after.",
       },
       {
         prompt: "Differentiation means:",
-        choices: ["Ignore some students", "Adjust supports so more learners can reach the goal", "Only for show", "Same exact path always with no help"],
-        answerIndex: 1,
+        choices: ["Ignore some students", "Only for show", "Same exact path always with no help", "Adjust supports so more learners can reach the goal"],
+        answerIndex: 3,
         why: "Access to the goal.",
       },
     ],
@@ -1110,20 +1110,20 @@ export const INDUSTRY_PACKS: Record<string, IndustryDemoPack> = {
     quiz: [
       {
         prompt: "Before-trip inspection is:",
-        choices: ["Optional", "Required safety check before driving", "Only for new trucks", "A suggestion"],
-        answerIndex: 1,
+        choices: ["Optional", "Only for new trucks", "Required safety check before driving", "A suggestion"],
+        answerIndex: 2,
         why: "Inspect first.",
       },
       {
         prompt: "Hours rules exist to:",
-        choices: ["Annoy drivers", "Reduce fatigue risk", "Increase paperwork only", "Help shippers only"],
-        answerIndex: 1,
+        choices: ["Annoy drivers", "Increase paperwork only", "Help shippers only", "Reduce fatigue risk"],
+        answerIndex: 3,
         why: "Fatigue kills.",
       },
       {
         prompt: "Overweight demand from customer:",
-        choices: ["Comply always", "Refuse illegal overweight; call dispatch", "Hide scale tickets", "Speed to compensate"],
-        answerIndex: 1,
+        choices: ["Refuse illegal overweight; call dispatch", "Comply always", "Hide scale tickets", "Speed to compensate"],
+        answerIndex: 0,
         why: "Legal weight.",
       },
     ],
@@ -1158,14 +1158,14 @@ export const INDUSTRY_PACKS: Record<string, IndustryDemoPack> = {
     quiz: [
       {
         prompt: "Checklist use is:",
-        choices: ["For students only", "For every flight as trained", "Optional if busy", "Embarrassing"],
-        answerIndex: 1,
+        choices: ["For students only", "Optional if busy", "Embarrassing", "For every flight as trained"],
+        answerIndex: 3,
         why: "Experts use checklists.",
       },
       {
         prompt: "Go/no-go should be decided:",
-        choices: ["After you are airborne only", "On the ground with facts", "By passenger vote", "By social media"],
-        answerIndex: 1,
+        choices: ["On the ground with facts", "After you are airborne only", "By passenger vote", "By social media"],
+        answerIndex: 0,
         why: "Decide before launch.",
       },
       {
@@ -1206,20 +1206,20 @@ export const INDUSTRY_PACKS: Record<string, IndustryDemoPack> = {
     quiz: [
       {
         prompt: "Hierarchy means:",
-        choices: ["Random sizes", "Guiding the eye to what matters first", "Only color theory trivia", "More drop shadows"],
-        answerIndex: 1,
+        choices: ["Guiding the eye to what matters first", "Random sizes", "Only color theory trivia", "More drop shadows"],
+        answerIndex: 0,
         why: "Order of attention.",
       },
       {
         prompt: "Critique should be:",
-        choices: ["Personal attacks", "About the work\u2019s goals and users", "Silent", "Only praise"],
+        choices: ["Personal attacks", "About the work’s goals and users", "Silent", "Only praise"],
         answerIndex: 1,
         why: "Useful feedback.",
       },
       {
         prompt: "Design systems help:",
-        choices: ["Chaos", "Consistency across screens", "One-off every time", "Hiding problems"],
-        answerIndex: 1,
+        choices: ["Chaos", "One-off every time", "Consistency across screens", "Hiding problems"],
+        answerIndex: 2,
         why: "Consistency.",
       },
     ],
@@ -1260,14 +1260,14 @@ export const INDUSTRY_PACKS: Record<string, IndustryDemoPack> = {
       },
       {
         prompt: "Bad audio should be:",
-        choices: ["Ignored", "Caught on set with headphones", "Fixed by \u201cAI magic\u201d always", "Deleted without note"],
-        answerIndex: 1,
+        choices: ["Ignored", "Fixed by “AI magic” always", "Caught on set with headphones", "Deleted without note"],
+        answerIndex: 2,
         why: "Catch on set.",
       },
       {
         prompt: "Export settings depend on:",
-        choices: ["Mood", "Where it will play (web, social, broadcast)", "Random", "Only resolution memes"],
-        answerIndex: 1,
+        choices: ["Mood", "Random", "Only resolution memes", "Where it will play (web, social, broadcast)"],
+        answerIndex: 3,
         why: "Delivery target.",
       },
     ],
@@ -1302,20 +1302,20 @@ export const INDUSTRY_PACKS: Record<string, IndustryDemoPack> = {
     quiz: [
       {
         prompt: "LOTO means:",
-        choices: ["A lottery", "Lockout/tagout energy control", "Optional sticker", "Lunch order"],
-        answerIndex: 1,
+        choices: ["A lottery", "Optional sticker", "Lockout/tagout energy control", "Lunch order"],
+        answerIndex: 2,
         why: "Energy control.",
       },
       {
         prompt: "Try-start check (confirm it will not start):",
-        choices: ["Skip if busy", "Confirms isolation worked", "Only for new hires", "A suggestion"],
-        answerIndex: 1,
+        choices: ["Skip if busy", "Only for new hires", "A suggestion", "Confirms isolation worked"],
+        answerIndex: 3,
         why: "Verify.",
       },
       {
         prompt: "If procedure is unclear:",
-        choices: ["Improvise live", "Stop and get qualified direction", "Coin flip", "Watch a random video while exposed"],
-        answerIndex: 1,
+        choices: ["Stop and get qualified direction", "Improvise live", "Coin flip", "Watch a random video while exposed"],
+        answerIndex: 0,
         why: "Stop.",
       },
     ],
@@ -1350,14 +1350,14 @@ export const INDUSTRY_PACKS: Record<string, IndustryDemoPack> = {
     quiz: [
       {
         prompt: "Scouting is:",
-        choices: ["Optional drive-by", "Systematic field checking", "Only satellite", "Never needed"],
-        answerIndex: 1,
+        choices: ["Optional drive-by", "Only satellite", "Never needed", "Systematic field checking"],
+        answerIndex: 3,
         why: "Walk and count.",
       },
       {
         prompt: "Over-tilling can:",
-        choices: ["Always help", "Damage structure and life in soil", "Create free fertilizer forever", "Stop rain"],
-        answerIndex: 1,
+        choices: ["Damage structure and life in soil", "Always help", "Create free fertilizer forever", "Stop rain"],
+        answerIndex: 0,
         why: "Soil structure matters.",
       },
       {
@@ -1398,8 +1398,8 @@ export const INDUSTRY_PACKS: Record<string, IndustryDemoPack> = {
     quiz: [
       {
         prompt: "Guessing by replacing random parts means:",
-        choices: ["Careful testing", "Throwing parts without proof", "A tool brand", "Good practice"],
-        answerIndex: 1,
+        choices: ["Throwing parts without proof", "Careful testing", "A tool brand", "Good practice"],
+        answerIndex: 0,
         why: "Avoid guess-and-replace.",
       },
       {
@@ -1410,8 +1410,8 @@ export const INDUSTRY_PACKS: Record<string, IndustryDemoPack> = {
       },
       {
         prompt: "Safety on a lift:",
-        choices: ["Rush", "Follow lift points and stands as trained", "Jack anywhere", "Work under car on a bottle jack only"],
-        answerIndex: 1,
+        choices: ["Rush", "Jack anywhere", "Follow lift points and stands as trained", "Work under car on a bottle jack only"],
+        answerIndex: 2,
         why: "Lift safety.",
       },
     ],
@@ -1452,14 +1452,14 @@ export const INDUSTRY_PACKS: Record<string, IndustryDemoPack> = {
       },
       {
         prompt: "Inventory accuracy matters because:",
-        choices: ["It does not", "You cannot ship what the system only pretends to have", "Only for accounting trivia", "Aesthetic reasons"],
-        answerIndex: 1,
+        choices: ["It does not", "Only for accounting trivia", "You cannot ship what the system only pretends to have", "Aesthetic reasons"],
+        answerIndex: 2,
         why: "Truth in counts.",
       },
       {
         prompt: "A good route balances:",
-        choices: ["Speed only", "Time, cost, constraints, and service promise", "Driver preference only", "Random"],
-        answerIndex: 1,
+        choices: ["Speed only", "Driver preference only", "Random", "Time, cost, constraints, and service promise"],
+        answerIndex: 3,
         why: "Multi-factor.",
       },
     ],
@@ -1477,51 +1477,74 @@ export const INDUSTRY_PACKS: Record<string, IndustryDemoPack> = {
     ],
   },
   "civic-intelligence": {
-    what: "Civic intelligence is learning how public decisions work by reading records, permits, and who has authority \u2014 carefully and lawfully.",
-    coreSteps: ["Define the question", "Find primary public documents", "Note dates and authors", "Separate fact from claim", "Map who decides", "Write sources so others can re-check"],
-    explainDetail: "\u201cHow permits work\u201d is the path a project takes through applications, reviews, conditions, and inspections. Beginners argue from social posts instead of the file.",
-    mistakeTitle: "Treating a viral post as equal to the stamped public record",
-    mistakeBody: "Rumors spread faster than PDFs. You waste energy and mislead neighbors if you do not check the primary document.",
-    mistakeBetter: ["Find the application number", "Read the conditions", "Note hearing dates", "Cite the document", "Update when the file updates"],
-    exampleGood: "Summary: Conditional use permit 2024-19, condition 12 requires quarterly monitoring. Source: stamped conditions PDF on the county portal, retrieved Aug 1.",
+    what: "Public information literacy is learning to check claims about shared decisions by reading original documents carefully — and labeling what you still do not know.",
+    coreSteps: [
+      "Write the question in plain words",
+      "Find the original document or recording when you can",
+      "Note who wrote it and when",
+      "Separate what the document says from what people claim online",
+      "List who can decide next, if that is public",
+      "Write sources so someone else can re-check",
+    ],
+    explainDetail:
+      "\u201cHow approvals work\u201d in this tutor means the general idea of apply \u2192 review \u2192 conditions \u2192 check. We teach habits, not place-specific rules. Beginners argue from social posts instead of the original file.",
+    mistakeTitle: "Treating a viral post as equal to the original document",
+    mistakeBody:
+      "Rumors move faster than PDFs. You mislead yourself and others if you never open the original source.",
+    mistakeBetter: [
+      "Ask for the document name or number if one exists",
+      "Read the actual conditions or minutes",
+      "Note dates",
+      "Cite what you read",
+      "Update your notes when the file changes",
+    ],
+    exampleGood:
+      "Summary: The posted conditions PDF (retrieved today) lists quarterly monitoring in condition 12. I am not adding claims beyond that text.",
     exampleBad: "Someone online said it is illegal; must be true.",
-    socraticQ1: "Where should you verify a claim about a project \u2014 comments or the permit file?",
-    socraticPush: "The file (and official notices) first.",
-    socraticQ2: "What details make a citation useful?",
-    socraticQ3: "Why label assumptions in civic work?",
-    practiceSetup: "Neighbor claims a build has no permits. You have not checked.",
-    practiceGoodUpdate: "Search portal; note findings; if unpermitted signs appear, learn lawful reporting paths \u2014 no harassment.",
+    socraticQ1: "Where should you verify a claim about a shared project — comments, or the original file?",
+    socraticPush: "The original file (or official notice) first.",
+    socraticQ2: "What details make a citation useful to a classmate?",
+    socraticQ3: "Why label guesses when you talk about public decisions?",
+    practiceSetup: "A neighbor claims a build has no approval paperwork. You have not checked any document.",
+    practiceGoodUpdate:
+      "I will look for the original application or notice before I repeat the claim. If I cannot find a source, I will say so.",
     quiz: [
       {
-        prompt: "Original document from the authority is:",
-        choices: ["A meme", "Original document from the authority", "A reaction video only", "A rumor"],
-        answerIndex: 1,
+        prompt: "The strongest source for a public claim is usually:",
+        choices: ["A meme", "A reaction video only", "The original document or recording", "A rumor"],
+        answerIndex: 2,
         why: "Go to source.",
       },
       {
-        prompt: "Charting who can shape a decision should use:",
-        choices: ["Private stalking", "Public relationships and documented roles", "Threats", "Anonymous smears"],
-        answerIndex: 1,
+        prompt: "When you map who can shape a decision, stick to:",
+        choices: ["Private stalking", "Threats", "Anonymous smears", "Public roles and documented relationships"],
+        answerIndex: 3,
         why: "Public + ethical.",
       },
       {
         prompt: "If you are unsure:",
-        choices: ["Post certainty anyway", "Label uncertainty and keep researching", "Harass staff", "Give up forever"],
-        answerIndex: 1,
+        choices: ["Label uncertainty and keep researching", "Post certainty anyway", "Harass staff", "Give up forever"],
+        answerIndex: 0,
         why: "Label it.",
       },
     ],
-    scenarioSetup: "Group chat wants you to publish an accusation before documents are checked.",
+    scenarioSetup: "Group chat wants you to publish an accusation before any documents are checked.",
     scenarioHold: "Do not publish unverified harm. Check first.",
-    scenarioChecks: ["Get primary docs", "Write what is known/unknown", "Legal/ethical review if accusing", "Correct promptly if wrong"],
-    scenarioMessage: "I will not post that claim until we have the permit file and can cite it. I will share a sourced summary within 24 hours.",
+    scenarioChecks: [
+      "Get primary documents if available",
+      "Write what is known vs unknown",
+      "Pause before accusing people",
+      "Correct promptly if you were wrong",
+    ],
+    scenarioMessage:
+      "I will not post that claim until we have an original document we can cite. I will share a sourced summary when I have one.",
     careerWeek1: [
-      { day: "Mon", focus: "Find your local portal", output: "Notes on where agendas/permits live" },
-      { day: "Tue", focus: "Read one agenda", output: "Summarize in 10 lines with links" },
+      { day: "Mon", focus: "Find official notices", output: "Notes on where agendas and applications are posted in general" },
+      { day: "Tue", focus: "Read one agenda sample", output: "Summarize in 10 lines with links" },
       { day: "Wed", focus: "Citation practice", output: "3 proper citations" },
       { day: "Thu", focus: "Fact vs claim", output: "Label a news article" },
       { day: "Fri", focus: "Quiz", output: "5 questions" },
-      { day: "Sat", focus: "Portfolio", output: "One-page sourced brief on a public item" },
+      { day: "Sat", focus: "Portfolio", output: "One-page sourced brief on a public item (no private data)" },
     ],
   },
   "media-literacy": {
@@ -1542,14 +1565,14 @@ export const INDUSTRY_PACKS: Record<string, IndustryDemoPack> = {
     quiz: [
       {
         prompt: "Framing is:",
-        choices: ["A picture frame", "How presentation pushes interpretation", "Always neutral", "Only about fonts"],
-        answerIndex: 1,
+        choices: ["A picture frame", "Always neutral", "Only about fonts", "How presentation pushes interpretation"],
+        answerIndex: 3,
         why: "Angle matters.",
       },
       {
         prompt: "Primary evidence is:",
-        choices: ["A reaction podcast only", "Original data/document/recording", "Anonymous chat", "AI summary with no link"],
-        answerIndex: 1,
+        choices: ["Original data/document/recording", "A reaction podcast only", "Anonymous chat", "AI summary with no link"],
+        answerIndex: 0,
         why: "Primary first.",
       },
       {

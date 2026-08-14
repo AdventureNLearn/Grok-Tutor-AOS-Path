@@ -1,0 +1,88 @@
+Grok Tutor — third-party notices and lineage
+============================================
+
+This file is part of the public attribution pack. Product UI keeps learning
+surfaces clean; full narrative credit lives at /credits in the running app.
+
+----------------------------------------------------------------
+1. CAI-OS / CAIOS / Chaos AI-OS (conceptual lineage — not code merge)
+----------------------------------------------------------------
+
+Grok Tutor and the AOS/LPIN integrity framing were helped by the public work of
+CAI-OS. This application does NOT ship, embed, or redistribute CAIOS source.
+
+Exact attribution (unaltered), as requested by the creator:
+
+  Built on CAIOS v1.0 by inventor Jonathan M. Schack –
+  Patent Pending US 19/433,771 & 19/390,493 – www.cai-os.com
+
+Also (README form):
+  Built on CRB 6.7 by Jonathan Schack (ELXaber) (GPL 3.0).
+
+Text citation (CITATION.md):
+  Chaos-Persona framework by ELXaber (https://github.com/ELXaber/chaos-persona/).
+
+Site:    https://cai-os.com
+GitHub:  https://github.com/ELXaber/chaos-persona
+Contact: jon@cai-os.com · @EL_Xaber
+
+Patents pending (as stated by inventor):
+  US 19/390,493 · US 19/433,771
+
+If CAIOS software is ever integrated into a product distribution, follow the
+upstream dual license (GPL-3.0 + attribution terms, or commercial license) and
+contact the inventor. Current relationship: conceptual credit only.
+
+----------------------------------------------------------------
+2. Multi-Agent CAD (MAC) — educational Plan Lab alignment
+----------------------------------------------------------------
+
+Plan Lab curriculum is aligned with MAC (offline samples; browser does not run
+the Python CAD kernel).
+
+Citation (as requested in upstream README):
+
+  Guanxing Qu and Xueyan Zou.
+  MAC (Multi-Agent CAD): A Decoupled Multi-Agent Framework for Text-to-CAD Generation.
+  2026. https://github.com/Pan-Chera/Multi-Agent-CAD
+
+Copyright (c) 2026 Tsinghua University · IEI Lab
+License: MIT
+
+When using MAC’s quantitative baseline lineage, also cite:
+  earthtojake/text-to-cad (CAD Skills)
+  https://github.com/earthtojake/text-to-cad
+
+Upstream also acknowledges: build123d, LangGraph, Aider, Qwen (DashScope).
+
+----------------------------------------------------------------
+3. Selected open-source runtime packages
+----------------------------------------------------------------
+
+  three.js              MIT     https://github.com/mrdoob/three.js
+  React                 MIT     https://react.dev
+  TanStack Start/Router MIT     https://github.com/TanStack/router
+  Vite                  MIT     https://github.com/vitejs/vite
+  Tailwind CSS          MIT     https://github.com/tailwindlabs/tailwindcss
+  Zustand               MIT     https://github.com/pmndrs/zustand
+  Zod                   MIT     https://github.com/colinhacks/zod
+  Lucide                ISC     https://github.com/lucide-icons/lucide
+  Sonner                MIT     https://github.com/emilkowalski/sonner
+  PGLite                Apache-2.0  https://github.com/electric-sql/pglite
+  Better Auth           MIT     https://github.com/better-auth/better-auth
+
+Full dependency licenses are in node_modules/*/LICENSE (or package metadata).
+
+----------------------------------------------------------------
+4. Platform
+----------------------------------------------------------------
+
+  xAI / Grok — live tutoring when server-side API key is configured.
+  AdventureNLearn — product author; public AOS/LPIN libraries on GitHub.
+
+----------------------------------------------------------------
+5. This product
+----------------------------------------------------------------
+
+Grok Tutor — MIT License (see LICENSE).
+Educational use only. Not a substitute for licensed instruction, codes, or care.

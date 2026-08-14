@@ -3,7 +3,7 @@
  * Every answer is built from industry packs (real content), not shared copy-paste.
  */
 
-import { type TutorMode } from "./aos-skills";
+import { getSkill, type TutorMode } from "./aos-skills";
 import { getIndustryPack, type IndustryDemoPack } from "./demo/industry-packs";
 import { INDUSTRIES, type Industry } from "./industries";
 
@@ -418,7 +418,7 @@ function careerTurns(ind: Industry, topic: string, pack: IndustryDemoPack): Demo
     "",
     `**Goal:** A concrete plan you can follow without overwhelm, with early focus on *${t0}*.`,
     "",
-    `**What you are aiming at`,
+    `**What you are aiming at**`,
     pack.what,
     "",
     "**Days 1–30 — foundations**",
@@ -498,9 +498,16 @@ function buildTurns(ind: Industry, mode: TutorMode, topic: string): DemoTurn[] {
   }
 }
 
+function skillNamesFor(ind: Industry): { skillIds: string[]; skillNames: string[] } {
+  const skillIds = ind.aosAffinity.slice(0, 3);
+  const skillNames = skillIds.map((id) => getSkill(id)?.name ?? id);
+  return { skillIds, skillNames };
+}
+
 function buildLesson(ind: Industry, modeMeta: (typeof MODE_META)[number]): DemoLesson {
   const topic = topicFor(ind, modeMeta.id);
   const pack = requirePack(ind);
+  const { skillIds, skillNames } = skillNamesFor(ind);
   return {
     id: `${ind.id}--${modeMeta.id}`,
     industryId: ind.id,
@@ -509,8 +516,8 @@ function buildLesson(ind: Industry, modeMeta: (typeof MODE_META)[number]): DemoL
     modeLabel: modeMeta.label,
     level: modeMeta.level,
     topic,
-    skillIds: ind.aosAffinity.slice(0, 3),
-    skillNames: ["Look carefully", "Write it clearly", "Tell the right person"],
+    skillIds,
+    skillNames,
     title: `${ind.name} · ${modeMeta.label} · ${topic}`,
     summary: `${modeMeta.label}: real ${ind.name} content on “${topic}” — ${pack.mistakeTitle.slice(0, 80)}${pack.mistakeTitle.length > 80 ? "…" : ""}`,
     turns: buildTurns(ind, modeMeta.id, topic),
