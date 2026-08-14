@@ -4,7 +4,6 @@ import { Pause, Play, SkipForward } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { useHiveEditStore } from "@/lib/hive-edit-store";
 import { PATH_HABIT_BEAT_MS, planPathPlay } from "@/lib/path-play";
-import { firstSliceTrackById } from "@/lib/reasoning-tracks";
 import { FROZEN_HABITS, HABIT_LINES, getLearnerLens } from "@/lib/suite-rooms";
 import { cn } from "@/lib/utils";
 
@@ -21,7 +20,6 @@ function PathPage() {
   const nextPhase = useHiveEditStore((s) => s.nextPhase);
 
   const plan = planPathPlay(activeLessonId);
-  const lesson = firstSliceTrackById(plan.lessonId);
   const lens = getLearnerLens(attachedLensId);
   const habit = FROZEN_HABITS[Math.min(phaseIndex, FROZEN_HABITS.length - 1)]!;
 
@@ -64,7 +62,7 @@ function PathPage() {
           <span className="text-subtle">Lesson · </span>
           {plan.pairing
             ? plan.pairing
-            : "Pick a sample comb on the hive first. Play will not invent a different lesson."}
+            : "Pick a sample comb on the hive first, or ask for a covered pack. Play will not invent a different lesson."}
         </p>
         <p className="mt-1 text-sm">
           <span className="text-subtle">Lens · </span>
@@ -124,7 +122,7 @@ function PathPage() {
 
       <p className="mt-6 text-xs text-subtle">
         Now walking <strong>{habit}</strong>
-        {lesson ? (
+        {plan.pairing ? (
           <>
             {" "}
             on <strong>{plan.pairing}</strong>

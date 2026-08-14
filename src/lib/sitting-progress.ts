@@ -1,14 +1,11 @@
 /**
- * Progress lights from a first-slice sit.
+ * Progress lights from a sit — first-slice comb or a covered pack reached by ask.
  * Honest empty is only before a sit (and with no recorded lessons).
  * Do not invent minutes, notes, or a cloud save.
  */
 import type { SessionRecord } from "./store";
-import {
-  firstSliceTrackById,
-  learnerCombPairing,
-  learnerIndustryLabel,
-} from "./reasoning-tracks";
+import { resolveSitting } from "./sit-from-named-pack";
+import { learnerIndustryLabel } from "./reasoning-tracks";
 
 export const PROGRESS_UNLIT_COPY =
   "This browser has not lit a comb yet. Progress stays on this device. Changing browsers or clearing site data goes dark — there is no cloud save.";
@@ -46,7 +43,7 @@ export function planSittingProgress(opts: {
   sittingLessonId: string | null | undefined;
   sessionCount?: number;
 }): SittingProgress {
-  const sitting = firstSliceTrackById(opts.sittingLessonId);
+  const sitting = resolveSitting(opts.sittingLessonId);
   const sessions =
     typeof opts.sessionCount === "number" && Number.isFinite(opts.sessionCount)
       ? Math.max(0, Math.floor(opts.sessionCount))
@@ -56,8 +53,8 @@ export function planSittingProgress(opts: {
   return {
     lit,
     lessonCount,
-    sittingLessonId: sitting?.id ?? null,
-    sittingPairing: sitting ? learnerCombPairing(sitting) : null,
+    sittingLessonId: sitting?.sitId ?? null,
+    sittingPairing: sitting?.pairing ?? null,
     sittingIndustry: sitting ? learnerIndustryLabel(sitting.industryId) : null,
     showUnlitCopy: !lit,
     inventedMinutes: false,
@@ -71,7 +68,7 @@ export function sittingProgressRows(opts: {
   sessions: SessionRecord[];
 }): ProgressLessonRow[] {
   const sessions = Array.isArray(opts.sessions) ? opts.sessions : [];
-  const sitting = firstSliceTrackById(opts.sittingLessonId);
+  const sitting = resolveSitting(opts.sittingLessonId);
   const sessionRows: ProgressLessonRow[] = sessions.map((s) => ({
     id: s.id,
     industryName: s.industryName || "Lesson",
@@ -86,13 +83,14 @@ export function sittingProgressRows(opts: {
   if (!sitting) return sessionRows;
   const already = sessionRows.some(
     (row) =>
-      row.id === sitting.id ||
+      row.id === sitting.sitId ||
+      row.industryName === sitting.pairing ||
       row.industryName === learnerIndustryLabel(sitting.industryId),
   );
   if (already) return sessionRows;
   const sitRow: ProgressLessonRow = {
-    id: sitting.id,
-    industryName: learnerCombPairing(sitting),
+    id: sitting.sitId,
+    industryName: sitting.pairing,
     minutes: null,
     createdAt: null,
     messages: 0,

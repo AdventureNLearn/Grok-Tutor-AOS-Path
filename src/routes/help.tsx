@@ -2,6 +2,7 @@ import { createFileRoute, Link } from "@tanstack/react-router";
 import { BookOpen, Hexagon, ShieldCheck, Sparkles } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import {
+  HELP_ASK_LINE,
   HELP_HIVE_BLURB,
   HELP_HIVE_LINE,
   HELP_IDLE_MATCH,
@@ -141,7 +142,7 @@ function HelpPage() {
       <section className="mt-10 space-y-3">
         <h2 className="text-lg font-semibold tracking-tight">The Hive · Map-first home</h2>
         <p className="text-sm text-muted leading-relaxed">
-          {HELP_HIVE_LINE} {HELP_IDLE_MATCH}
+          {HELP_HIVE_LINE} {HELP_IDLE_MATCH} {HELP_ASK_LINE}
         </p>
         <p className="text-sm text-muted leading-relaxed">
           Integrity Triangle and Claim Diamond teach the habit of separating evidence, inference, and

@@ -18,6 +18,9 @@ export const HELP_HIVE_LINE = `The Hive is ${HELP_HIVE_BLURB}`;
 export const HELP_IDLE_MATCH =
   "Three first-slice lessons. Click a comb to open a desk. Path walks this sitting's seven habits.";
 
+export const HELP_ASK_LINE =
+  "Ask a question or name a covered pack to sit that field. Idle stays the three first-slice lessons.";
+
 export const HELP_PROGRESS_LINE =
   "Progress lights when you sit a comb. It stays on this device. There is no cloud save.";
 
