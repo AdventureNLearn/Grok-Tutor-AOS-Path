@@ -35,6 +35,7 @@
     "test:idle-labels": "tsx scripts/assert-idle-comb-labels.mts",
     "test:path-play": "tsx scripts/assert-path-play.mts",
     "test:learner-chrome": "tsx scripts/assert-learner-desk-chrome.mts",
+    "test:help-progress": "tsx scripts/assert-help-progress.mts",
     "test:reasoning": "npm.cmd exec -- tsx scripts/reasoning-track-corpus.mts",
     "test:spectrum": "npm.cmd exec -- tsx scripts/full-spectrum-reasoning-pipeline.mts",
     "test:morning": "node scripts/e2e-morning-suite.mjs",
