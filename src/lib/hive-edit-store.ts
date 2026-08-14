@@ -31,6 +31,7 @@ import {
 } from "./hive-orchestration-sim";
 import type { HiveNodeStyle } from "./hive-node-style";
 import type { HiveNode } from "./tutor-hive-map";
+import { firstSliceTrackById } from "./reasoning-tracks";
 
 export type { HiveNodeStyle } from "./hive-node-style";
 export type { ReasoningDepth } from "./hive-deep-reasoning";
@@ -174,7 +175,13 @@ export const useHiveEditStore = create<HiveEditState>()(
         set({ attachedLensId: id && id.length ? id : null });
       },
       setActiveLessonId(id) {
-        set({ activeLessonId: id && id.length ? id : null });
+        if (!id) {
+          set({ activeLessonId: null });
+          return;
+        }
+        const sit = firstSliceTrackById(id);
+        // Civic / nursing / CM are off this sitting — do not replace a trade sit.
+        if (sit) set({ activeLessonId: sit.id });
       },
       setShape(id) {
         set({ shapeId: id, phaseIndex: 0 });
@@ -391,10 +398,30 @@ export const useHiveEditStore = create<HiveEditState>()(
     }),
     {
       name: "grok-tutor-hive-edit-v3",
+      // v1: drop civic / nursing / CM from learner sitting (first-slice only)
+      version: 1,
+      migrate: (persisted: unknown) => {
+        const p = (persisted || {}) as Record<string, unknown>;
+        const raw = typeof p.activeLessonId === "string" ? p.activeLessonId : null;
+        return {
+          ...p,
+          activeLessonId: firstSliceTrackById(raw)?.id ?? null,
+        };
+      },
+      merge: (persisted, current) => {
+        const p = (persisted || {}) as Partial<HiveEditState>;
+        const persistedSit = firstSliceTrackById(p.activeLessonId)?.id ?? null;
+        const currentSit = firstSliceTrackById(current.activeLessonId)?.id ?? null;
+        return {
+          ...current,
+          ...p,
+          activeLessonId: currentSit ?? persistedSit,
+        };
+      },
       partialize: (s) => ({
         fieldMode: s.fieldMode,
         attachedLensId: s.attachedLensId,
-        activeLessonId: s.activeLessonId,
+        activeLessonId: firstSliceTrackById(s.activeLessonId)?.id ?? null,
         shapeId: s.shapeId,
         nodeStyle: s.nodeStyle,
         reasoningDepth: s.reasoningDepth,

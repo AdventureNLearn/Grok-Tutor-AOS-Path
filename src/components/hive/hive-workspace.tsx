@@ -8,17 +8,14 @@
  */
 import { useCallback, useEffect, useMemo, useRef, useState, type CSSProperties } from "react";
 import { Maximize2, Minus, Pencil, Plus, Sparkles } from "lucide-react";
+import { hiveHudSummary, type HiveNode } from "@/lib/tutor-hive-map";
+import { assembleHiveField } from "@/lib/hive-idle-field";
 import {
-  buildConnectedHiveField,
-  hiveHudSummary,
-  type HiveNode,
-} from "@/lib/tutor-hive-map";
-import {
-  buildFirstSliceIdleCombs,
   buildReasoningLessonCombs,
+  firstSliceTrackById,
   lessonNodeId,
+  sitLessonIdFromNode,
 } from "@/lib/reasoning-tracks";
-import { existingSampleById, skillIdsForLens } from "@/lib/suite-rooms";
 import { useHiveDeskStore } from "@/lib/hive-desk-store";
 import { useHiveEditStore } from "@/lib/hive-edit-store";
 import { detectHiveQuality, profileFor } from "@/lib/hive-load-quality";
@@ -159,39 +156,26 @@ export function HiveWorkspace({ className }: Props) {
   const phone = tier === "phone";
 
   const lessons = useMemo(() => buildReasoningLessonCombs(), []);
-  const firstSlice = useMemo(() => buildFirstSliceIdleCombs(), []);
-  const sittingLesson = existingSampleById(activeLessonId);
-  const slice = useMemo(
-    () =>
-      buildConnectedHiveField({
-        lessonId: activeLessonId,
-        industryId: sittingLesson?.industryId ?? null,
-        lensSkillIds: skillIdsForLens(attachedLensId),
-      }),
-    [activeLessonId, sittingLesson?.industryId, attachedLensId],
-  );
-  const workspaces = slice.workspaces;
-  const skills = slice.skills;
-  const industries = slice.industries;
+  const sittingLesson = firstSliceTrackById(activeLessonId);
   const examplesOn = fieldMode === "examples";
-  // Idle: exactly three first-slice trade pairings (Electrical / Plumbing / HVAC).
-  // Sitting: those rooms + at most one lesson comb.
-  // Never dump civic, nursing, construction-management, or the skill carpet on idle.
-  const fieldWorkspaces = useMemo(() => {
-    if (examplesOn) {
-      const one = sittingLesson
-        ? lessons.filter((n) => n.id === lessonNodeId(sittingLesson.id))
-        : firstSlice;
-      return one.length ? one : firstSlice;
-    }
-    if (sittingLesson) {
-      const extra = lessons.find((n) => n.id === lessonNodeId(sittingLesson.id));
-      return extra ? [extra, ...workspaces] : workspaces;
-    }
-    return firstSlice;
-  }, [examplesOn, sittingLesson, lessons, firstSlice, workspaces]);
-  const fieldSkills = skills;
-  const fieldIndustries = industries;
+  // Learner idle: exactly three first-slice trade pairings. Sitting does not
+  // dump rooms or auto-open a desk — a comb click opens the desk.
+  const assembled = useMemo(
+    () =>
+      assembleHiveField({
+        editMode,
+        examplesOn,
+        sittingLessonId: activeLessonId,
+        attachedLensId,
+      }),
+    [editMode, examplesOn, activeLessonId, attachedLensId],
+  );
+  const fieldWorkspaces = assembled.workspaces;
+  const fieldSkills = assembled.skills;
+  const fieldIndustries = assembled.industries;
+  const workspaces = fieldWorkspaces;
+  const skills = fieldSkills;
+  const industries = fieldIndustries;
   const summary = useMemo(() => hiveHudSummary(), []);
 
   const phases = useMemo(
@@ -271,6 +255,8 @@ export function HiveWorkspace({ className }: Props) {
 
   const openFromNodeRef = useRef(openFromNode);
   openFromNodeRef.current = openFromNode;
+  const setActiveLessonIdRef = useRef(setActiveLessonId);
+  setActiveLessonIdRef.current = setActiveLessonId;
   const editModeRef = useRef(editMode);
   editModeRef.current = editMode;
   const selectNodeRef = useRef(selectNode);
@@ -558,6 +544,8 @@ export function HiveWorkspace({ className }: Props) {
                   selectNodeRef.current(node.id);
                   return;
                 }
+                const sitId = sitLessonIdFromNode(node.id);
+                if (sitId) setActiveLessonIdRef.current(sitId);
                 openFromNodeRef.current(node);
               },
               onReady: () => {
@@ -731,9 +719,10 @@ export function HiveWorkspace({ className }: Props) {
       selectNode(node.id);
       return;
     }
-    if (node.id.startsWith("lesson:")) {
-      setActiveLessonId(node.id.slice("lesson:".length));
-    }
+    // Desk opens only from a learner click — never on idle mount / Path Play.
+    // Sit first-slice only (Electrical / Plumbing / HVAC). Civic is off this sitting.
+    const sitId = sitLessonIdFromNode(node.id);
+    if (sitId) setActiveLessonId(sitId);
     try {
       const result = openFromNode(node);
       if (result && "ok" in result && result.ok) {
@@ -796,6 +785,7 @@ export function HiveWorkspace({ className }: Props) {
       data-view={showMap ? "2d" : "3d"}
       data-quality={quality.tier}
       data-layout={tier}
+      data-idle-combs={!editMode && !examplesOn ? String(fieldWorkspaces.length) : undefined}
     >
       <div className="tutor-galaxy-layer" aria-hidden />
       <div className="tutor-hive-glow" aria-hidden />
@@ -856,7 +846,7 @@ export function HiveWorkspace({ className }: Props) {
             <p className="tutor-hive-sub">
               {editMode
                 ? "Edit — operator sculpt. Learners use Tools to attach a lens and Path to play the lesson."
-                : "This sitting only — rooms plus the connected lesson and lens. The full catalog is Samples and Industries, not the 3D field."}
+                : "Three first-slice lessons. Click a comb to open a desk. Path walks this sitting's seven habits."}
             </p>
           </div>
         </div>

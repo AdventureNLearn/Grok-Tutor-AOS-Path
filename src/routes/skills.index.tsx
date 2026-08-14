@@ -1,8 +1,8 @@
 import { createFileRoute, Link, useNavigate } from "@tanstack/react-router";
 import { Button } from "@/components/ui/button";
 import { useHiveEditStore } from "@/lib/hive-edit-store";
-import { LEARNER_LENSES, existingSampleById } from "@/lib/suite-rooms";
-import { waveShapeForLens } from "@/lib/suite-rooms";
+import { firstSliceTrackById, learnerCombPairing } from "@/lib/reasoning-tracks";
+import { LEARNER_LENSES, waveShapeForLens } from "@/lib/suite-rooms";
 import { cn } from "@/lib/utils";
 
 export const Route = createFileRoute("/skills/")({
@@ -16,7 +16,7 @@ function SkillsPage() {
   const setAttachedLensId = useHiveEditStore((s) => s.setAttachedLensId);
   const setShape = useHiveEditStore((s) => s.setShape);
   const setEditMode = useHiveEditStore((s) => s.setEditMode);
-  const lesson = existingSampleById(lessonId);
+  const lesson = firstSliceTrackById(lessonId);
 
   function attach(id: string) {
     const next = attached === id ? null : id;
@@ -33,7 +33,7 @@ function SkillsPage() {
         not load a lens before you have a claim.
       </p>
       <p className="mt-2 text-sm text-subtle">
-        Sitting lesson: {lesson ? lesson.combTitle : "none yet — pick a sample comb on the hive."}
+        Sitting lesson: {lesson ? learnerCombPairing(lesson) : "none yet — pick a sample comb on the hive."}
       </p>
 
       <div className="mt-8 grid sm:grid-cols-2 gap-3">

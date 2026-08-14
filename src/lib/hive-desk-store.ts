@@ -667,30 +667,16 @@ export const useHiveDeskStore = create<HiveDeskState>()(
     }),
     {
       name: "grok-tutor-hive-desks-v2",
-      // v4: path-only hrefs + maximize restored desks (kill cascade dead space)
-      version: 4,
+      // v5: never restore desks on load — idle must not auto-open a Load surface stub
+      version: 5,
       migrate: (persisted: unknown) => {
         const p = (persisted || {}) as Record<string, unknown>;
-        const desksRaw = Array.isArray(p.desks) ? p.desks : [];
         const bmRaw = Array.isArray(p.bookmarks) ? p.bookmarks : [];
-        const desks = desksRaw
-          .map(normalizeDesk)
-          .filter(Boolean)
-          .slice(0, MAX_OPEN_DESKS)
-          .map((d, i) => ({
-            ...(d as FloatingDesk),
-            ...maximizedPos(i),
-            minimized: false,
-            contentScale: Math.min(
-              DESK_SCALE_MAX,
-              Math.max(DESK_SCALE_MIN, (d as FloatingDesk).contentScale || 1),
-            ),
-          })) as FloatingDesk[];
         const bookmarks = bmRaw
           .map(normalizeBookmark)
           .filter(Boolean) as DeskBookmark[];
         return {
-          desks,
+          desks: [],
           bookmarks,
           cascade: typeof p.cascade === "number" ? p.cascade : 0,
           focusedId: null,
@@ -699,27 +685,20 @@ export const useHiveDeskStore = create<HiveDeskState>()(
       },
       merge: (persisted, current) => {
         const p = (persisted || {}) as Partial<HiveDeskState>;
-        const desks = (Array.isArray(p.desks) ? p.desks : [])
-          .map(normalizeDesk)
-          .filter((d): d is FloatingDesk => Boolean(d))
-          .map((d, i) => {
-            // If legacy small window, expand
-            const small = d.w < 500 || d.h < 360;
-            return small ? { ...d, ...maximizedPos(i) } : d;
-          });
         const bookmarks = (Array.isArray(p.bookmarks) ? p.bookmarks : [])
           .map(normalizeBookmark)
           .filter(Boolean) as DeskBookmark[];
         return {
           ...current,
           ...p,
-          desks,
+          desks: current.desks,
           bookmarks,
-          focusedId: null,
+          focusedId: current.focusedId,
         };
       },
+      // Desks are session-only. Restoring them on idle painted a "Load surface"
+      // stub (often the last lesson comb) before the learner clicked anything.
       partialize: (s) => ({
-        desks: s.desks,
         bookmarks: s.bookmarks,
         cascade: s.cascade,
       }),
