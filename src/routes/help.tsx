@@ -1,6 +1,13 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { BookOpen, Hexagon, ShieldCheck, Sparkles } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import {
+  HELP_HIVE_BLURB,
+  HELP_HIVE_LINE,
+  HELP_IDLE_MATCH,
+  HELP_PROGRESS_LINE,
+  HELP_WORK_LINE,
+} from "@/lib/help-copy";
 import { HOST_MATRIX, hostMatrixBlurb } from "@/lib/host-matrix";
 
 export const Route = createFileRoute("/help")({
@@ -42,12 +49,9 @@ function HelpPage() {
           <Hexagon className="h-4 w-4 text-teal" /> What you get
         </h2>
         <ul className="list-disc pl-5 text-sm text-muted space-y-2 leading-relaxed">
+          <li>{HELP_WORK_LINE}</li>
           <li>
-            A tutor for real work — electrical, nursing, software, construction, and many more fields.
-          </li>
-          <li>
-            <strong className="text-fg">The Hive</strong> — a 3D home surface. Click a comb to open a
-            floating desk, or use the top navigation for full pages.
+            <strong className="text-fg">The Hive</strong> — {HELP_HIVE_BLURB}
           </li>
           <li>
             Thinking tools you can turn on when you want stricter habits: evidence checks, clear
@@ -92,8 +96,7 @@ function HelpPage() {
             lenses.
           </li>
           <li>
-            <strong className="text-fg">4. Progress</strong> — notes and study minutes stay in this
-            browser.
+            <strong className="text-fg">4. Progress</strong> — {HELP_PROGRESS_LINE}
           </li>
         </ol>
         <div className="flex flex-wrap gap-2 pt-1">
@@ -136,11 +139,9 @@ function HelpPage() {
       </section>
 
       <section className="mt-10 space-y-3">
-        <h2 className="text-lg font-semibold tracking-tight">The Hive · shapes & orchestration</h2>
+        <h2 className="text-lg font-semibold tracking-tight">The Hive · Map-first home</h2>
         <p className="text-sm text-muted leading-relaxed">
-          On The Hive home, tap <strong className="text-fg">Edit</strong> to rearrange combs into
-          shapes that show how a lesson can move (for example Field Helix: Observe → Claim → Craft
-          talk → Progress). Play phases, nudge nodes, and save layouts on this device.
+          {HELP_HIVE_LINE} {HELP_IDLE_MATCH}
         </p>
         <p className="text-sm text-muted leading-relaxed">
           Integrity Triangle and Claim Diamond teach the habit of separating evidence, inference, and
