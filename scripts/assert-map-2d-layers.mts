@@ -1,7 +1,7 @@
 /**
  * Contract: 2D map paints sector layers + short-label cards.
- * Door is three. Stay-OFF get no card. Layer switch does not open /demo.
- * Card sit reuses sittingForIndustry / sitFromNamedPack.
+ * Door is three. All paints 27 covered cards. Stay-OFF get no card.
+ * Layer switch does not open /demo. Card sit reuses sittingForIndustry.
  * Run: npx tsx scripts/assert-map-2d-layers.mts
  */
 import { readFileSync } from "node:fs";
@@ -9,6 +9,8 @@ import { dirname, join } from "node:path";
 import { fileURLToPath } from "node:url";
 import { assembleHiveField } from "../src/lib/hive-idle-field.ts";
 import {
+  ALL_LAYER,
+  ALL_LAYER_ID,
   DOOR_INDUSTRY_IDS,
   DOOR_LAYER_ID,
   MAP_BANNED_CARD_ACRONYMS,
@@ -16,8 +18,10 @@ import {
   MAP_SECTOR_LAYERS,
   MAP_STAY_OFF_INDUSTRY_IDS,
   MAP_STAY_OFF_LABELS,
+  allLayerIsTwentySeven,
   cardsForLayer,
   doorLayerIsThree,
+  isMapLayerId,
   mapCardDeskHref,
   mapCardNodesForLayer,
   mapCardOpensCatalog,
@@ -102,6 +106,39 @@ if (!doorLayerIsThree() || cardsForLayer(DOOR_LAYER_ID).length !== 3) {
 }
 if (DOOR_INDUSTRY_IDS.join("|") !== "electrical|plumbing|hvac") {
   throw new Error(`Door industries were ${DOOR_INDUSTRY_IDS.join(", ")}`);
+}
+
+if (ALL_LAYER.id !== ALL_LAYER_ID || ALL_LAYER.label !== "All") {
+  throw new Error(`All layer chip must be labeled All, got ${ALL_LAYER.label}`);
+}
+if (!allLayerIsTwentySeven() || cardsForLayer(ALL_LAYER_ID).length !== 27) {
+  throw new Error(`All layer must paint 27 cards, got ${cardsForLayer(ALL_LAYER_ID).length}`);
+}
+const stayOffSet = new Set<string>(MAP_STAY_OFF_INDUSTRY_IDS);
+if (cardsForLayer(ALL_LAYER_ID).some((pin) => stayOffSet.has(pin.industryId))) {
+  throw new Error("All layer must not include stay-OFF cards");
+}
+if (new Set(cardsForLayer(ALL_LAYER_ID).map((p) => p.industryId)).size !== 27) {
+  throw new Error("All layer must paint 27 distinct covered cards");
+}
+const allNodes = mapCardNodesForLayer(ALL_LAYER_ID);
+if (allNodes.length !== 27) {
+  throw new Error(`All layer nodes must be 27, got ${allNodes.length}`);
+}
+if (allNodes.some((n) => /nursing|civic|construction|law enforcement|media literacy/i.test(`${n.id} ${n.acr} ${n.title} ${n.description}`))) {
+  throw new Error("All layer must not paint stay-OFF cards");
+}
+if (allNodes.some((n) => mapCardOpensCatalog(n.href) || isCatalogRoute(n.href))) {
+  throw new Error("All layer cards must not link /demo or /explore");
+}
+if (mapLayerSwitchHref(ALL_LAYER_ID) !== null) {
+  throw new Error("All layer switch must not have an href");
+}
+if (!isMapLayerId(ALL_LAYER_ID) || !isMapLayerId(DOOR_LAYER_ID)) {
+  throw new Error("All and Door must be valid map layer ids");
+}
+if (MAP_SECTOR_LAYERS.some((layer) => layer.id === ALL_LAYER_ID || layer.label === "All")) {
+  throw new Error("All is an extra chip, not an eighth sector layer");
 }
 
 const layerCounts: Record<string, number> = {
@@ -212,6 +249,9 @@ for (const layer of MAP_SECTOR_LAYERS) {
 if (mapLayerSwitchHref(DOOR_LAYER_ID) !== null) {
   throw new Error("Door layer switch must not have an href");
 }
+if (mapLayerSwitchHref(ALL_LAYER_ID) !== null) {
+  throw new Error("All layer switch must not have an href");
+}
 
 const idle = assembleHiveField({
   editMode: false,
@@ -252,6 +292,12 @@ if (CATALOG_LINK.test(mapSrc)) {
 }
 if (!mapSrc.includes("MAP_SECTOR_LAYERS") || !mapSrc.includes("learnerLayers")) {
   throw new Error("2D map must mount the sector-layer switcher");
+}
+if (!mapSrc.includes("ALL_LAYER_ID") || !mapSrc.includes("ALL_LAYER.label")) {
+  throw new Error("2D map must mount the All corpus chip");
+}
+if (!mapSrc.includes("useState<MapLayerId>(DOOR_LAYER_ID)")) {
+  throw new Error("Door must stay the default idle layer");
 }
 if (!mapSrc.includes("setLayerId") || /navigate\(|openRoute\(/.test(mapSrc)) {
   throw new Error("Layer switch must stay local — no navigate / openRoute");
@@ -390,6 +436,8 @@ console.log(
   cardsForLayer(DOOR_LAYER_ID)
     .map((p) => p.shortLabel)
     .join(" · "),
+  "· all",
+  cardsForLayer(ALL_LAYER_ID).length,
   "·",
   MAP_CARD_PINS.length,
   "cards ·",

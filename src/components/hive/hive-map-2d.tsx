@@ -3,12 +3,15 @@
  * This is the accessible product surface: same shapes, desks, phases, and
  * orchestration as 3D, without WebGL. Designed for basic hardware first.
  * Learner sector layers paint short-label cards. Door stays the three
- * first-slice combs. Layer switch does not open /demo or /explore.
+ * first-slice combs. All paints the 27 covered cards at once.
+ * Layer switch does not open /demo or /explore.
  */
 import { useEffect, useMemo, useRef, useState, type CSSProperties } from "react";
 import type { HiveNode } from "@/lib/tutor-hive-map";
 import type { Vec3 } from "@/lib/hive-layout-shapes";
 import {
+  ALL_LAYER,
+  ALL_LAYER_ID,
   DOOR_LAYER_ID,
   MAP_SECTOR_LAYERS,
   cardsForLayer,
@@ -61,7 +64,13 @@ function project(
   total: number,
   /** How much of the board the field uses (0.7–0.96) — higher = less dead space */
   fieldSpan: number,
+  /** All-layer inset keeps 27 cards above the layer switcher. */
+  inset?: { leftMin: number; leftMax: number; topMin: number; topMax: number },
 ): { left: number; top: number; sizeBoost: number; elev: number } {
+  const leftMin = inset?.leftMin ?? 4;
+  const leftMax = inset?.leftMax ?? 96;
+  const topMin = inset?.topMin ?? 6;
+  const topMax = inset?.topMax ?? 94;
   if (pos) {
     // Wider fieldSpan on large screens / zoom-out fills sides
     const span = 50 * fieldSpan;
@@ -70,8 +79,8 @@ function project(
     const elev = Math.min(1, Math.abs(pos.y || 0) / 4);
     const sizeBoost = 1 + Math.min(0.2, Math.abs(pos.y || 0) * 0.04);
     return {
-      left: Math.min(96, Math.max(4, left)),
-      top: Math.min(94, Math.max(6, top)),
+      left: Math.min(leftMax, Math.max(leftMin, left)),
+      top: Math.min(topMax, Math.max(topMin, top)),
       sizeBoost,
       elev,
     };
@@ -133,6 +142,7 @@ export function HiveMap2D({
     [learnerLayers, layerId],
   );
   const paintDoor = !learnerLayers || layerId === DOOR_LAYER_ID;
+  const paintAll = learnerLayers && layerId === ALL_LAYER_ID;
   const all = useMemo(
     () => (paintDoor ? [...workspaces, ...industries, ...skills] : sectorCards),
     [paintDoor, workspaces, industries, skills, sectorCards],
@@ -145,9 +155,18 @@ export function HiveMap2D({
   const openSet = new Set(openIds);
 
   // Zoom-out (scale < 1) → expand field span + comb size to kill gutters
-  // Zoom-in → slightly denser center
-  const fieldSpan = Math.min(0.96, Math.max(0.72, 0.82 + (1 - scale) * 0.28));
-  const combPx = board.combScale * scale * (tier === "phone" ? 1.08 : 1);
+  // Zoom-in → slightly denser center. All uses a tighter span so 27 cards
+  // stay on the board and above the layer switcher.
+  const fieldSpan = paintAll
+    ? Math.min(0.86, Math.max(0.64, 0.72 + (1 - scale) * 0.22))
+    : Math.min(0.96, Math.max(0.72, 0.82 + (1 - scale) * 0.28));
+  const combPx =
+    board.combScale * scale * (tier === "phone" ? 1.08 : 1) * (paintAll ? 0.72 : 1);
+  const projectInset = useMemo(
+    () =>
+      paintAll ? { leftMin: 6, leftMax: 94, topMin: 8, topMax: 78 } : undefined,
+    [paintAll],
+  );
 
   const projected = useMemo(() => {
     const map = new Map<
@@ -156,12 +175,12 @@ export function HiveMap2D({
     >();
     all.forEach((n, i) => {
       map.set(n.id, {
-        ...project(layoutPositions[n.id], i, all.length, fieldSpan),
+        ...project(layoutPositions[n.id], i, all.length, fieldSpan, projectInset),
         node: n,
       });
     });
     return map;
-  }, [all, layoutPositions, fieldSpan]);
+  }, [all, layoutPositions, fieldSpan, projectInset]);
 
   const edgePaths = useMemo(() => {
     if (!flowEdges.length) return [] as { key: string; d: string; kind: string }[];
@@ -185,7 +204,12 @@ export function HiveMap2D({
   return (
     <div
       ref={shellRef}
-      className={cn("hive-map-2d", `is-${tier}`, learnerLayers && "has-layers")}
+      className={cn(
+        "hive-map-2d",
+        `is-${tier}`,
+        learnerLayers && "has-layers",
+        paintAll && "is-all-layer",
+      )}
       data-testid="hive-map-2d"
       data-tier={tier}
       data-quality={qualityTier || "balanced"}
@@ -218,6 +242,17 @@ export function HiveMap2D({
             onClick={() => setLayerId(DOOR_LAYER_ID)}
           >
             Door
+          </button>
+          <button
+            type="button"
+            role="radio"
+            aria-checked={layerId === ALL_LAYER_ID}
+            className={cn(layerId === ALL_LAYER_ID && "is-on")}
+            data-map-layer-id={ALL_LAYER_ID}
+            style={{ ["--layer-c" as string]: ALL_LAYER.color }}
+            onClick={() => setLayerId(ALL_LAYER_ID)}
+          >
+            {ALL_LAYER.label}
           </button>
           {MAP_SECTOR_LAYERS.map((layer) => (
             <button
