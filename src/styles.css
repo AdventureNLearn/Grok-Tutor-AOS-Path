@@ -3244,7 +3244,7 @@ button.iso-chip { cursor: pointer; }
   justify-content: center;
   align-items: center;
   gap: 0.28rem;
-  max-width: min(40rem, calc(100vw - 14rem));
+  max-width: min(46rem, calc(100vw - 12rem));
   min-width: 12rem;
   min-height: 1.7rem;
   padding: 0.28rem 0.45rem;
@@ -3278,6 +3278,14 @@ button.iso-chip { cursor: pointer; }
 }
 .hive-map-2d.has-layers {
   padding-bottom: 8.2rem;
+}
+.hive-map-2d.has-layers.is-all-layer {
+  padding-bottom: 9.2rem;
+}
+.hive-map-2d.is-all-layer .hive-map-2d-comb.map-card {
+  min-width: calc(3.35rem * var(--map-comb-scale, 1));
+  max-width: calc(5.4rem * var(--map-comb-scale, 1));
+  padding: 0.32rem 0.38rem;
 }
 .hive-map-2d-bloom {
   position: absolute;
@@ -3473,8 +3481,14 @@ button.iso-chip { cursor: pointer; }
 .hive-map-2d.has-layers.is-wide {
   padding-bottom: 7.6rem;
 }
+.hive-map-2d.has-layers.is-wide.is-all-layer {
+  padding-bottom: 8.6rem;
+}
 .hive-map-2d.has-layers.is-phone {
   padding-bottom: calc(8.8rem + env(safe-area-inset-bottom, 0px));
+}
+.hive-map-2d.has-layers.is-phone.is-all-layer {
+  padding-bottom: calc(9.6rem + env(safe-area-inset-bottom, 0px));
 }
 .hive-map-2d.is-phone .hive-map-2d-layers {
   top: auto;
@@ -3992,6 +4006,9 @@ button.iso-chip { cursor: pointer; }
   }
   .hive-map-2d.has-layers {
     padding-bottom: calc(8.8rem + env(safe-area-inset-bottom, 0px));
+  }
+  .hive-map-2d.has-layers.is-all-layer {
+    padding-bottom: calc(9.6rem + env(safe-area-inset-bottom, 0px));
   }
   .tutor-topbar-brand span span:last-child {
     display: none; /* hide tagline on narrow */

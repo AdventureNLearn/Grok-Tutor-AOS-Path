@@ -1,7 +1,8 @@
 /**
  * 2D map sector layers + short-label cards (Hive Lab #63 / #64).
  * Door / idle stays Electrical, Plumbing, HVAC. No fourth idle comb.
- * Seven named layers only — no Public & Civic. Stay-OFF get no card.
+ * Seven named sector layers — no Public & Civic. Stay-OFF get no card.
+ * Extra "All" chip paints the 27 covered cards at once (not a /demo catalog).
  * Card click sits via sittingForIndustry (same path as ask / named-pack).
  */
 import { getIndustry } from "./industries";
@@ -17,6 +18,7 @@ import {
 } from "./sit-from-named-pack";
 
 export const DOOR_LAYER_ID = "door" as const;
+export const ALL_LAYER_ID = "all" as const;
 
 export type MapSectorLayerId =
   | "trades"
@@ -27,7 +29,14 @@ export type MapSectorLayerId =
   | "logistics"
   | "education";
 
-export type MapLayerId = typeof DOOR_LAYER_ID | MapSectorLayerId;
+export type MapLayerId = typeof DOOR_LAYER_ID | typeof ALL_LAYER_ID | MapSectorLayerId;
+
+/** Corpus-wide layer — not a sector, not /demo. Chip label is All. */
+export const ALL_LAYER = {
+  id: ALL_LAYER_ID,
+  label: "All",
+  color: "#e2e8f0",
+} as const;
 
 export const MAP_CARD_PREFIX = "map-card:" as const;
 
@@ -122,7 +131,7 @@ export function isMapSectorLayerId(id: string | null | undefined): id is MapSect
 }
 
 export function isMapLayerId(id: string | null | undefined): id is MapLayerId {
-  return id === DOOR_LAYER_ID || isMapSectorLayerId(id);
+  return id === DOOR_LAYER_ID || id === ALL_LAYER_ID || isMapSectorLayerId(id);
 }
 
 export function getMapSectorLayer(id: MapSectorLayerId): MapSectorLayer | undefined {
@@ -162,11 +171,21 @@ export function cardsForLayer(layerId: MapLayerId): MapCardPin[] {
       (pin): pin is MapCardPin => Boolean(pin),
     );
   }
+  if (layerId === ALL_LAYER_ID) {
+    return MAP_CARD_PINS.slice();
+  }
   return MAP_CARD_PINS.filter((pin) => pin.layerId === layerId);
 }
 
 export function doorLayerIsThree(): boolean {
   return cardsForLayer(DOOR_LAYER_ID).length === 3;
+}
+
+/** All paints every covered card. Stay-OFF never appear. */
+export function allLayerIsTwentySeven(): boolean {
+  const cards = cardsForLayer(ALL_LAYER_ID);
+  if (cards.length !== 27) return false;
+  return !cards.some((pin) => isFailClosedIndustry(pin.industryId));
 }
 
 /** Layer chips are buttons. Switching never navigates. */
@@ -248,10 +267,21 @@ function honeycombAt(index: number, spacing: number): Vec3 {
   };
 }
 
+/**
+ * Honeycomb cell size. All (27) uses a tighter pitch so the corpus
+ * fits on the board above the layer switcher. Sector layers stay 2.35.
+ */
+export function mapCardSpacing(count: number): number {
+  if (count <= 7) return 2.35;
+  if (count <= 12) return 2.05;
+  return 1.62;
+}
+
 export function mapCardPositions(pins: readonly MapCardPin[]): Record<string, Vec3> {
+  const spacing = mapCardSpacing(pins.length);
   const out: Record<string, Vec3> = {};
   pins.forEach((pin, i) => {
-    out[mapCardId(pin.industryId)] = honeycombAt(i, 2.35);
+    out[mapCardId(pin.industryId)] = honeycombAt(i, spacing);
   });
   return out;
 }
