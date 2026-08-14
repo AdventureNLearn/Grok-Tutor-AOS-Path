@@ -11,12 +11,12 @@ const KEY = "grok-tutor-first-run-coach-v1";
 const STEPS = [
   {
     title: "Welcome to The Hive",
-    body: "Each comb opens a learning desk — Live session, Samples, Library, Industries, Tools, Plan Lab, and more. Click a comb, or use the top navigation for full pages.",
+    body: "Click a sample comb — those are existing lessons, not a new library. Tools attaches one lens or none. Path plays that lesson through that lens on the 3D hive.",
     icon: Hexagon,
   },
   {
-    title: "Learn your way",
-    body: "Sample lessons are multi-turn craft dialogues. Live session guides you through explain, practice, quiz, and on-the-job modes. Library is your curriculum hub.",
+    title: "Walk, do not sculpt",
+    body: "Path is Align → check → practice → deliver. The wave lights the path. You do not edit the graph. Stop wins if the topic is unsafe or out of scope.",
     icon: BookOpen,
   },
   {

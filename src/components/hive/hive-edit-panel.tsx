@@ -184,6 +184,12 @@ export function HiveEditPanel({
           ))}
         </div>
         <p className="hive-edit-hint">{NODE_STYLE_META[nodeStyle].blurb}</p>
+        {nodeStyle === "galactic" ? (
+          <p className="hive-edit-hint hive-edit-hint-size">
+            Size key: large = desks · medium = crafts · small = tools. Within a
+            tier, bigger = more central to a clear session.
+          </p>
+        ) : null}
         <p className="hive-edit-subhead">Reasoning depth</p>
         <div className="hive-edit-orch-controls">
           <button

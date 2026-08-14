@@ -29,7 +29,9 @@ function arg(name, fallback) {
 }
 
 const CYCLES = Math.max(1, parseInt(arg("--cycles", "4"), 10) || 4);
-const PC_BASE = (arg("--pc", process.env.TUTOR_BASE || "http://127.0.0.1:8085")).replace(/\/$/, "");
+const PC_BASE = (arg("--pc", process.env.TUTOR_BASE || "http://127.0.0.1:8085"))
+  .trim()
+  .replace(/\/$/, "");
 const PUBLIC_BASE = (arg("--public", process.env.TUTOR_PUBLIC || "https://gt2samples.grok.me")).replace(
   /\/$/,
   "",

@@ -1,6 +1,5 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { useEffect, useMemo, useRef, useState } from "react";
-import { useServerFn } from "@tanstack/react-start";
 import { BookOpen, Layers, Loader2, Send, Sparkles, Trash2 } from "lucide-react";
 import { toast } from "sonner";
 import { z } from "zod";
@@ -15,7 +14,11 @@ import {
   skillsForIndustry,
   type TutorMode,
 } from "@/lib/aos-skills";
-import { tutorChat } from "@/lib/tutor-api";
+import {
+  offlineTutorReply,
+  tutorChat,
+  type TutorChatRequest,
+} from "@/lib/tutor-api";
 import { useTutorStore, type ChatMessage } from "@/lib/store";
 import { cn } from "@/lib/utils";
 import { isMemeLane, parseTutorLane } from "@/lib/tutor-lane";
@@ -47,7 +50,9 @@ const LEVELS = ["beginner", "intermediate", "advanced"] as const;
 
 function TutorPage() {
   const search = Route.useSearch();
-  const chatFn = useServerFn(tutorChat);
+  // Do NOT use useServerFn — prebundled @tanstack/react-start crashes the
+  // browser (AsyncLocalStorage is not a constructor). Call createServerFn
+  // directly (plugin transforms to fetch) with offline fallback.
   const lane = parseTutorLane(search.lane);
   const meme = isMemeLane(lane);
   const {
@@ -65,13 +70,17 @@ function TutorPage() {
   const [mode, setMode] = useState<TutorMode>("explain");
   const [topic, setTopic] = useState("");
   const [skillIds, setSkillIds] = useState<string[]>(() => {
-    const base = foundationSkills()
-      .slice(0, 2)
-      .map((s) => s.id);
-    if (search.skill && AOS_SKILLS.some((s) => s.id === search.skill)) {
-      return Array.from(new Set([...base, search.skill]));
+    try {
+      const base = foundationSkills()
+        .slice(0, 2)
+        .map((s) => s.id);
+      if (search.skill && AOS_SKILLS.some((s) => s.id === search.skill)) {
+        return Array.from(new Set([...base, search.skill]));
+      }
+      return base.length ? base : [];
+    } catch {
+      return [];
     }
-    return base;
   });
   const [sessionId, setSessionId] = useState<string | null>(null);
   const [messages, setMessages] = useState<ChatMessage[]>([]);
@@ -82,7 +91,12 @@ function TutorPage() {
   const startRef = useRef<number>(Date.now());
   const onLearnEvent = useHiveEditStore((s) => s.onLearnEvent);
   const shapeId = useHiveEditStore((s) => s.shapeId);
-  const phaseCount = Math.max(1, getShapeDef(shapeId).phases.length || 4);
+  let phaseCount = 4;
+  try {
+    phaseCount = Math.max(1, getShapeDef(shapeId).phases.length || 4);
+  } catch {
+    phaseCount = 4;
+  }
 
   const industry = getIndustry(industryId);
   const recommended = useMemo(() => {
@@ -190,40 +204,77 @@ function TutorPage() {
     appendMessage(sid, userMsg);
     setInput("");
     setBusy(true);
-    onLearnEvent("user_turn", phaseCount);
+    try {
+      onLearnEvent("user_turn", phaseCount);
+    } catch {
+      /* hive edit store optional */
+    }
+
+    const payload: TutorChatRequest = {
+      industryId,
+      level,
+      mode,
+      skillIds,
+      topic: topic || undefined,
+      lane,
+      messages: next
+        .filter((m) => m.role === "user" || m.role === "assistant")
+        .map((m) => ({
+          role: m.role as "user" | "assistant",
+          content: m.content,
+        })),
+    };
 
     try {
-      const result = await chatFn({
-        data: {
-          industryId,
-          level,
-          mode,
-          skillIds,
-          topic: topic || undefined,
-          lane,
-          messages: next
-            .filter((m) => m.role === "user" || m.role === "assistant")
-            .map((m) => ({
-              role: m.role as "user" | "assistant",
-              content: m.content,
-            })),
-        },
-      });
+      let text: string | null = null;
+      let offline = false;
+      try {
+        const result = await tutorChat({ data: payload });
+        if (result && typeof result === "object" && "text" in result && result.text) {
+          text = String(result.text);
+          offline = !!(result as { offline?: boolean }).offline;
+        } else if (
+          result &&
+          typeof result === "object" &&
+          "ok" in result &&
+          (result as { ok: boolean }).ok === false
+        ) {
+          text = offlineTutorReply(payload);
+          offline = true;
+        }
+      } catch {
+        // Server fn / network failed — still teach offline
+        text = offlineTutorReply(payload);
+        offline = true;
+      }
 
-      if ("text" in result && result.text) {
-        const aMsg: ChatMessage = {
-          id: crypto.randomUUID(),
-          role: "assistant",
-          content: result.text,
-          at: Date.now(),
-        };
-        setMessages((m) => [...m, aMsg]);
-        appendMessage(sid, aMsg);
+      if (!text) {
+        text = offlineTutorReply(payload);
+        offline = true;
+      }
+
+      const aMsg: ChatMessage = {
+        id: crypto.randomUUID(),
+        role: "assistant",
+        content: text,
+        at: Date.now(),
+      };
+      setMessages((m) => [...m, aMsg]);
+      appendMessage(sid, aMsg);
+      try {
         onLearnEvent("assistant_turn", phaseCount);
-        const mins = Math.max(1, Math.round((Date.now() - startRef.current) / 60000));
-        updateSession(sid, { minutes: mins });
-      } else {
-        toast.error("I couldn't complete that turn. Try again.");
+      } catch {
+        /* ignore */
+      }
+      const mins = Math.max(
+        1,
+        Math.round((Date.now() - startRef.current) / 60000),
+      );
+      updateSession(sid, { minutes: mins });
+      if (offline) {
+        toast.message("Offline teaching mode", {
+          description: "Using built-in craft lessons (no live model this turn).",
+        });
       }
     } catch (e) {
       toast.error(e instanceof Error ? e.message : "Request failed");

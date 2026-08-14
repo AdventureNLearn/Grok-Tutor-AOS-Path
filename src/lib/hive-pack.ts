@@ -2,27 +2,31 @@
  * Shared 3D packing — minimize collision, maximize readable depth.
  *
  * Design:
- * - Generous XZ spacing so hex bodies never fuse
+ * - Generous XZ spacing so hex / galactic bodies never fuse
  * - Strong Y tiers (skills floor → industries mid → workspaces high)
  * - Y-aware deoverlap: same-height nodes need more XZ clearance
+ * - Optional per-node radii (galactic corona + priority scale)
  */
 
 /** Workspace (elevated) honeycomb spacing */
-export const PACK_WS = 3.15;
-/** Skill carpet spacing */
-export const PACK_SK = 1.72;
+export const PACK_WS = 3.55;
+/** Skill carpet spacing — was 1.72; tight for galactic moons */
+export const PACK_SK = 2.05;
 /** Industry mid-band spacing */
-export const PACK_IND = 2.55;
+export const PACK_IND = 2.95;
+
+/** Extra spacing multiplier when node style is galactic */
+export const GALACTIC_PACK_BOOST = 1.22;
 
 /** Vertical tiers — large deltas so perspective reads structure in depth */
-export const WS_Y = 2.85;
+export const WS_Y = 3.05;
 export const SK_Y = 0.05;
-export const IND_Y = 1.35;
+export const IND_Y = 1.45;
 
 /** Extra vertical stagger within a tier (ring index jitter) */
-export const WS_Y_JITTER = 0.22;
-export const SK_Y_JITTER = 0.12;
-export const IND_Y_JITTER = 0.16;
+export const WS_Y_JITTER = 0.28;
+export const SK_Y_JITTER = 0.14;
+export const IND_Y_JITTER = 0.18;
 
 /** Hex body radii (world units) — well under PACK / 2 */
 export const GEO_WS_R = 0.68;
@@ -33,14 +37,20 @@ export const GEO_IND_R = 0.36;
  * Max visual card boost from zoom-out.
  * Modest: field expands via separationScale instead of body growth into neighbors.
  */
-export const CARD_FILL_MAX = 1.22;
+export const CARD_FILL_MAX = 1.18;
 
 /**
  * As cards grow slightly, push the field outward so neighbors stay clear.
  */
 export function separationScale(cardFillScale: number): number {
   const f = Math.min(CARD_FILL_MAX, Math.max(0.85, cardFillScale || 1));
-  return 0.94 + f * 0.16;
+  return 0.96 + f * 0.18;
+}
+
+export function defaultRadius(kind: "workspace" | "skill" | "industry"): number {
+  if (kind === "workspace") return GEO_WS_R;
+  if (kind === "industry") return GEO_IND_R;
+  return GEO_SK_R;
 }
 
 /**
@@ -53,15 +63,17 @@ export function minCenterDistance(
   cardFill = 1,
   yA = 0,
   yB = 0,
+  radiusA?: number,
+  radiusB?: number,
 ): number {
-  const r = (k: string) =>
-    k === "workspace" ? GEO_WS_R : k === "industry" ? GEO_IND_R : GEO_SK_R;
+  const ra = radiusA ?? defaultRadius(kindA);
+  const rb = radiusB ?? defaultRadius(kindB);
   const dy = Math.abs(yA - yB);
-  // Same-height: full pad. Large Y delta: allow closer footprints (stacked in plan, clear in elev)
-  const yRelief = Math.min(1, dy / 1.6);
-  const pad = 0.32 * (1 - yRelief * 0.62);
+  // Same-height: full pad. Large Y delta: allow closer footprints
+  const yRelief = Math.min(1, dy / 1.8);
+  const pad = 0.42 * (1 - yRelief * 0.55);
   const fill = Math.min(CARD_FILL_MAX, Math.max(1, cardFill));
-  return (r(kindA) + r(kindB) + pad) * fill;
+  return (ra + rb + pad) * fill;
 }
 
 export type DeoverlapOpts = {
@@ -71,6 +83,10 @@ export type DeoverlapOpts = {
   lockXZ?: Set<string> | string[];
   /** Only push along X (ribs) — keeps vertical stacks clean */
   axis?: "xz" | "x" | "z";
+  /** Per-node collision radius (galactic scale + shells). Falls back to GEO_* by kind. */
+  radii?: Record<string, number>;
+  /** Uniform pack boost (e.g. GALACTIC_PACK_BOOST applied as extra push strength) */
+  pushBias?: number;
 };
 
 /**
@@ -88,6 +104,7 @@ export function deoverlapPositions(
       : cardFillOrOpts;
   const cardFill = opts.cardFill ?? 1;
   const iterations = opts.iterations ?? 5;
+  const pushBias = opts.pushBias ?? 1.08;
   const lock = new Set(
     opts.lockXZ
       ? Array.isArray(opts.lockXZ)
@@ -114,9 +131,11 @@ export function deoverlapPositions(
           cardFill,
           pa.y,
           pb.y,
+          opts.radii?.[a],
+          opts.radii?.[b],
         );
         if (dist >= need) continue;
-        const push = ((need - dist) / 2) * 1.08;
+        const push = ((need - dist) / 2) * pushBias;
         const nx = dx / dist;
         const nz = dz / dist;
         const aLock = lock.has(a);
@@ -146,7 +165,17 @@ export function deoverlapPositions(
 export function tierRadialBias(
   kind: "workspace" | "skill" | "industry",
 ): number {
-  if (kind === "workspace") return 0.92; // slightly inward / elevated core
-  if (kind === "industry") return 1.08;
-  return 1.18; // skills outer
+  if (kind === "workspace") return 0.9; // elevated core
+  if (kind === "industry") return 1.12;
+  return 1.28; // skills outer — more room for small moons
+}
+
+/** Pack spacing for a style (geometric vs galactic) */
+export function packSpacing(
+  kind: "workspace" | "skill" | "industry",
+  style: "geometric" | "galactic" = "geometric",
+): number {
+  const base =
+    kind === "workspace" ? PACK_WS : kind === "industry" ? PACK_IND : PACK_SK;
+  return style === "galactic" ? base * GALACTIC_PACK_BOOST : base;
 }

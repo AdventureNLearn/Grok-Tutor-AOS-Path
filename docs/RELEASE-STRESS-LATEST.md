@@ -1,9 +1,9 @@
 # Release stress suite
 
-**At:** 2026-08-08T14:34:58.375Z
+**At:** 2026-08-14T17:21:18.464Z
 **Base:** http://127.0.0.1:8085
-**Mode:** full
-**Passed:** 18 / 20
+**Mode:** quick
+**Passed:** 14 / 15
 
 | Check | Result | Detail |
 | --- | --- | --- |
@@ -17,15 +17,10 @@
 | HTTP /explore | PASS | 200 |
 | HTTP /skills | PASS | 200 |
 | HTTP /path | PASS | 200 |
-| typecheck | PASS | exit=0 10714ms |
-| partmode20 | PASS | exit=0 722ms |
-| cad100 | PASS | exit=0 742ms |
-| shape | PASS | exit=0 978ms |
-| e2e50 | PASS | exit=0 3050ms |
-| responsive50 | PASS | exit=0 1175ms |
-| hive-dual | PASS | exit=0 1661ms |
-| morning | FAIL | exit=1 1078ms |
-| normie-sim | FAIL | exit=1 10824ms |
-| sim200 | PASS | exit=0 38627ms |
+| typecheck | PASS | exit=0 6404ms |
+| partmode20 | FAIL | exit=3221226505 820ms |
+| cad100 | PASS | exit=0 584ms |
+| shape | PASS | exit=0 805ms |
+| e2e50 | PASS | exit=0 1564ms |
 
 Logs: `C:\AOS\logs\tutor-release-stress\*.log`

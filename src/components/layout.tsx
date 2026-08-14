@@ -10,13 +10,16 @@ import {
   Route,
   X,
 } from "lucide-react";
-import { useEffect, useState } from "react";
+import { lazy, Suspense, useEffect, useState } from "react";
 import { Link, useNavigate, useRouterState } from "@tanstack/react-router";
 import { cn } from "@/lib/utils";
 import { Button } from "./ui/button";
-import { HiveWorkspace } from "./hive/hive-workspace";
 import { DeskStage } from "./hive/desk-stage";
 import { useHiveDeskStore } from "@/lib/hive-desk-store";
+
+const HiveWorkspace = lazy(() =>
+  import("./hive/hive-workspace").then((m) => ({ default: m.HiveWorkspace })),
+);
 
 /** Professional product nav only. Meme surfaces: /itshabbening, /meme-village. */
 const NAV: {
@@ -29,7 +32,6 @@ const NAV: {
 }[] = [
   { href: "/tutor", label: "Learn", icon: BookOpen, title: "Live session", color: "#2dd4bf", acr: "LRN" },
   { href: "/demo", label: "Samples", icon: Library, title: "Sample lessons", color: "#a78bfa", acr: "SMP" },
-  { href: "/library", label: "Library", icon: Library, title: "Training library", color: "#c084fc", acr: "LIB" },
   { href: "/explore", label: "Industries", icon: Compass, title: "Industries", color: "#60a5fa", acr: "IND" },
   { href: "/skills", label: "Tools", icon: Layers, title: "Thinking tools", color: "#fbbf24", acr: "THK" },
   { href: "/progress", label: "Progress", icon: LineChart, title: "Progress", color: "#4ade80", acr: "PRG" },
@@ -76,10 +78,28 @@ function useDeskSurface(): boolean {
   return false;
 }
 
+function useSafeLanding(): boolean {
+  const location = useRouterState({ select: (s) => s.location });
+  const searchObj = location.search as Record<string, unknown> | undefined;
+  if (searchObj && (searchObj.safe === "1" || searchObj.view === "safe")) return true;
+  const href = String((location as { href?: string }).href ?? "");
+  if (href.includes("safe=1") || href.includes("view=safe")) return true;
+  if (typeof window !== "undefined") {
+    try {
+      const p = new URLSearchParams(window.location.search);
+      if (p.get("safe") === "1" || p.get("view") === "safe") return true;
+    } catch {
+      /* ignore */
+    }
+  }
+  return false;
+}
+
 export function AppShell({ children }: { children: React.ReactNode }) {
   const pathname = useRouterState({ select: (s) => s.location.pathname });
   const navigate = useNavigate();
   const deskSurface = useDeskSurface();
+  const safeLanding = useSafeLanding();
   const [open, setOpen] = useState(false);
   const desks = useHiveDeskStore((s) => s.desks);
 
@@ -103,7 +123,12 @@ export function AppShell({ children }: { children: React.ReactNode }) {
 
   function go(href: string) {
     setOpen(false);
-    // Full-page navigation (desks still open from comb clicks on The Hive)
+    // Prefer full navigation for Learn — SPA navigate + server-fn bugs were
+    // leaving a blank crash on /tutor. Hard navigation is reliable.
+    if (href === "/tutor" || href.startsWith("/tutor?")) {
+      window.location.assign(href);
+      return;
+    }
     void navigate({ to: href as any });
   }
 
@@ -227,18 +252,45 @@ export function AppShell({ children }: { children: React.ReactNode }) {
     </header>
   );
 
+  // Hard safe landing — no canvas, no galaxy, no Hive workspace chunk
+  if (isHiveHome && safeLanding) {
+    return (
+      <div className="min-h-dvh bg-bg text-fg flex flex-col" data-safe="1">
+        {topbar}
+        <main className="mx-auto max-w-xl px-4 py-10">
+          <h1 className="text-2xl font-semibold tracking-tight">Grok Tutor · safe landing</h1>
+          <p className="mt-2 text-sm text-muted leading-relaxed">
+            The Hive canvas is off. This machine GPU-crashed Edge and Chrome on the map and 3D
+            views. Use the pages below.
+          </p>
+          <ul className="mt-6 space-y-2 text-sm">
+            {NAV.map((n) => (
+              <li key={n.href}>
+                <Link className="text-teal underline-offset-2 hover:underline" to={n.href as never}>
+                  {n.label} — {n.title}
+                </Link>
+              </li>
+            ))}
+          </ul>
+        </main>
+      </div>
+    );
+  }
+
   // ── Hive home: 3D workspace + optional floating desks from comb clicks ──
   if (isHiveHome) {
     return (
       <div
         className={cn(
-          "tutor-immersive tutor-galaxy-skin",
+          "tutor-immersive tutor-galaxy-skin tutor-gpu-safe",
           desks.length > 0 && "has-desks",
         )}
       >
         <div className="tutor-galaxy-layer is-global" aria-hidden />
         <div className="tutor-hive-layer is-hero">
-          <HiveWorkspace />
+          <Suspense fallback={<p className="p-6 text-sm text-subtle">Opening the hive…</p>}>
+            <HiveWorkspace />
+          </Suspense>
         </div>
         <DeskStage />
         {topbar}
@@ -259,7 +311,7 @@ export function AppShell({ children }: { children: React.ReactNode }) {
 
   // ── Full pages: real scrollable content (no desk redirect, no hidden main) ──
   return (
-    <div className="tutor-page-shell tutor-galaxy-skin min-h-dvh bg-bg text-fg flex flex-col">
+    <div className="tutor-page-shell tutor-galaxy-skin tutor-gpu-safe min-h-dvh bg-bg text-fg flex flex-col">
       <div className="tutor-galaxy-layer is-global is-page" aria-hidden />
       {topbar}
       <main className="tutor-page-main flex-1 w-full relative z-[1]">{children}</main>

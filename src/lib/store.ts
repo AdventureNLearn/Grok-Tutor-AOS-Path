@@ -42,11 +42,49 @@ type TutorState = {
   appendMessage: (sessionId: string, msg: ChatMessage) => void;
   addNote: (n: Note) => void;
   removeNote: (id: string) => void;
+  /** Clear lessons, notes, minutes, guest counters (this browser only). */
+  resetProgress: () => void;
   consumeGuestMessage: () => boolean;
   guestLimit: () => number;
   guestRemaining: () => number;
   addMinutes: (m: number) => void;
 };
+
+/** localStorage keys used by Tutor product surfaces (progress + hive session chrome) */
+export const TUTOR_STORAGE_KEYS = [
+  "grok-tutor-aos-v1",
+  "grok-tutor-hive-desks-v2",
+  "grok-tutor-hive-desks-v1",
+  "grok-tutor-first-run-coach-v1",
+] as const;
+
+/**
+ * Wipe learner progress + open desks in this browser.
+ * Does not clear 3D/edit preferences unless `full` is true.
+ */
+export function clearBrowserTutorData(opts?: { full?: boolean }): void {
+  if (typeof localStorage === "undefined") return;
+  for (const k of TUTOR_STORAGE_KEYS) {
+    try {
+      localStorage.removeItem(k);
+    } catch {
+      /* ignore */
+    }
+  }
+  if (opts?.full) {
+    for (const k of [
+      "grok-tutor-hive-edit-v3",
+      "grok-tutor-hive-view-v1",
+      "grok-tutor-hive-view-forced-v1",
+    ]) {
+      try {
+        localStorage.removeItem(k);
+      } catch {
+        /* ignore */
+      }
+    }
+  }
+}
 
 function todayKey() {
   return new Date().toISOString().slice(0, 10);
@@ -148,6 +186,15 @@ export const useTutorStore = create<TutorState>()(
         set((st) => ({
           notes: (Array.isArray(st.notes) ? st.notes : []).filter((n) => n.id !== id),
         })),
+
+      resetProgress: () =>
+        set({
+          sessions: [],
+          notes: [],
+          guestMessagesUsed: 0,
+          guestDayKey: todayKey(),
+          totalMinutes: 0,
+        }),
 
       consumeGuestMessage: () => {
         const st = get();

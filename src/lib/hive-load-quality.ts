@@ -34,6 +34,8 @@ export type HiveQualityProfile = {
   preferMap: boolean;
   /** Soft 3D start budget (ms) before fail → Map */
   igniteBudgetMs: number;
+  /** Refuse a slow/iGPU WebGL context instead of crashing the tab */
+  failIfMajorPerformanceCaveat: boolean;
   gpuLabel: string;
   isIgpu: boolean;
   webgl: boolean;
@@ -199,6 +201,7 @@ export function profileFor(
         powerPreference: "high-performance",
         preferMap: false,
         igniteBudgetMs: 10000,
+        failIfMajorPerformanceCaveat: false,
       };
     case "accessible":
       return {
@@ -217,6 +220,7 @@ export function profileFor(
         powerPreference: "low-power",
         preferMap: true,
         igniteBudgetMs: 6000,
+        failIfMajorPerformanceCaveat: true,
       };
     case "steady":
       return {
@@ -235,6 +239,7 @@ export function profileFor(
         powerPreference: "low-power",
         preferMap: true,
         igniteBudgetMs: 8000,
+        failIfMajorPerformanceCaveat: true,
       };
     default:
       return {
@@ -253,6 +258,7 @@ export function profileFor(
         powerPreference: "default",
         preferMap: true,
         igniteBudgetMs: 9000,
+        failIfMajorPerformanceCaveat: true,
       };
   }
 }

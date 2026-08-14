@@ -26,6 +26,13 @@ function DemoIndexPage() {
           jobsite talk — super, foreman, holds, handoffs, short status updates — not textbook
           jargon. Review tone and accuracy before you run a live lesson.
         </p>
+        <p className="mt-3 text-sm text-subtle">
+          Flagship example-reasoning tracks live on{" "}
+          <a className="text-teal underline-offset-2 hover:underline" href="/?view=3d&field=examples">
+            The Hive 3D field
+          </a>{" "}
+          — pick a lens to remap the same six lessons.
+        </p>
       </div>
 
       <div className="mt-8 grid grid-cols-2 sm:grid-cols-4 gap-3">

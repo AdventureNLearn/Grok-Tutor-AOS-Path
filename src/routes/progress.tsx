@@ -1,6 +1,11 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
-import { Clock, StickyNote, Trash2 } from "lucide-react";
-import { useTutorStore } from "@/lib/store";
+import { Clock, StickyNote, Trash2, RotateCcw } from "lucide-react";
+import { toast } from "sonner";
+import {
+  clearBrowserTutorData,
+  useTutorStore,
+} from "@/lib/store";
+import { useHiveDeskStore } from "@/lib/hive-desk-store";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { useMemo, useState } from "react";
@@ -15,6 +20,9 @@ function ProgressPage() {
   const totalMinutes = useTutorStore((s) => s.totalMinutes);
   const addNote = useTutorStore((s) => s.addNote);
   const removeNote = useTutorStore((s) => s.removeNote);
+  const resetProgress = useTutorStore((s) => s.resetProgress);
+  const closeAllDesks = useHiveDeskStore((s) => s.closeAll);
+  const clearBookmarks = useHiveDeskStore((s) => s.clearBookmarks);
 
   const sessions = useMemo(
     () => (Array.isArray(sessionsRaw) ? sessionsRaw : []),
@@ -37,12 +45,81 @@ function ProgressPage() {
     sessionMinutes,
   );
 
+  function handleResetProgress() {
+    const ok = window.confirm(
+      "Reset all progress in this browser?\n\nThis clears lessons, notes, study minutes, guest question counters, and open desks. It cannot be undone.",
+    );
+    if (!ok) return;
+    try {
+      resetProgress();
+      closeAllDesks();
+      clearBookmarks();
+      clearBrowserTutorData({ full: false });
+      toast.success("Progress reset", {
+        description: "Lessons, notes, and desks cleared on this device.",
+      });
+    } catch (e) {
+      toast.error(e instanceof Error ? e.message : "Could not reset progress");
+    }
+  }
+
+  function handleFullReset() {
+    const ok = window.confirm(
+      "Full local reset?\n\nClears progress, desks, first-run tips, and Hive view preferences. The page will reload.",
+    );
+    if (!ok) return;
+    try {
+      resetProgress();
+      closeAllDesks();
+      clearBookmarks();
+      clearBrowserTutorData({ full: true });
+      toast.success("Full reset — reloading…");
+      window.setTimeout(() => {
+        window.location.href = "/";
+      }, 400);
+    } catch (e) {
+      toast.error(e instanceof Error ? e.message : "Could not reset");
+    }
+  }
+
   return (
     <div className="mx-auto max-w-6xl px-4 py-10">
-      <h1 className="text-3xl font-semibold tracking-tight">Progress</h1>
-      <p className="mt-2 text-muted">
-        Saved in this browser. Lessons and notes stay on your device.
-      </p>
+      <div className="flex flex-col sm:flex-row sm:items-end sm:justify-between gap-3">
+        <div>
+          <h1 className="text-3xl font-semibold tracking-tight">Progress</h1>
+          {sessions.length === 0 && notes.length === 0 ? (
+            <p className="mt-2 text-sm text-subtle">
+              This browser has not lit a comb yet. Progress stays on this device. Changing
+              browsers or clearing site data goes dark — there is no cloud save.
+            </p>
+          ) : null}
+          <p className="mt-2 text-muted">
+            Saved in this browser. Lessons and notes stay on your device.
+          </p>
+        </div>
+        <div className="flex flex-wrap gap-2">
+          <Button
+            type="button"
+            size="sm"
+            variant="outline"
+            onClick={handleResetProgress}
+            title="Clear lessons, notes, minutes, and desks"
+          >
+            <RotateCcw className="h-3.5 w-3.5" />
+            Reset progress
+          </Button>
+          <Button
+            type="button"
+            size="sm"
+            variant="ghost"
+            className="text-subtle hover:text-danger"
+            onClick={handleFullReset}
+            title="Clear all local Tutor data and reload"
+          >
+            Full local reset
+          </Button>
+        </div>
+      </div>
 
       <div className="mt-8 grid sm:grid-cols-3 gap-3">
         <div className="rounded-[var(--radius-xl)] border border-border bg-surface p-5">

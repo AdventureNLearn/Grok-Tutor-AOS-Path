@@ -94,18 +94,6 @@ export function buildWorkspaceCombs(): HiveNode[] {
       meta: `${RELEASE_CURRICULUM.industries} industries · ${RELEASE_CURRICULUM.modes} modes`,
     },
     {
-      id: "ws:library",
-      kind: "workspace",
-      acr: "LIB",
-      title: "Training library",
-      description:
-        "Curriculum hub: ready lessons by craft, Plan Lab, and clear entry points for learning.",
-      how: "Browse ready lessons, open Plan Lab, or jump into samples and live sessions.",
-      color: WS_COLORS.library,
-      href: "/library",
-      meta: `${RELEASE_CURRICULUM.readyPublicClean} ready · ${RELEASE_CURRICULUM.planLabTotal} Plan Lab`,
-    },
-    {
       id: "ws:industries",
       kind: "workspace",
       acr: "IND",
@@ -172,18 +160,7 @@ export function buildWorkspaceCombs(): HiveNode[] {
       href: "/labs/cad",
       meta: `${RELEASE_CURRICULUM.planLabTotal} samples · offline`,
     },
-    {
-      id: "ws:credits",
-      kind: "workspace",
-      acr: "CRD",
-      title: "Credits & lineage",
-      description:
-        "Third-party research credits: MAC, PartMode literacy, CAI-OS conceptual spark — clean product chrome.",
-      how: "Open full attribution. No secrets. No private ops brands.",
-      color: WS_COLORS.credits,
-      href: "/credits",
-      meta: "MAC · PartMode · CAI-OS",
-    },
+    // Library + Credits live as pages (Samples → library, topbar Credits) — not extra Hive combs.
     // ITSHABBENING / meme village are NOT professional workspace combs.
     // Access only via meme routes (/itshabbening, /meme-village) — see tutor-lane.ts.
   ];
@@ -263,6 +240,32 @@ export function buildIndustryField(limit = 24): HiveNode[] {
   }));
 }
 
+/**
+ * Hive field = one connected sitting, never the full corpus.
+ * Catalog lives on /demo /explore /library. People who want every node
+ * firing at once build that themselves.
+ */
+export function buildConnectedHiveField(opts?: {
+  lessonId?: string | null;
+  lensSkillIds?: string[];
+  industryId?: string | null;
+}): {
+  workspaces: HiveNode[];
+  skills: HiveNode[];
+  industries: HiveNode[];
+} {
+  const workspaces = buildWorkspaceCombs();
+  const wantSkills = new Set((opts?.lensSkillIds ?? []).filter(Boolean));
+  const skills = wantSkills.size
+    ? buildSkillField(48).filter((n) => wantSkills.has(n.id.replace(/^sk:/, "")))
+    : [];
+  const wantInd = opts?.industryId;
+  const industries = wantInd
+    ? buildIndustryField(64).filter((n) => n.id === `ind:${wantInd}`)
+    : [];
+  return { workspaces, skills, industries };
+}
+
 export function hiveHudSummary() {
   const skills = AOS_SKILLS.filter((s) => s.tutorEnabled).length;
   return {
@@ -271,6 +274,6 @@ export function hiveHudSummary() {
     industries: INDUSTRIES.length,
     planLab: RELEASE_CURRICULUM.planLabTotal,
     readyPublicClean: RELEASE_CURRICULUM.readyPublicClean,
-    label: releaseHudLine(),
+    label: `${buildWorkspaceCombs().length} rooms · this sitting only`,
   };
 }

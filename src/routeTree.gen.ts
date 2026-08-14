@@ -27,6 +27,7 @@ import { Route as DemoIndustryIdRouteImport } from './routes/demo.$industryId'
 import { Route as LabsCadRouteImport } from './routes/labs.cad'
 import { Route as SkillsIndexRouteImport } from './routes/skills.index'
 import { Route as SkillsSkillIdRouteImport } from './routes/skills.$skillId'
+import { Route as DemoReasonTrackIdRouteImport } from './routes/demo.reason.$trackId'
 
 const IndexRoute = IndexRouteImport.update({
   id: '/',
@@ -118,6 +119,11 @@ const SkillsSkillIdRoute = SkillsSkillIdRouteImport.update({
   path: '/$skillId',
   getParentRoute: () => SkillsRoute,
 } as any)
+const DemoReasonTrackIdRoute = DemoReasonTrackIdRouteImport.update({
+  id: '/reason/$trackId',
+  path: '/reason/$trackId',
+  getParentRoute: () => DemoRoute,
+} as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
@@ -138,6 +144,7 @@ export interface FileRoutesByFullPath {
   '/skills/$skillId': typeof SkillsSkillIdRoute
   '/demo/': typeof DemoIndexRoute
   '/skills/': typeof SkillsIndexRoute
+  '/demo/reason/$trackId': typeof DemoReasonTrackIdRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
@@ -156,6 +163,7 @@ export interface FileRoutesByTo {
   '/skills/$skillId': typeof SkillsSkillIdRoute
   '/demo': typeof DemoIndexRoute
   '/skills': typeof SkillsIndexRoute
+  '/demo/reason/$trackId': typeof DemoReasonTrackIdRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
@@ -177,6 +185,7 @@ export interface FileRoutesById {
   '/skills/$skillId': typeof SkillsSkillIdRoute
   '/demo/': typeof DemoIndexRoute
   '/skills/': typeof SkillsIndexRoute
+  '/demo/reason/$trackId': typeof DemoReasonTrackIdRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
@@ -199,6 +208,7 @@ export interface FileRouteTypes {
     | '/skills/$skillId'
     | '/demo/'
     | '/skills/'
+    | '/demo/reason/$trackId'
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
@@ -217,6 +227,7 @@ export interface FileRouteTypes {
     | '/skills/$skillId'
     | '/demo'
     | '/skills'
+    | '/demo/reason/$trackId'
   id:
     | '__root__'
     | '/'
@@ -237,6 +248,7 @@ export interface FileRouteTypes {
     | '/skills/$skillId'
     | '/demo/'
     | '/skills/'
+    | '/demo/reason/$trackId'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
@@ -384,17 +396,26 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof SkillsSkillIdRouteImport
       parentRoute: typeof SkillsRoute
     }
+    '/demo/reason/$trackId': {
+      id: '/demo/reason/$trackId'
+      path: '/reason/$trackId'
+      fullPath: '/demo/reason/$trackId'
+      preLoaderRoute: typeof DemoReasonTrackIdRouteImport
+      parentRoute: typeof DemoRoute
+    }
   }
 }
 
 interface DemoRouteChildren {
   DemoIndustryIdRoute: typeof DemoIndustryIdRoute
   DemoIndexRoute: typeof DemoIndexRoute
+  DemoReasonTrackIdRoute: typeof DemoReasonTrackIdRoute
 }
 
 const DemoRouteChildren: DemoRouteChildren = {
   DemoIndustryIdRoute: DemoIndustryIdRoute,
   DemoIndexRoute: DemoIndexRoute,
+  DemoReasonTrackIdRoute: DemoReasonTrackIdRoute,
 }
 
 const DemoRouteWithChildren = DemoRoute._addFileChildren(DemoRouteChildren)

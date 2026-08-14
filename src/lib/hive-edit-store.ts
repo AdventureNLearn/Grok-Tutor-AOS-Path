@@ -37,6 +37,8 @@ export type { ReasoningDepth } from "./hive-deep-reasoning";
 export { DEEP_REASONING_PROFILES } from "./hive-deep-reasoning";
 export { NODE_STYLE_META } from "./hive-node-style";
 
+export type HiveFieldMode = "examples" | "catalog";
+
 export type SavedLayout = {
   id: string;
   name: string;
@@ -55,6 +57,12 @@ export type LearnOrchEvent =
 
 type HiveEditState = {
   editMode: boolean;
+  /** Examples = lesson-through-lens field (default). Catalog = desks / crafts. */
+  fieldMode: HiveFieldMode;
+  /** Learner Tools: one lens or none */
+  attachedLensId: string | null;
+  /** Existing sample lesson id (reasoning-track), or null */
+  activeLessonId: string | null;
   shapeId: HiveShapeId;
   /** Geometric hex vs galactic star/planet bodies */
   nodeStyle: HiveNodeStyle;
@@ -70,6 +78,9 @@ type HiveEditState = {
   savedLayouts: SavedLayout[];
   setEditMode: (on: boolean) => void;
   toggleEditMode: () => void;
+  setFieldMode: (mode: HiveFieldMode) => void;
+  setAttachedLensId: (id: string | null) => void;
+  setActiveLessonId: (id: string | null) => void;
   setShape: (id: HiveShapeId) => void;
   setNodeStyle: (style: HiveNodeStyle) => void;
   setReasoningDepth: (depth: ReasoningDepth) => void;
@@ -129,7 +140,10 @@ export const useHiveEditStore = create<HiveEditState>()(
   persist(
     (set, get) => ({
       editMode: false,
-      // Honeycomb is the light default; Helix/Spine available in Edit (GPU-friendly cold start)
+      fieldMode: "catalog",
+      attachedLensId: null,
+      activeLessonId: null,
+      // Idle Hive is honeycomb. A lens may change the wave shape — not this default.
       shapeId: "honeycomb",
       nodeStyle: "geometric",
       reasoningDepth: "standard",
@@ -150,6 +164,17 @@ export const useHiveEditStore = create<HiveEditState>()(
       },
       toggleEditMode() {
         set((s) => ({ editMode: !s.editMode }));
+      },
+      setFieldMode(mode) {
+        set({
+          fieldMode: mode === "catalog" ? "catalog" : "examples",
+        });
+      },
+      setAttachedLensId(id) {
+        set({ attachedLensId: id && id.length ? id : null });
+      },
+      setActiveLessonId(id) {
+        set({ activeLessonId: id && id.length ? id : null });
       },
       setShape(id) {
         set({ shapeId: id, phaseIndex: 0 });
@@ -319,6 +344,7 @@ export const useHiveEditStore = create<HiveEditState>()(
           skills,
           industries,
           get().customOffsets,
+          get().nodeStyle === "galactic" ? "galactic" : "geometric",
         );
       },
       scenarioFor(_workspaces, _skills, _industries) {
@@ -366,6 +392,9 @@ export const useHiveEditStore = create<HiveEditState>()(
     {
       name: "grok-tutor-hive-edit-v3",
       partialize: (s) => ({
+        fieldMode: s.fieldMode,
+        attachedLensId: s.attachedLensId,
+        activeLessonId: s.activeLessonId,
         shapeId: s.shapeId,
         nodeStyle: s.nodeStyle,
         reasoningDepth: s.reasoningDepth,

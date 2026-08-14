@@ -9,21 +9,30 @@
 import { useCallback, useEffect, useMemo, useRef, useState, type CSSProperties } from "react";
 import { Maximize2, Minus, Pencil, Plus, Sparkles } from "lucide-react";
 import {
-  buildIndustryField,
-  buildSkillField,
-  buildWorkspaceCombs,
+  buildConnectedHiveField,
   hiveHudSummary,
   type HiveNode,
 } from "@/lib/tutor-hive-map";
+import {
+  buildReasoningLessonCombs,
+  lessonNodeId,
+} from "@/lib/reasoning-tracks";
+import { existingSampleById, skillIdsForLens } from "@/lib/suite-rooms";
 import { useHiveDeskStore } from "@/lib/hive-desk-store";
 import { useHiveEditStore } from "@/lib/hive-edit-store";
-import { detectHiveQuality } from "@/lib/hive-load-quality";
+import { detectHiveQuality, profileFor } from "@/lib/hive-load-quality";
 import {
   defaultViewForDevice,
   isPhoneLayout,
   layoutTier,
   type HiveLayoutTier,
 } from "@/lib/hive-viewport";
+import {
+  NODE_SIZE_LEGEND,
+  NODE_STYLE_META,
+  sizeMeaningForNode,
+  thinkingPriority,
+} from "@/lib/hive-node-style";
 import { cn } from "@/lib/utils";
 import type { TutorHive3D } from "./tutor-hive3d";
 import { HiveEditPanel } from "./hive-edit-panel";
@@ -96,6 +105,8 @@ export function HiveWorkspace({ className }: Props) {
   const lastMessage = useHiveDeskStore((s) => s.lastMessage);
 
   const editMode = useHiveEditStore((s) => s.editMode);
+  const fieldModeRaw = useHiveEditStore((s) => s.fieldMode);
+  const fieldMode = fieldModeRaw === "examples" ? "examples" : "catalog";
   const shapeId = useHiveEditStore((s) => s.shapeId);
   const nodeStyle = useHiveEditStore((s) => s.nodeStyle);
   const reasoningDepth = useHiveEditStore((s) => s.reasoningDepth);
@@ -106,6 +117,10 @@ export function HiveWorkspace({ className }: Props) {
   const phaseIndex = useHiveEditStore((s) => s.phaseIndex);
   const toggleEditMode = useHiveEditStore((s) => s.toggleEditMode);
   const setEditMode = useHiveEditStore((s) => s.setEditMode);
+  const setFieldMode = useHiveEditStore((s) => s.setFieldMode);
+  const setActiveLessonId = useHiveEditStore((s) => s.setActiveLessonId);
+  const activeLessonId = useHiveEditStore((s) => s.activeLessonId);
+  const attachedLensId = useHiveEditStore((s) => s.attachedLensId);
   const setShape = useHiveEditStore((s) => s.setShape);
   const setPlayOrchestration = useHiveEditStore((s) => s.setPlayOrchestration);
   const setReasoningDepth = useHiveEditStore((s) => s.setReasoningDepth);
@@ -121,7 +136,12 @@ export function HiveWorkspace({ className }: Props) {
   // Quality + stored view are client-only — SSR always paints Map so hydration
   // matches. Prefer 3D only after mount (localStorage / user click).
   const [quality, setQuality] = useState(() =>
-    detectHiveQuality(), // SSR: steady; client first paint also steady until effect
+    profileFor("steady", {
+      reasons: ["safe-fallback-no-gpu-probe"],
+      gpuLabel: "deferred",
+      isIgpu: true,
+      webgl: false,
+    }),
   );
   const [viewMode, setViewMode] = useState<HiveViewMode>("2d");
   const [loadStage, setLoadStage] = useState<LoadStage>("idle");
@@ -137,24 +157,47 @@ export function HiveWorkspace({ className }: Props) {
   );
   const phone = tier === "phone";
 
-  const workspaces = useMemo(() => buildWorkspaceCombs(), []);
-  const skills = useMemo(
-    () => buildSkillField(quality.maxSkills),
-    [quality.maxSkills],
+  const lessons = useMemo(() => buildReasoningLessonCombs(), []);
+  const sittingLesson = existingSampleById(activeLessonId);
+  const slice = useMemo(
+    () =>
+      buildConnectedHiveField({
+        lessonId: activeLessonId,
+        industryId: sittingLesson?.industryId ?? null,
+        lensSkillIds: skillIdsForLens(attachedLensId),
+      }),
+    [activeLessonId, sittingLesson?.industryId, attachedLensId],
   );
-  const industries = useMemo(
-    () => buildIndustryField(quality.maxIndustries),
-    [quality.maxIndustries],
-  );
+  const workspaces = slice.workspaces;
+  const skills = slice.skills;
+  const industries = slice.industries;
+  const examplesOn = fieldMode === "examples";
+  // Idle: 8 rooms only. Sitting: those rooms + at most one lesson comb.
+  // Never dump the corpus, industry ring, or skill carpet into 3D.
+  const fieldWorkspaces = useMemo(() => {
+    if (examplesOn) {
+      const one = sittingLesson
+        ? lessons.filter((n) => n.id === lessonNodeId(sittingLesson.id))
+        : lessons.slice(0, 1);
+      return one.length ? one : lessons.slice(0, 1);
+    }
+    if (sittingLesson) {
+      const extra = lessons.find((n) => n.id === lessonNodeId(sittingLesson.id));
+      return extra ? [extra, ...workspaces] : workspaces;
+    }
+    return workspaces;
+  }, [examplesOn, sittingLesson, lessons, workspaces]);
+  const fieldSkills = skills;
+  const fieldIndustries = industries;
   const summary = useMemo(() => hiveHudSummary(), []);
 
   const phases = useMemo(
-    () => phasesFor(workspaces, skills, industries),
+    () => phasesFor(fieldWorkspaces, fieldSkills, fieldIndustries),
     [
       phasesFor,
-      workspaces,
-      skills,
-      industries,
+      fieldWorkspaces,
+      fieldSkills,
+      fieldIndustries,
       shapeId,
       reasoningDepth,
       deepProfileId,
@@ -162,28 +205,28 @@ export function HiveWorkspace({ className }: Props) {
   );
 
   const orchScenario = useMemo(
-    () => scenarioFor(workspaces, skills, industries),
-    [scenarioFor, workspaces, skills, industries, shapeId, reasoningDepth],
+    () => scenarioFor(fieldWorkspaces, fieldSkills, fieldIndustries),
+    [scenarioFor, fieldWorkspaces, fieldSkills, fieldIndustries, shapeId, reasoningDepth],
   );
   const orchStep = useMemo(
-    () => scenarioStepFor(workspaces, skills, industries),
+    () => scenarioStepFor(fieldWorkspaces, fieldSkills, fieldIndustries),
     [
       scenarioStepFor,
-      workspaces,
-      skills,
-      industries,
+      fieldWorkspaces,
+      fieldSkills,
+      fieldIndustries,
       shapeId,
       reasoningDepth,
       phaseIndex,
     ],
   );
   const orchSkills = useMemo(
-    () => scenarioSkillsFor(workspaces, skills, industries),
+    () => scenarioSkillsFor(fieldWorkspaces, fieldSkills, fieldIndustries),
     [
       scenarioSkillsFor,
-      workspaces,
-      skills,
-      industries,
+      fieldWorkspaces,
+      fieldSkills,
+      fieldIndustries,
       shapeId,
       reasoningDepth,
       phaseIndex,
@@ -191,28 +234,37 @@ export function HiveWorkspace({ className }: Props) {
   );
 
   const positions = useMemo(
-    () => positionsFor(workspaces, skills, industries),
-    [positionsFor, workspaces, skills, industries, shapeId, customOffsets],
+    () => positionsFor(fieldWorkspaces, fieldSkills, fieldIndustries),
+    [
+      positionsFor,
+      fieldWorkspaces,
+      fieldSkills,
+      fieldIndustries,
+      shapeId,
+      customOffsets,
+      nodeStyle,
+    ],
   );
 
   const activePhase = phases[phaseIndex];
-  const phaseNodeIds = activePhase?.nodeIds ?? [];
+  const exampleGlowIds = sittingLesson ? [lessonNodeId(sittingLesson.id)] : [];
+  const phaseNodeIds = useMemo(() => {
+    const ids = new Set(activePhase?.nodeIds ?? []);
+    for (const id of exampleGlowIds) ids.add(id);
+    return [...ids];
+  }, [activePhase, exampleGlowIds]);
 
   const openIds = useMemo(() => {
     const ids: string[] = [];
+    const pool = [...fieldWorkspaces, ...fieldIndustries, ...fieldSkills, ...lessons];
     for (const d of desks) {
       if (!d?.href) continue;
       const path = d.href.split("?")[0] || "";
-      const hit =
-        workspaces.find((n) => path === n.href.split("?")[0]) ||
-        industries.find((n) => path === n.href.split("?")[0]) ||
-        skills.find(
-          (n) => path === n.href.split("?")[0] || d.href.includes(n.href),
-        );
+      const hit = pool.find((n) => path === n.href.split("?")[0]);
       if (hit) ids.push(hit.id);
     }
     return ids;
-  }, [desks, workspaces, industries, skills]);
+  }, [desks, fieldWorkspaces, fieldIndustries, fieldSkills, lessons]);
 
   const openFromNodeRef = useRef(openFromNode);
   openFromNodeRef.current = openFromNode;
@@ -224,24 +276,24 @@ export function HiveWorkspace({ className }: Props) {
   positionsRef.current = positions;
   const qualityRef = useRef(quality);
   qualityRef.current = quality;
-  const workspacesRef = useRef(workspaces);
-  workspacesRef.current = workspaces;
-  const skillsRef = useRef(skills);
-  skillsRef.current = skills;
-  const industriesRef = useRef(industries);
-  industriesRef.current = industries;
+  const workspacesRef = useRef(fieldWorkspaces);
+  workspacesRef.current = fieldWorkspaces;
+  const skillsRef = useRef(fieldSkills);
+  skillsRef.current = fieldSkills;
+  const industriesRef = useRef(fieldIndustries);
+  industriesRef.current = fieldIndustries;
 
   const prefer3d = viewMode === "3d";
   /** Map shows on user choice OR soft 3D failure — never blocks shapes/desks */
   const showMap = viewMode === "2d" || loadStage === "failed";
   const softFailed = loadStage === "failed";
 
-  // Remount 3D when node visual style changes (geometric ↔ galactic)
+  // Remount 3D when the connected sitting changes (small field — never the corpus)
   useEffect(() => {
     if (!prefer3d) return;
     setRemountKey((k) => k + 1);
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [nodeStyle]);
+  }, [nodeStyle, fieldMode, activeLessonId, attachedLensId]);
 
   /**
    * Human-observable demo / auto-test entry:
@@ -255,8 +307,10 @@ export function HiveWorkspace({ className }: Props) {
     const applyOrchFromUrl = () => {
       try {
         const p = new URLSearchParams(window.location.search);
-        const orch = p.get("orch") === "1" || p.get("demo") === "scenario";
-        if (!orch) return;
+        const field = p.get("field");
+        if (field === "examples" || field === "catalog") {
+          setFieldMode(field);
+        }
         const allowedShapes = [
           "spine",
           "integrity-triangle",
@@ -267,6 +321,20 @@ export function HiveWorkspace({ className }: Props) {
           "star-burst",
           "honeycomb",
         ] as const;
+        const rawShapeEarly = p.get("shape");
+        if (
+          rawShapeEarly &&
+          (allowedShapes as readonly string[]).includes(rawShapeEarly)
+        ) {
+          setShape(rawShapeEarly as (typeof allowedShapes)[number]);
+        }
+        const track = p.get("track");
+        if (track) {
+          setFieldMode("examples");
+          selectNode(lessonNodeId(track));
+        }
+        const orch = p.get("orch") === "1" || p.get("demo") === "scenario";
+        if (!orch) return;
         const rawShape = p.get("shape") || "spine";
         const shape = (allowedShapes as readonly string[]).includes(rawShape)
           ? (rawShape as (typeof allowedShapes)[number])
@@ -281,15 +349,7 @@ export function HiveWorkspace({ className }: Props) {
         }
         setEditMode(true);
         setPlayOrchestration(true);
-        if (p.get("view") !== "map") {
-          try {
-            localStorage.setItem("grok-tutor-hive-view-v1", "3d");
-            localStorage.setItem("grok-tutor-hive-view-forced-v1", "1");
-          } catch {
-            /* ignore */
-          }
-          setViewMode("3d");
-        }
+        // Play works on Map. Do not force 3D — that GPU-crashed iGPU browsers.
       } catch {
         /* ignore */
       }
@@ -365,46 +425,56 @@ export function HiveWorkspace({ className }: Props) {
   // After hydration: apply device quality + stored view (avoids SSR/client mismatch)
   useEffect(() => {
     if (typeof window === "undefined") return;
-    const q = detectHiveQuality();
+    // Do not probe WebGL on boot — loseContext() on Iris Xe crashed Edge/Chrome
+    // even in Map view. Probe only if the user later opts into 3D.
+    const q = profileFor("steady", {
+      reasons: ["safe-fallback-no-gpu-probe"],
+      gpuLabel: "deferred",
+      isIgpu: true,
+      webgl: false,
+    });
     setQuality(q);
     try {
       const params = new URLSearchParams(window.location.search);
       const urlView = params.get("view");
-      // Operator deep-link: /?view=3d or /?view=map
-      if (urlView === "3d" || urlView === "map" || urlView === "2d") {
-        const mode: HiveViewMode = urlView === "3d" ? "3d" : "2d";
-        setViewMode(mode);
+      const wantMap =
+        urlView === "map" ||
+        urlView === "2d" ||
+        urlView === "safe" ||
+        params.get("safe") === "1";
+
+      // Safe fallback (restored): Map is the product on iGPU / preferMap.
+      // Ignore stored/forced 3D and ?view=3d so a prior crash URL cannot loop.
+      if (q.preferMap || wantMap || isPhoneLayout()) {
+        setViewMode("2d");
         try {
-          localStorage.setItem(VIEW_KEY, mode);
+          localStorage.setItem(VIEW_KEY, "2d");
+          localStorage.removeItem(VIEW_FORCED_KEY);
+        } catch {
+          /* ignore */
+        }
+        return;
+      }
+
+      if (urlView === "3d") {
+        setViewMode("3d");
+        try {
+          localStorage.setItem(VIEW_KEY, "3d");
           localStorage.setItem(VIEW_FORCED_KEY, "1");
         } catch {
           /* ignore */
         }
         return;
       }
-      const stored = readStoredView();
-      // Phone + no forced preference → Map
-      if (localStorage.getItem(VIEW_FORCED_KEY) !== "1" && isPhoneLayout()) {
-        setViewMode("2d");
-        localStorage.setItem(VIEW_KEY, "2d");
-        return;
-      }
-      // Prefer Map on accessible/steady unless user already forced 3D
-      if (
-        stored === "3d" &&
-        q.preferMap &&
-        localStorage.getItem(VIEW_FORCED_KEY) !== "1"
-      ) {
-        setViewMode("2d");
-        return;
-      }
-      setViewMode(stored);
+      setViewMode(readStoredView());
     } catch {
       setViewMode(defaultViewForDevice());
     }
   }, []);
 
   const retry3d = useCallback(() => {
+    const q = detectHiveQuality();
+    setQuality(q);
     setView("3d");
   }, [setView]);
 
@@ -475,6 +545,7 @@ export function HiveWorkspace({ className }: Props) {
                 nebula: q.nebula,
                 grid: q.grid,
                 powerPreference: q.powerPreference,
+                failIfMajorPerformanceCaveat: q.failIfMajorPerformanceCaveat,
               },
               onHover: (info) => {
                 if (!cancelled && stillMine()) setHover(info);
@@ -556,7 +627,7 @@ export function HiveWorkspace({ className }: Props) {
     const api = apiRef.current;
     if (!api || loadStage !== "ready") return;
     try {
-      const edges = edgesFor(workspaces, skills, industries);
+      const edges = edgesFor(fieldWorkspaces, fieldSkills, fieldIndustries);
       api.setFlowEdges(playOrchestration || editMode ? edges : []);
     } catch {
       /* ignore */
@@ -657,6 +728,9 @@ export function HiveWorkspace({ className }: Props) {
       selectNode(node.id);
       return;
     }
+    if (node.id.startsWith("lesson:")) {
+      setActiveLessonId(node.id.slice("lesson:".length));
+    }
     try {
       const result = openFromNode(node);
       if (result && "ok" in result && result.ok) {
@@ -670,28 +744,31 @@ export function HiveWorkspace({ className }: Props) {
   const igniting = prefer3d && loadStage === "igniting" && !showMap;
   const mapNote = softFailed
     ? glError
-      ? `${glError} Map keeps full Hive features. Retry 3D when ready.`
-      : "Map mode (3D paused) — same shapes, desks, and phases. Retry 3D anytime."
+      ? `${glError} Map keeps example lessons and lenses. Retry 3D when ready.`
+      : "Map mode (3D paused) — same lessons and lenses. Retry 3D anytime."
     : viewMode === "2d"
-      ? quality.preferMap
-        ? `Map-first on this machine (${quality.tier}) — full Hive features. 3D is optional.`
-        : "Map view — reasoning shapes and phases still apply. Switch to 3D anytime."
+      ? examplesOn
+        ? "Map of example lessons — pick a lens to remap the same samples."
+        : quality.preferMap
+          ? `Map-first on this machine (${quality.tier}) — full Hive features. 3D is optional.`
+          : "Map view — reasoning shapes and phases still apply. Switch to 3D anytime."
       : null;
 
   const flowEdges = useMemo(() => {
-    if (!(playOrchestration || editMode)) return [];
+    if (!(playOrchestration || editMode || examplesOn)) return [];
     try {
-      return edgesFor(workspaces, skills, industries);
+      return edgesFor(fieldWorkspaces, fieldSkills, fieldIndustries);
     } catch {
       return [];
     }
   }, [
     playOrchestration,
     editMode,
+    examplesOn,
     edgesFor,
-    workspaces,
-    skills,
-    industries,
+    fieldWorkspaces,
+    fieldSkills,
+    fieldIndustries,
     shapeId,
     phaseIndex,
   ]);
@@ -708,6 +785,7 @@ export function HiveWorkspace({ className }: Props) {
       )}
       data-lane="real"
       data-surface="tutor-hive"
+      data-field={fieldMode}
       data-shape={shapeId}
       data-node-style={nodeStyle}
       data-reasoning={reasoningDepth}
@@ -738,9 +816,9 @@ export function HiveWorkspace({ className }: Props) {
 
       {showMap ? (
         <HiveMap2D
-          workspaces={workspaces}
-          skills={skills}
-          industries={industries}
+          workspaces={fieldWorkspaces}
+          skills={fieldSkills}
+          industries={fieldIndustries}
           positions={positions}
           phaseNodeIds={
             playOrchestration || editMode ? phaseNodeIds : []
@@ -774,18 +852,8 @@ export function HiveWorkspace({ className }: Props) {
             <p className="tutor-hive-meta">{summary.label}</p>
             <p className="tutor-hive-sub">
               {editMode
-                ? phone
-                  ? "Edit — pick a shape · phases light combs · Map or 3D"
-                  : "Edit mode — pick a shape · phases light combs · works in 3D and Map"
-                : showMap
-                  ? softFailed
-                    ? "Map fallback — tap a comb · shapes still apply · Retry 3D when ready"
-                    : phone
-                      ? "Tap a comb to open a desk · shapes apply · switch to 3D anytime"
-                      : "Map view — click a comb to open a desk · shapes still apply · zoom fills the field"
-                  : phone
-                    ? "Drag to orbit · pinch/scroll zoom · tap comb → desk"
-                    : "Click a comb to open Learn, Samples, Industries, or Tools. Drag to orbit · scroll to zoom · zoom-out scales cards to fill."}
+                ? "Edit — operator sculpt. Learners use Tools to attach a lens and Path to play the lesson."
+                : "This sitting only — rooms plus the connected lesson and lens. The full catalog is Samples and Industries, not the 3D field."}
             </p>
           </div>
         </div>
@@ -834,23 +902,24 @@ export function HiveWorkspace({ className }: Props) {
         role="toolbar"
         aria-label="Hive tools"
       >
-        <button
-          type="button"
-          className={cn(editMode && "is-active-tool")}
-          onClick={() => toggleEditMode()}
-          title="Edit workspace shapes"
-        >
-          <Pencil className="h-3.5 w-3.5" />
-          {phone ? null : "Edit"}
-          {phone ? <span className="sr-only">Edit</span> : null}
-        </button>
+        {editMode ? (
+          <button
+            type="button"
+            className="is-active-tool"
+            onClick={() => toggleEditMode()}
+            title="Leave operator edit"
+          >
+            <Pencil className="h-3.5 w-3.5" />
+            {phone ? null : "Edit"}
+          </button>
+        ) : null}
 
         <span className="tutor-view-toggle" role="group" aria-label="Hive view">
           <button
             type="button"
             className={cn(prefer3d && !softFailed && "is-on")}
             title="3D field"
-            onClick={() => setView("3d")}
+            onClick={() => retry3d()}
           >
             3D
           </button>
@@ -925,9 +994,9 @@ export function HiveWorkspace({ className }: Props) {
       </div>
 
       <HiveEditPanel
-        workspaces={workspaces}
-        skills={skills}
-        industries={industries}
+        workspaces={fieldWorkspaces}
+        skills={fieldSkills}
+        industries={fieldIndustries}
         phases={phases}
       />
 
@@ -942,6 +1011,39 @@ export function HiveWorkspace({ className }: Props) {
       ) : null}
 
       <FirstRunCoach />
+
+      {/* Size key — always visible in 3D so galactic scale is readable */}
+      {!showMap && prefer3d && !softFailed ? (
+        <aside
+          className="tutor-hive-size-legend"
+          aria-label="What node sizes mean"
+        >
+          <p className="tutor-hive-size-legend-title">
+            Node size
+            <span>
+              {nodeStyle === "galactic"
+                ? NODE_STYLE_META.galactic.label
+                : NODE_STYLE_META.geometric.label}
+            </span>
+          </p>
+          <ul>
+            {NODE_SIZE_LEGEND.map((row) => (
+              <li key={row.id} data-kind={row.id}>
+                <span className={cn("sz-dot", `is-${row.id}`)} aria-hidden />
+                <span>
+                  <strong>{row.label}</strong>
+                  <em>{row.meaning}</em>
+                </span>
+              </li>
+            ))}
+          </ul>
+          <p className="tutor-hive-size-legend-foot">
+            {nodeStyle === "galactic"
+              ? "Within a tier, slightly larger = more central to clear thinking."
+              : "Hex size follows desk / craft / tool role — same meaning as galactic."}
+          </p>
+        </aside>
+      ) : null}
 
       <div
         className={cn("tutor-hive-hover cinematic", hover && "is-on")}
@@ -962,6 +1064,28 @@ export function HiveWorkspace({ className }: Props) {
             </div>
             <span className="thh-title">{hover.title}</span>
             {hover.meta ? <span className="thh-meta">{hover.meta}</span> : null}
+            {(() => {
+              const list =
+                hover.kind === "workspace"
+                  ? fieldWorkspaces
+                  : hover.kind === "industry"
+                    ? fieldIndustries
+                    : fieldSkills;
+              const idx = Math.max(
+                0,
+                list.findIndex((n) => n.id === hover.id),
+              );
+              const pr = thinkingPriority(hover.kind, idx, list.length, {
+                enabled: hover.enabled,
+              });
+              const sm = sizeMeaningForNode(hover.kind, pr);
+              return (
+                <p className="thh-size" title={sm.sizeBlurb}>
+                  <span className="thh-size-label">{sm.sizeLabel}</span>
+                  <span className="thh-size-blurb">{sm.sizeBlurb}</span>
+                </p>
+              );
+            })()}
             <p className="thh-desc">{hover.description}</p>
             <p className="thh-how">
               {editMode

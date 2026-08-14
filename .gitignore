@@ -46,6 +46,8 @@ public/soak/LIVE.json
 # Multi-million lesson trees, harvest exports, polish dumps
 public/corpus/
 public-dev/
+!public-dev/README.md
+!public-dev/safe.html
 public-release/
 !public-release/README.md
 

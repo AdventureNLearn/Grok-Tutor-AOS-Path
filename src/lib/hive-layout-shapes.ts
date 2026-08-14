@@ -9,16 +9,18 @@ import type { HiveNode } from "./tutor-hive-map";
 import {
   IND_Y,
   IND_Y_JITTER,
-  PACK_IND,
-  PACK_SK,
-  PACK_WS,
   SK_Y,
   SK_Y_JITTER,
   WS_Y,
   WS_Y_JITTER,
   deoverlapPositions,
+  packSpacing,
   tierRadialBias,
 } from "./hive-pack";
+import {
+  collisionRadiusForNode,
+  type HiveNodeStyle,
+} from "./hive-node-style";
 
 export type Vec3 = { x: number; y: number; z: number };
 
@@ -402,6 +404,40 @@ function chunkRoundRobin(ids: string[], n: number): string[][] {
   return buckets;
 }
 
+function buildRadii(
+  workspaces: HiveNode[],
+  skills: HiveNode[],
+  industries: HiveNode[],
+  style: HiveNodeStyle,
+): Record<string, number> {
+  const radii: Record<string, number> = {};
+  workspaces.forEach((n, i) => {
+    radii[n.id] = collisionRadiusForNode(
+      "workspace",
+      style,
+      i,
+      workspaces.length,
+      { enabled: n.enabled, baseMeshScale: 1 },
+    );
+  });
+  skills.forEach((n, i) => {
+    radii[n.id] = collisionRadiusForNode("skill", style, i, skills.length, {
+      enabled: n.enabled,
+      baseMeshScale: 0.95,
+    });
+  });
+  industries.forEach((n, i) => {
+    radii[n.id] = collisionRadiusForNode(
+      "industry",
+      style,
+      i,
+      industries.length,
+      { enabled: n.enabled, baseMeshScale: 0.9 },
+    );
+  });
+  return radii;
+}
+
 /** Compute world positions for every node under a shape + optional custom offsets. */
 export function computeLayoutPositions(
   shapeId: HiveShapeId,
@@ -409,15 +445,20 @@ export function computeLayoutPositions(
   skills: HiveNode[],
   industries: HiveNode[],
   customOffsets: Record<string, Vec3> = {},
+  nodeStyle: HiveNodeStyle = "geometric",
 ): Record<string, Vec3> {
   const out: Record<string, Vec3> = {};
+  const style = nodeStyle === "galactic" ? "galactic" : "geometric";
+  const packWs = packSpacing("workspace", style);
+  const packSk = packSpacing("skill", style);
+  const packInd = packSpacing("industry", style);
   const apply = (id: string, base: Vec3) => {
     const o = customOffsets[id];
     out[id] = o
       ? { x: base.x + o.x, y: base.y + o.y, z: base.z + o.z }
       : { ...base };
   };
-  const finalize = () => {
+  const finalize = (extraIters = 0) => {
     const kinds: Record<string, "workspace" | "skill" | "industry"> = {};
     workspaces.forEach((n) => {
       kinds[n.id] = "workspace";
@@ -428,24 +469,32 @@ export function computeLayoutPositions(
     industries.forEach((n) => {
       kinds[n.id] = "industry";
     });
+    const radii = buildRadii(workspaces, skills, industries, style);
     // Soft push so shape layouts never leave stacked/piled combs
-    deoverlapPositions(out, kinds, 1, 5);
+    // Galactic needs more iterations — shells + priority scale inflate bodies
+    const iters = (style === "galactic" ? 10 : 6) + extraIters;
+    deoverlapPositions(out, kinds, {
+      cardFill: 1,
+      iterations: iters,
+      radii,
+      pushBias: style === "galactic" ? 1.14 : 1.08,
+    });
     return out;
   };
 
   if (shapeId === "honeycomb" || shapeId === "custom") {
     workspaces.forEach((n, i) => {
-      const p = honey(i, PACK_WS, WS_Y, WS_Y_JITTER);
+      const p = honey(i, packWs, WS_Y, WS_Y_JITTER);
       const b = tierRadialBias("workspace");
       apply(n.id, { x: p.x * b, y: p.y, z: p.z * b });
     });
     skills.forEach((n, i) => {
-      const p = honey(ringSkip(5) + i, PACK_SK, SK_Y, SK_Y_JITTER);
+      const p = honey(ringSkip(5) + i, packSk, SK_Y, SK_Y_JITTER);
       const b = tierRadialBias("skill");
       apply(n.id, { x: p.x * b, y: p.y, z: p.z * b });
     });
     industries.forEach((n, i) => {
-      const p = honey(ringSkip(3) + i, PACK_IND, IND_Y, IND_Y_JITTER);
+      const p = honey(ringSkip(3) + i, packInd, IND_Y, IND_Y_JITTER);
       const b = tierRadialBias("industry");
       apply(n.id, { x: p.x * b, y: p.y, z: p.z * b });
     });
@@ -503,9 +552,11 @@ export function computeLayoutPositions(
     });
     deoverlapPositions(out, kinds, {
       cardFill: 1,
-      iterations: 6,
+      iterations: style === "galactic" ? 10 : 6,
       lockXZ: lock,
       axis: "xz",
+      radii: buildRadii(workspaces, skills, industries, style),
+      pushBias: style === "galactic" ? 1.14 : 1.08,
     });
     return out;
   }

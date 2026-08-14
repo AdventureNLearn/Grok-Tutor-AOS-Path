@@ -194,6 +194,9 @@ export default defineConfig(({ command }) => ({
     // CRITICAL: three's OrbitControls is a separate entry — without it in
     // include, 3D dynamic import 404s and Hive never leaves Map.
     noDiscovery: true,
+    // Never prebundle @tanstack/react-start — pulls Node AsyncLocalStorage into
+    // the browser and crashes /tutor (Learn) with "is not a constructor".
+    exclude: ["@tanstack/react-start"],
     include: [
       "react",
       "react/jsx-runtime",
@@ -201,7 +204,6 @@ export default defineConfig(({ command }) => ({
       "react-dom",
       "react-dom/client",
       "@tanstack/react-router",
-      "@tanstack/react-start",
       "@tanstack/react-query",
       "clsx",
       "tailwind-merge",

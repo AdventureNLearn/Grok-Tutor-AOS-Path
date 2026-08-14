@@ -202,6 +202,12 @@
     animation: none;
   }
 }
+/* Map / safe fallback — no GPU star drift (Iris Xe compositor crashes) */
+.tutor-gpu-safe .tutor-galaxy-layer::before,
+.tutor-gpu-safe .tutor-galaxy-layer::after {
+  animation: none;
+  opacity: 0.22;
+}
 
 /* ========== Immersive Tutor Hive + multi-desk ========== */
 
@@ -437,6 +443,27 @@
   color: var(--color-teal);
   margin-top: 0.2rem;
 }
+.thh-size {
+  margin: 0.4rem 0 0;
+  padding: 0.4rem 0.5rem;
+  border-radius: 0.55rem;
+  background: rgba(45, 212, 191, 0.08);
+  border: 1px solid rgba(45, 212, 191, 0.18);
+}
+.thh-size-label {
+  display: block;
+  font-size: 0.68rem;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  color: #5eead4;
+}
+.thh-size-blurb {
+  display: block;
+  margin-top: 0.15rem;
+  font-size: 0.72rem;
+  line-height: 1.4;
+  color: rgba(180, 190, 210, 0.88);
+}
 .thh-desc,
 .thh-how {
   margin: 0.45rem 0 0;
@@ -449,6 +476,113 @@
   padding-top: 0.5rem;
   color: rgba(180, 190, 210, 0.7);
   font-size: 0.74rem;
+}
+
+/* 3D size legend — top-right, non-blocking */
+.tutor-hive-size-legend {
+  position: absolute;
+  top: 4.5rem;
+  right: 1rem;
+  z-index: 8;
+  width: min(15.5rem, calc(100vw - 2rem));
+  padding: 0.7rem 0.8rem 0.65rem;
+  border-radius: 0.85rem;
+  border: 1px solid rgba(167, 139, 250, 0.28);
+  background: rgba(8, 10, 18, 0.82);
+  backdrop-filter: blur(14px);
+  box-shadow: 0 12px 36px rgba(0, 0, 0, 0.4);
+  pointer-events: none;
+  color: rgba(230, 235, 245, 0.92);
+}
+.tutor-hive-size-legend-title {
+  margin: 0 0 0.45rem;
+  font-size: 0.62rem;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: rgba(180, 190, 210, 0.75);
+  display: flex;
+  justify-content: space-between;
+  gap: 0.5rem;
+  align-items: baseline;
+}
+.tutor-hive-size-legend-title span {
+  letter-spacing: 0.04em;
+  text-transform: none;
+  font-weight: 600;
+  color: #a78bfa;
+  font-size: 0.68rem;
+}
+.tutor-hive-size-legend ul {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 0.4rem;
+}
+.tutor-hive-size-legend li {
+  display: flex;
+  gap: 0.5rem;
+  align-items: flex-start;
+}
+.tutor-hive-size-legend .sz-dot {
+  flex: 0 0 auto;
+  margin-top: 0.15rem;
+  border-radius: 999px;
+  background: radial-gradient(circle at 35% 30%, #fff, var(--sz, #a78bfa) 55%, transparent 72%);
+  box-shadow: 0 0 10px color-mix(in srgb, var(--sz, #a78bfa) 50%, transparent);
+}
+.tutor-hive-size-legend .sz-dot.is-workspace {
+  --sz: #2dd4bf;
+  width: 0.95rem;
+  height: 0.95rem;
+}
+.tutor-hive-size-legend .sz-dot.is-industry {
+  --sz: #60a5fa;
+  width: 0.72rem;
+  height: 0.72rem;
+}
+.tutor-hive-size-legend .sz-dot.is-skill {
+  --sz: #fbbf24;
+  width: 0.5rem;
+  height: 0.5rem;
+}
+.tutor-hive-size-legend strong {
+  display: block;
+  font-size: 0.72rem;
+  font-weight: 700;
+  color: rgba(242, 244, 248, 0.95);
+}
+.tutor-hive-size-legend em {
+  display: block;
+  margin-top: 0.08rem;
+  font-style: normal;
+  font-size: 0.65rem;
+  line-height: 1.35;
+  color: rgba(170, 180, 200, 0.78);
+}
+.tutor-hive-size-legend-foot {
+  margin: 0.5rem 0 0;
+  font-size: 0.62rem;
+  line-height: 1.35;
+  color: rgba(150, 160, 180, 0.7);
+}
+@media (max-width: 720px) {
+  .tutor-hive-size-legend {
+    top: auto;
+    bottom: 5.25rem;
+    right: 0.5rem;
+    width: min(12.5rem, calc(100vw - 1rem));
+    padding: 0.55rem 0.6rem;
+  }
+  .tutor-hive-size-legend em {
+    display: none;
+  }
+}
+.hive-edit-hint-size {
+  margin-top: 0.35rem !important;
+  color: rgba(94, 234, 212, 0.85) !important;
 }
 
 .tutor-hive-hint {
@@ -3254,6 +3388,67 @@ button.iso-chip { cursor: pointer; }
 .tutor-view-toggle button.is-on {
   background: rgba(45, 212, 191, 0.18);
   color: #5eead4;
+}
+
+.tutor-hive-lenses {
+  position: absolute;
+  left: 50%;
+  bottom: 5.5rem;
+  transform: translateX(-50%);
+  z-index: 12;
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 0.3rem;
+  max-width: min(52rem, calc(100vw - 14rem));
+  padding: 0.35rem;
+  border-radius: 999px;
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  background: rgba(8, 10, 18, 0.72);
+  backdrop-filter: blur(16px) saturate(1.2);
+  pointer-events: auto;
+}
+.tutor-hive-lenses button {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+  border: none;
+  background: transparent;
+  color: rgba(242, 244, 248, 0.82);
+  border-radius: 999px;
+  padding: 0.38rem 0.7rem;
+  font-size: 0.7rem;
+  font-weight: 600;
+  cursor: pointer;
+}
+.tutor-hive-lenses button:hover {
+  background: rgba(255, 255, 255, 0.08);
+  color: #fff;
+}
+.tutor-hive-lenses button.is-on {
+  background: rgba(167, 139, 250, 0.2);
+  color: #ddd6fe;
+}
+.tutor-hive-lenses button em {
+  font-style: normal;
+  font-size: 0.62rem;
+  opacity: 0.7;
+  font-variant-numeric: tabular-nums;
+}
+.hive-map-2d-comb.lesson {
+  min-width: calc(5.6rem * var(--map-comb-scale, 1));
+  box-shadow:
+    0 0 22px color-mix(in srgb, var(--c, #a78bfa) 28%, transparent),
+    inset 0 0 0 1px color-mix(in srgb, var(--c, #a78bfa) 36%, transparent);
+}
+
+.tutor-hive-root.is-phone .tutor-hive-lenses {
+  left: 0.5rem;
+  right: 0.5rem;
+  bottom: calc(8.2rem + env(safe-area-inset-bottom, 0px));
+  transform: none;
+  max-width: none;
+  border-radius: 1rem;
 }
 
 .tutor-desk-warming {

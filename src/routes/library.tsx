@@ -57,6 +57,21 @@ function LibraryPage() {
         <Card>
           <CardHeader className="p-5">
             <CardTitle className="text-base flex items-center gap-2">
+              <Sparkles className="h-4 w-4 text-teal-400" />
+              Example reasoning
+            </CardTitle>
+            <CardDescription className="mt-2 text-xs leading-relaxed">
+              Six flagship lessons on The Hive — switch Integrity, Spine, Four-agent, and other
+              lenses to see how the same samples remap in 3D.
+            </CardDescription>
+            <Button asChild size="sm" variant="teal" className="mt-4 w-fit">
+              <a href="/?view=3d&field=examples">Open the reasoning field</a>
+            </Button>
+          </CardHeader>
+        </Card>
+        <Card>
+          <CardHeader className="p-5">
+            <CardTitle className="text-base flex items-center gap-2">
               <BookOpen className="h-4 w-4 text-teal-400" />
               Sample lessons
             </CardTitle>

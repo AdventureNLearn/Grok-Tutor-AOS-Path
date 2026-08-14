@@ -10,7 +10,9 @@ import { mkdirSync, writeFileSync, existsSync } from "node:fs";
 import { join } from "node:path";
 
 const root = process.cwd();
-const base = (process.env.TUTOR_BASE || "http://127.0.0.1:8085").replace(/\/$/, "");
+const base = (process.env.TUTOR_BASE || "http://127.0.0.1:8085")
+  .trim()
+  .replace(/\/$/, "");
 const quick = process.argv.includes("--quick");
 const logDir = "C:\\AOS\\logs\\tutor-release-stress";
 mkdirSync(logDir, { recursive: true });

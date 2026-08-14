@@ -15,13 +15,11 @@ import {
   GEO_WS_R,
   IND_Y,
   IND_Y_JITTER,
-  PACK_IND,
-  PACK_SK,
-  PACK_WS,
   SK_Y,
   SK_Y_JITTER,
   WS_Y,
   WS_Y_JITTER,
+  packSpacing,
   separationScale,
   tierRadialBias,
 } from "@/lib/hive-pack";
@@ -121,7 +119,12 @@ function honeycombPosition(index: number, spacing: number) {
   return { q, r, x, z };
 }
 
-function vecFromHoney(index: number, spacing: number, yBase = 0, yJitter = 0) {
+function vecFromHoney(
+  index: number,
+  spacing: number,
+  yBase = 0,
+  yJitter = 0,
+) {
   const h = honeycombPosition(index, spacing);
   const y =
     yBase +
@@ -136,13 +139,29 @@ function ringSkip(ringOffset: number) {
 }
 
 /** Outer carpet — starts after industry ring so nodes never share cells */
-function skillFieldPosition(index: number) {
-  return vecFromHoney(ringSkip(5) + index, PACK_SK, SK_Y, SK_Y_JITTER);
+function skillFieldPosition(
+  index: number,
+  style: "geometric" | "galactic" = "geometric",
+) {
+  return vecFromHoney(
+    ringSkip(5) + index,
+    packSpacing("skill", style),
+    SK_Y,
+    SK_Y_JITTER,
+  );
 }
 
 /** Mid band — clear of elevated workspaces */
-function industryFieldPosition(index: number) {
-  return vecFromHoney(ringSkip(3) + index, PACK_IND, IND_Y, IND_Y_JITTER);
+function industryFieldPosition(
+  index: number,
+  style: "geometric" | "galactic" = "geometric",
+) {
+  return vecFromHoney(
+    ringSkip(3) + index,
+    packSpacing("industry", style),
+    IND_Y,
+    IND_Y_JITTER,
+  );
 }
 
 function makeAcrSprite(
@@ -321,19 +340,21 @@ export type Hive3DQuality = {
   nebula?: boolean;
   grid?: boolean;
   powerPreference?: WebGLPowerPreference;
+  failIfMajorPerformanceCaveat?: boolean;
 };
 
 function makeRenderer(
   canvas: HTMLCanvasElement,
   antialias: boolean,
   powerPreference: WebGLPowerPreference,
+  failIfMajorPerformanceCaveat = false,
 ): THREE.WebGLRenderer {
   const renderer = new THREE.WebGLRenderer({
     canvas,
     antialias,
     alpha: false,
     powerPreference,
-    failIfMajorPerformanceCaveat: false,
+    failIfMajorPerformanceCaveat,
     // Preserve drawing buffer off = less memory on iGPU
     preserveDrawingBuffer: false,
   });
@@ -377,6 +398,7 @@ export function createTutorHive3D(
   const useNebula = q.nebula === true;
   const useGrid = q.grid !== false;
   const powerPref: WebGLPowerPreference = q.powerPreference ?? "default";
+  const caveat = q.failIfMajorPerformanceCaveat === true;
   const nodeStyle: HiveNodeStyle =
     opts.nodeStyle === "galactic" ? "galactic" : "geometric";
   const isGalactic = nodeStyle === "galactic";
@@ -394,15 +416,17 @@ export function createTutorHive3D(
   // Oblique start: high enough to see tiers, far enough for perspective
   camera.position.set(6.5, 9.5, 18.5);
 
-  // Honor quality powerPreference first; fall back if context fails (remote / locked GPUs)
+  // Honor quality powerPreference first. If the tier asked for a caveat check,
+  // do not retry without it — that path GPU-crashed this host.
   let renderer: THREE.WebGLRenderer;
   try {
-    renderer = makeRenderer(canvas, useAA, powerPref);
+    renderer = makeRenderer(canvas, useAA, powerPref, caveat);
   } catch {
+    if (caveat) throw new Error("WebGL declined on this machine — map view stays available.");
     try {
-      renderer = makeRenderer(canvas, false, "default");
+      renderer = makeRenderer(canvas, false, "default", false);
     } catch {
-      renderer = makeRenderer(canvas, false, "low-power");
+      renderer = makeRenderer(canvas, false, "low-power", false);
     }
   }
   renderer.setPixelRatio(Math.min(window.devicePixelRatio || 1, pixelCap));
@@ -600,13 +624,13 @@ export function createTutorHive3D(
     // Light path for basic hardware: body mesh only (no corona/wire/ring stacks)
     if (!lightGalactic) return;
 
-    // Outer corona (soft sphere — globe feel without messy cards)
+    // Outer corona — kept close so packing clearance stays honest
     const corona = new THREE.Mesh(
-      new THREE.SphereGeometry(r * (body === "star" ? 1.38 : 1.22), 16, 12),
+      new THREE.SphereGeometry(r * (body === "star" ? 1.22 : 1.14), 14, 10),
       new THREE.MeshBasicMaterial({
         color: color.clone().lerp(new THREE.Color("#fdf4ff"), 0.35),
         transparent: true,
-        opacity: dimmed ? 0.06 : body === "star" ? 0.2 : 0.1,
+        opacity: dimmed ? 0.05 : body === "star" ? 0.16 : 0.08,
         blending: THREE.AdditiveBlending,
         depthWrite: false,
         side: THREE.BackSide,
@@ -615,19 +639,19 @@ export function createTutorHive3D(
     corona.raycast = () => {};
     mesh.add(corona);
 
-    // Faceted wire “comb” overlay — multi-surface dimensional read
+    // Faceted wire overlay — multi-surface read without huge extent
     const wireGeo =
       body === "star"
-        ? new THREE.IcosahedronGeometry(r * 1.08, 0)
+        ? new THREE.IcosahedronGeometry(r * 1.04, 0)
         : body === "planet"
-          ? new THREE.DodecahedronGeometry(r * 1.05, 0)
-          : new THREE.OctahedronGeometry(r * 1.1, 0);
+          ? new THREE.DodecahedronGeometry(r * 1.02, 0)
+          : new THREE.OctahedronGeometry(r * 1.05, 0);
     const wire = new THREE.LineSegments(
       new THREE.EdgesGeometry(wireGeo),
       new THREE.LineBasicMaterial({
         color: color.clone().lerp(new THREE.Color("#e9d5ff"), 0.4),
         transparent: true,
-        opacity: dimmed ? 0.12 : body === "star" ? 0.45 : 0.28,
+        opacity: dimmed ? 0.1 : body === "star" ? 0.4 : 0.25,
         blending: THREE.AdditiveBlending,
         depthWrite: false,
       }),
@@ -635,14 +659,14 @@ export function createTutorHive3D(
     wire.raycast = () => {};
     mesh.add(wire);
 
-    // Equatorial ring on higher-priority planets / stars (dimensional band)
-    if (body === "planet" || body === "star") {
+    // Equatorial ring only on stars + high planets — smaller than before
+    if (body === "star" || (body === "planet" && r >= 0.34)) {
       const ring = new THREE.Mesh(
-        new THREE.TorusGeometry(r * 1.25, r * 0.035, 6, 32),
+        new THREE.TorusGeometry(r * 1.14, r * 0.028, 6, 28),
         new THREE.MeshBasicMaterial({
           color: color.clone().lerp(new THREE.Color("#a5b4fc"), 0.3),
           transparent: true,
-          opacity: dimmed ? 0.1 : 0.35,
+          opacity: dimmed ? 0.08 : 0.28,
           blending: THREE.AdditiveBlending,
           depthWrite: false,
         }),
@@ -722,14 +746,14 @@ export function createTutorHive3D(
       );
     }
 
-    // Soft ground / orbital aura disc
+    // Soft ground / orbital aura disc — tighter in galactic to cut visual merge
     const disc = new THREE.Mesh(
       new THREE.PlaneGeometry(1, 1),
       new THREE.MeshBasicMaterial({
         map: glowTex,
         color: color.clone().lerp(new THREE.Color("#c4b5fd"), 0.25),
         transparent: true,
-        opacity: dimmed ? 0.1 : bigLabel ? 0.32 : 0.2,
+        opacity: dimmed ? 0.08 : bigLabel ? 0.24 : 0.14,
         depthWrite: false,
         blending: THREE.AdditiveBlending,
         side: THREE.DoubleSide,
@@ -738,7 +762,7 @@ export function createTutorHive3D(
     disc.rotation.x = -Math.PI / 2;
     disc.position.set(pos.x, 0.04, pos.z);
     const glowBase =
-      (bigLabel ? 1.7 : 0.9) * finalScale * (isGalactic ? 1.05 : 1);
+      (bigLabel ? 1.35 : 0.72) * finalScale * (isGalactic ? 0.92 : 1);
     disc.scale.setScalar(glowBase);
     disc.raycast = () => {};
     scene.add(disc);
@@ -772,6 +796,10 @@ export function createTutorHive3D(
     nodeData.set(node.id, node);
   }
 
+  const packStyle: "geometric" | "galactic" = isGalactic
+    ? "galactic"
+    : "geometric";
+
   function resolvePos(
     node: HiveNode,
     index: number,
@@ -781,9 +809,14 @@ export function createTutorHive3D(
     if (custom) return new THREE.Vector3(custom.x, custom.y, custom.z);
     let v: THREE.Vector3;
     if (kind === "workspace")
-      v = vecFromHoney(index, PACK_WS, WS_Y, WS_Y_JITTER);
-    else if (kind === "skill") v = skillFieldPosition(index);
-    else v = industryFieldPosition(index);
+      v = vecFromHoney(
+        index,
+        packSpacing("workspace", packStyle),
+        WS_Y,
+        WS_Y_JITTER,
+      );
+    else if (kind === "skill") v = skillFieldPosition(index, packStyle);
+    else v = industryFieldPosition(index, packStyle);
     const b = tierRadialBias(kind);
     v.x *= b;
     v.z *= b;

@@ -212,6 +212,7 @@ export function HiveMap2D({
               className={cn(
                 "hive-map-2d-comb",
                 n.kind,
+                n.id.startsWith("lesson:") && "lesson",
                 inPhase && "is-phase",
                 isOpen && "is-open",
                 isSel && "is-selected",
