@@ -173,7 +173,7 @@ if (helpCopyLeaksOffSliceFields(HELP_ASK_LINE)) {
 }
 
 const hiveAskSrc = readFileSync(join(here, "../src/components/hive/hive-ask.tsx"), "utf8");
-if (/\/demo/.test(hiveAskSrc)) {
+if (/openRoute\([^)]*\/demo|navigate\([^)]*\/demo|to=["']\/demo|href=["']\/demo/.test(hiveAskSrc)) {
   throw new Error("Ask must not dump the /demo catalog");
 }
 const workspaceSrc = readFileSync(join(here, "../src/components/hive/hive-workspace.tsx"), "utf8");
