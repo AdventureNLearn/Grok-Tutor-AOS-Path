@@ -2,15 +2,22 @@
  * Flagship example-reasoning lessons — the Hive's primary teaching field.
  * Each track is a real sample lesson bound to a reasoning shape (lens).
  * Bodies live at /corpus/reasoning-tracks/<id>/lesson.md (offline).
+ *
+ * Learner chrome (idle hex/pills, HUD, desks) must show industry + pairing,
+ * never operator short ids (SAF / PRD / BND). Those stay on `acr` for
+ * builder/operator notes only. Public pack "HVAC / R" maps to HVAC /
+ * Safety boundary — do not invent a second HVAC industry.
  */
 import type { HiveShapeId } from "./hive-layout-shapes";
+import { getIndustry } from "./industries";
 import type { HiveNode } from "./tutor-hive-map";
 
 export type ReasoningTrack = {
   id: string;
   title: string;
-  /** Short comb label */
+  /** Short pairing name on the comb (Safety ladder, Practice depth, …) */
   combTitle: string;
+  /** Operator / builder short id — never print on learner hex/pills */
   acr: string;
   color: string;
   industryId: string;
@@ -81,8 +88,41 @@ export const REASONING_TRACKS: ReasoningTrack[] = [
   },
 ];
 
+/**
+ * First-slice idle field — three existing trade pairings only.
+ * Do not add civic, nursing, or construction-management here.
+ */
+export const FIRST_SLICE_TRACK_IDS = [
+  "electrical-safety-ladder",
+  "plumbing-practice-depth",
+  "hvac-safety-scenario",
+] as const;
+
 export function getReasoningTrack(id: string): ReasoningTrack | undefined {
   return REASONING_TRACKS.find((t) => t.id === id);
+}
+
+export function firstSliceTracks(): ReasoningTrack[] {
+  const out: ReasoningTrack[] = [];
+  for (const id of FIRST_SLICE_TRACK_IDS) {
+    const t = getReasoningTrack(id);
+    if (t) out.push(t);
+  }
+  return out;
+}
+
+/**
+ * Learner-facing industry word on a comb.
+ * Public pack name "HVAC / R" maps to the HVAC / Safety boundary comb.
+ */
+export function learnerIndustryLabel(industryId: string): string {
+  if (industryId === "hvac") return "HVAC";
+  return getIndustry(industryId)?.name ?? industryId;
+}
+
+/** e.g. "Electrical / Safety ladder" */
+export function learnerCombPairing(track: ReasoningTrack): string {
+  return `${learnerIndustryLabel(track.industryId)} / ${track.combTitle}`;
 }
 
 export function lessonHref(id: string): string {
@@ -98,18 +138,27 @@ export function trackFromNodeId(nodeId: string): ReasoningTrack | undefined {
   return getReasoningTrack(nodeId.slice("lesson:".length));
 }
 
-export function buildReasoningLessonCombs(): HiveNode[] {
-  return REASONING_TRACKS.map((t) => ({
+function lessonCombNode(t: ReasoningTrack): HiveNode {
+  return {
     id: lessonNodeId(t.id),
     kind: "workspace",
-    acr: t.acr,
+    acr: learnerIndustryLabel(t.industryId),
     title: t.combTitle,
     description: t.summary,
     how: `Open this sample through the ${shapeLabel(t.hiveShape)} lens — then switch lenses to see how the same catalog remaps.`,
     color: t.color,
     href: lessonHref(t.id),
-    meta: `Example · ${shapeLabel(t.hiveShape)}`,
-  }));
+    meta: learnerCombPairing(t),
+  };
+}
+
+export function buildReasoningLessonCombs(): HiveNode[] {
+  return REASONING_TRACKS.map(lessonCombNode);
+}
+
+/** Idle hive: exactly the three first-slice trade combs. */
+export function buildFirstSliceIdleCombs(): HiveNode[] {
+  return firstSliceTracks().map(lessonCombNode);
 }
 
 export function tracksForShape(shapeId: string): ReasoningTrack[] {

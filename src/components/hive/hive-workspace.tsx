@@ -14,6 +14,7 @@ import {
   type HiveNode,
 } from "@/lib/tutor-hive-map";
 import {
+  buildFirstSliceIdleCombs,
   buildReasoningLessonCombs,
   lessonNodeId,
 } from "@/lib/reasoning-tracks";
@@ -158,6 +159,7 @@ export function HiveWorkspace({ className }: Props) {
   const phone = tier === "phone";
 
   const lessons = useMemo(() => buildReasoningLessonCombs(), []);
+  const firstSlice = useMemo(() => buildFirstSliceIdleCombs(), []);
   const sittingLesson = existingSampleById(activeLessonId);
   const slice = useMemo(
     () =>
@@ -172,21 +174,22 @@ export function HiveWorkspace({ className }: Props) {
   const skills = slice.skills;
   const industries = slice.industries;
   const examplesOn = fieldMode === "examples";
-  // Idle: 8 rooms only. Sitting: those rooms + at most one lesson comb.
-  // Never dump the corpus, industry ring, or skill carpet into 3D.
+  // Idle: exactly three first-slice trade pairings (Electrical / Plumbing / HVAC).
+  // Sitting: those rooms + at most one lesson comb.
+  // Never dump civic, nursing, construction-management, or the skill carpet on idle.
   const fieldWorkspaces = useMemo(() => {
     if (examplesOn) {
       const one = sittingLesson
         ? lessons.filter((n) => n.id === lessonNodeId(sittingLesson.id))
-        : lessons.slice(0, 1);
-      return one.length ? one : lessons.slice(0, 1);
+        : firstSlice;
+      return one.length ? one : firstSlice;
     }
     if (sittingLesson) {
       const extra = lessons.find((n) => n.id === lessonNodeId(sittingLesson.id));
       return extra ? [extra, ...workspaces] : workspaces;
     }
-    return workspaces;
-  }, [examplesOn, sittingLesson, lessons, workspaces]);
+    return firstSlice;
+  }, [examplesOn, sittingLesson, lessons, firstSlice, workspaces]);
   const fieldSkills = skills;
   const fieldIndustries = industries;
   const summary = useMemo(() => hiveHudSummary(), []);

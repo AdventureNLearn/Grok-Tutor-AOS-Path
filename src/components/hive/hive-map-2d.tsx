@@ -229,6 +229,7 @@ export function HiveMap2D({
                 } as CSSProperties
               }
               title={n.description}
+              aria-label={n.meta ? n.meta : `${n.acr} ${n.title}`}
               onClick={() => onSelect(n)}
               onMouseEnter={() => onHover?.(n)}
               onMouseLeave={() => onHover?.(null)}
