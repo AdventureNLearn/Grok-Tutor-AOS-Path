@@ -111,6 +111,21 @@ export function firstSliceTracks(): ReasoningTrack[] {
   return out;
 }
 
+/** Learner sitting — Electrical / Plumbing / HVAC only. Civic / nursing / CM are off. */
+export function firstSliceTrackById(
+  id: string | null | undefined,
+): ReasoningTrack | undefined {
+  if (!id) return undefined;
+  if (!(FIRST_SLICE_TRACK_IDS as readonly string[]).includes(id)) return undefined;
+  return getReasoningTrack(id);
+}
+
+/** Sit a first-slice comb from a hive node id (`lesson:plumbing-practice-depth`). */
+export function sitLessonIdFromNode(nodeId: string | null | undefined): string | null {
+  if (!nodeId?.startsWith("lesson:")) return null;
+  return firstSliceTrackById(nodeId.slice("lesson:".length))?.id ?? null;
+}
+
 /**
  * Learner-facing industry word on a comb.
  * Public pack name "HVAC / R" maps to the HVAC / Safety boundary comb.

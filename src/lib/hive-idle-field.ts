@@ -5,9 +5,10 @@
 import {
   buildFirstSliceIdleCombs,
   buildReasoningLessonCombs,
+  firstSliceTrackById,
   lessonNodeId,
 } from "./reasoning-tracks";
-import { existingSampleById, skillIdsForLens } from "./suite-rooms";
+import { skillIdsForLens } from "./suite-rooms";
 import { buildConnectedHiveField, type HiveNode } from "./tutor-hive-map";
 
 export function assembleHiveField(opts: {
@@ -18,7 +19,7 @@ export function assembleHiveField(opts: {
 }): { workspaces: HiveNode[]; skills: HiveNode[]; industries: HiveNode[] } {
   const firstSlice = buildFirstSliceIdleCombs();
   const lessons = buildReasoningLessonCombs();
-  const sitting = existingSampleById(opts.sittingLessonId);
+  const sitting = firstSliceTrackById(opts.sittingLessonId);
 
   // Learner idle: three first-slice combs only. No rooms, no skill carpet.
   if (!opts.editMode && !opts.examplesOn) {

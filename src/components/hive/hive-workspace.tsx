@@ -10,8 +10,12 @@ import { useCallback, useEffect, useMemo, useRef, useState, type CSSProperties }
 import { Maximize2, Minus, Pencil, Plus, Sparkles } from "lucide-react";
 import { hiveHudSummary, type HiveNode } from "@/lib/tutor-hive-map";
 import { assembleHiveField } from "@/lib/hive-idle-field";
-import { buildReasoningLessonCombs, lessonNodeId } from "@/lib/reasoning-tracks";
-import { existingSampleById } from "@/lib/suite-rooms";
+import {
+  buildReasoningLessonCombs,
+  firstSliceTrackById,
+  lessonNodeId,
+  sitLessonIdFromNode,
+} from "@/lib/reasoning-tracks";
 import { useHiveDeskStore } from "@/lib/hive-desk-store";
 import { useHiveEditStore } from "@/lib/hive-edit-store";
 import { detectHiveQuality, profileFor } from "@/lib/hive-load-quality";
@@ -152,7 +156,7 @@ export function HiveWorkspace({ className }: Props) {
   const phone = tier === "phone";
 
   const lessons = useMemo(() => buildReasoningLessonCombs(), []);
-  const sittingLesson = existingSampleById(activeLessonId);
+  const sittingLesson = firstSliceTrackById(activeLessonId);
   const examplesOn = fieldMode === "examples";
   // Learner idle: exactly three first-slice trade pairings. Sitting does not
   // dump rooms or auto-open a desk — a comb click opens the desk.
@@ -251,6 +255,8 @@ export function HiveWorkspace({ className }: Props) {
 
   const openFromNodeRef = useRef(openFromNode);
   openFromNodeRef.current = openFromNode;
+  const setActiveLessonIdRef = useRef(setActiveLessonId);
+  setActiveLessonIdRef.current = setActiveLessonId;
   const editModeRef = useRef(editMode);
   editModeRef.current = editMode;
   const selectNodeRef = useRef(selectNode);
@@ -538,6 +544,8 @@ export function HiveWorkspace({ className }: Props) {
                   selectNodeRef.current(node.id);
                   return;
                 }
+                const sitId = sitLessonIdFromNode(node.id);
+                if (sitId) setActiveLessonIdRef.current(sitId);
                 openFromNodeRef.current(node);
               },
               onReady: () => {
@@ -712,9 +720,9 @@ export function HiveWorkspace({ className }: Props) {
       return;
     }
     // Desk opens only from a learner click — never on idle mount / Path Play.
-    if (node.id.startsWith("lesson:")) {
-      setActiveLessonId(node.id.slice("lesson:".length));
-    }
+    // Sit first-slice only (Electrical / Plumbing / HVAC). Civic is off this sitting.
+    const sitId = sitLessonIdFromNode(node.id);
+    if (sitId) setActiveLessonId(sitId);
     try {
       const result = openFromNode(node);
       if (result && "ok" in result && result.ok) {

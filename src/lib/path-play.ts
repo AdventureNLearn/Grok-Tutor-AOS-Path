@@ -2,8 +2,8 @@
  * Path Play contract — stay on /path and walk THIS sitting's seven habits.
  * Never navigate to hive home, never invent a lesson, never open a desk.
  */
-import { learnerCombPairing } from "./reasoning-tracks";
-import { FROZEN_HABITS, existingSampleById, type FrozenHabit } from "./suite-rooms";
+import { firstSliceTrackById, learnerCombPairing } from "./reasoning-tracks";
+import { FROZEN_HABITS, type FrozenHabit } from "./suite-rooms";
 
 export const PATH_PLAY_ROUTE = "/path" as const;
 
@@ -18,7 +18,8 @@ export type PathPlayPlan = {
 };
 
 export function planPathPlay(activeLessonId: string | null | undefined): PathPlayPlan {
-  const sitting = existingSampleById(activeLessonId);
+  // THIS SITTING is the first-slice comb they sat — never civic / nursing / CM.
+  const sitting = firstSliceTrackById(activeLessonId);
   return {
     lessonId: sitting?.id ?? null,
     pairing: sitting ? learnerCombPairing(sitting) : null,

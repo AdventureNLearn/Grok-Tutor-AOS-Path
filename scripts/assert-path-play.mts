@@ -5,7 +5,11 @@
  */
 import { assembleHiveField } from "../src/lib/hive-idle-field.ts";
 import { planPathPlay, PATH_PLAY_ROUTE } from "../src/lib/path-play.ts";
-import { FIRST_SLICE_TRACK_IDS } from "../src/lib/reasoning-tracks.ts";
+import {
+  FIRST_SLICE_TRACK_IDS,
+  firstSliceTrackById,
+  sitLessonIdFromNode,
+} from "../src/lib/reasoning-tracks.ts";
 import { FROZEN_HABITS } from "../src/lib/suite-rooms.ts";
 
 const HABITS = [
@@ -50,6 +54,36 @@ if (none.lessonId !== null || none.canPlay) {
 }
 if (none.route !== "/path") {
   throw new Error("Even without a sitting, Play must not dump to hive home");
+}
+
+const civic = planPathPlay("civic-claim-hygiene");
+if (civic.lessonId || civic.pairing || civic.canPlay) {
+  throw new Error(`Civic is off this sitting, got ${civic.lessonId} / ${civic.pairing}`);
+}
+if (civic.route !== "/path") {
+  throw new Error("Civic persist must not dump Play to hive home");
+}
+if (firstSliceTrackById("civic-claim-hygiene") || firstSliceTrackById("four-agent-field-ops")) {
+  throw new Error("Civic / construction must not resolve as a first-slice sitting");
+}
+
+const plumbingSit = sitLessonIdFromNode("lesson:plumbing-practice-depth");
+if (plumbingSit !== "plumbing-practice-depth") {
+  throw new Error(`Sitting Plumbing comb must sit Plumbing, got ${plumbingSit}`);
+}
+const civicSit = sitLessonIdFromNode("lesson:civic-claim-hygiene");
+if (civicSit) {
+  throw new Error(`Civic comb must not become THIS SITTING, got ${civicSit}`);
+}
+const plumbing = planPathPlay(plumbingSit);
+if (plumbing.lessonId !== "plumbing-practice-depth") {
+  throw new Error(`Path THIS SITTING after Plumbing sit was ${plumbing.lessonId}`);
+}
+if (plumbing.pairing !== "Plumbing / Practice depth") {
+  throw new Error(`Plumbing sitting pairing was "${plumbing.pairing}"`);
+}
+if (/civic|claim hygiene|nursing|construction/i.test(plumbing.pairing ?? "")) {
+  throw new Error(`Plumbing sitting leaked a banned field: ${plumbing.pairing}`);
 }
 
 const hvac = planPathPlay("hvac-safety-scenario");

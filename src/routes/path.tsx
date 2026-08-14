@@ -4,12 +4,8 @@ import { Pause, Play, SkipForward } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { useHiveEditStore } from "@/lib/hive-edit-store";
 import { PATH_HABIT_BEAT_MS, planPathPlay } from "@/lib/path-play";
-import {
-  FROZEN_HABITS,
-  HABIT_LINES,
-  existingSampleById,
-  getLearnerLens,
-} from "@/lib/suite-rooms";
+import { firstSliceTrackById } from "@/lib/reasoning-tracks";
+import { FROZEN_HABITS, HABIT_LINES, getLearnerLens } from "@/lib/suite-rooms";
 import { cn } from "@/lib/utils";
 
 export const Route = createFileRoute("/path")({
@@ -25,7 +21,7 @@ function PathPage() {
   const nextPhase = useHiveEditStore((s) => s.nextPhase);
 
   const plan = planPathPlay(activeLessonId);
-  const lesson = existingSampleById(plan.lessonId);
+  const lesson = firstSliceTrackById(plan.lessonId);
   const lens = getLearnerLens(attachedLensId);
   const habit = FROZEN_HABITS[Math.min(phaseIndex, FROZEN_HABITS.length - 1)]!;
 
