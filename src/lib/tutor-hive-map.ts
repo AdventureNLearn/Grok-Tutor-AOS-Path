@@ -274,6 +274,7 @@ export function hiveHudSummary() {
     industries: INDUSTRIES.length,
     planLab: RELEASE_CURRICULUM.planLabTotal,
     readyPublicClean: RELEASE_CURRICULUM.readyPublicClean,
-    label: `${buildWorkspaceCombs().length} rooms · this sitting only`,
+    /** Operator / sitting inventory — never print on learner idle. */
+    sittingLabel: `${buildWorkspaceCombs().length} rooms · this sitting only`,
   };
 }

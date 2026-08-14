@@ -19,6 +19,7 @@ import {
   useHiveDeskStore,
   type FloatingDesk,
 } from "@/lib/hive-desk-store";
+import { showLearnerDeskAcr } from "@/lib/learner-desk-chrome";
 
 type Props = {
   desk: FloatingDesk;
@@ -276,9 +277,11 @@ export function FloatingDeskWindow({ desk, focused }: Props) {
         onPointerCancel={onDragEnd}
       >
         <GripHorizontal className="tutor-desk-grip" aria-hidden />
-        <span className="tutor-desk-acr" style={{ color: desk.color }}>
-          {desk.acr}
-        </span>
+        {showLearnerDeskAcr(desk.title) ? (
+          <span className="tutor-desk-acr" style={{ color: desk.color }}>
+            {desk.acr}
+          </span>
+        ) : null}
         <span className="tutor-desk-title" title={src}>
           {desk.title}
         </span>
