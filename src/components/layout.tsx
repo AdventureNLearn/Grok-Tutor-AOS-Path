@@ -1,10 +1,8 @@
 import {
   BookOpen,
   CircleHelp,
-  Compass,
   Hexagon,
   Layers,
-  Library,
   LineChart,
   Menu,
   Route,
@@ -12,6 +10,7 @@ import {
 } from "lucide-react";
 import { lazy, Suspense, useEffect, useState } from "react";
 import { Link, useNavigate, useRouterState } from "@tanstack/react-router";
+import { LEARNER_NAV } from "@/lib/no-demo-catalog-from-hive";
 import { cn } from "@/lib/utils";
 import { Button } from "./ui/button";
 import { DeskStage } from "./hive/desk-stage";
@@ -21,31 +20,20 @@ const HiveWorkspace = lazy(() =>
   import("./hive/hive-workspace").then((m) => ({ default: m.HiveWorkspace })),
 );
 
-/** Professional product nav only. Meme surfaces: /itshabbening, /meme-village. */
-const NAV: {
-  href: string;
-  label: string;
-  icon: typeof Hexagon;
-  title: string;
-  color: string;
-  acr: string;
-}[] = [
-  { href: "/tutor", label: "Learn", icon: BookOpen, title: "Live session", color: "#2dd4bf", acr: "LRN" },
-  { href: "/demo", label: "Samples", icon: Library, title: "Sample lessons", color: "#a78bfa", acr: "SMP" },
-  { href: "/explore", label: "Industries", icon: Compass, title: "Industries", color: "#60a5fa", acr: "IND" },
-  { href: "/skills", label: "Tools", icon: Layers, title: "Thinking tools", color: "#fbbf24", acr: "THK" },
-  { href: "/progress", label: "Progress", icon: LineChart, title: "Progress", color: "#4ade80", acr: "PRG" },
-  { href: "/path", label: "Path", icon: Route, title: "Your path", color: "#f472b6", acr: "PTH" },
-  { href: "/help", label: "Help", icon: CircleHelp, title: "How to use", color: "#94a3b8", acr: "HLP" },
-  {
-    href: "/labs/cad",
-    label: "Plan Lab",
-    icon: Layers,
-    title: "Plan Lab · MAC + PartMode",
-    color: "#38bdf8",
-    acr: "CAD",
-  },
-];
+/** Learner chrome — no Samples → /demo, no Industries → /explore. */
+const NAV_ICONS: Record<string, typeof Hexagon> = {
+  "/tutor": BookOpen,
+  "/skills": Layers,
+  "/progress": LineChart,
+  "/path": Route,
+  "/help": CircleHelp,
+  "/labs/cad": Layers,
+};
+
+const NAV = LEARNER_NAV.map((item) => ({
+  ...item,
+  icon: NAV_ICONS[item.href] ?? Hexagon,
+}));
 
 /**
  * Desk iframes load routes with ?surface=desk.

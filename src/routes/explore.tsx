@@ -1,8 +1,9 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { useMemo, useState } from "react";
 import { Search, ShieldCheck } from "lucide-react";
-import { INDUSTRIES, SECTORS, type IndustrySector } from "@/lib/industries";
+import { SECTORS, type IndustrySector } from "@/lib/industries";
 import { AOS_SKILLS } from "@/lib/aos-skills";
+import { learnerVisibleIndustries } from "@/lib/no-demo-catalog-from-hive";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
@@ -15,9 +16,10 @@ function ExplorePage() {
   const [q, setQ] = useState("");
   const [sector, setSector] = useState<IndustrySector | "all">("all");
 
+  const visible = useMemo(() => learnerVisibleIndustries(), []);
   const list = useMemo(() => {
     const query = q.trim().toLowerCase();
-    return INDUSTRIES.filter((i) => {
+    return visible.filter((i) => {
       if (sector !== "all" && i.sector !== sector) return false;
       if (!query) return true;
       return (
@@ -26,14 +28,14 @@ function ExplorePage() {
         i.topics.some((t) => t.toLowerCase().includes(query))
       );
     });
-  }, [q, sector]);
+  }, [q, sector, visible]);
 
   return (
     <div className="mx-auto max-w-6xl px-4 py-10">
       <div className="max-w-2xl">
         <h1 className="text-3xl font-semibold tracking-tight">Industries & trades</h1>
         <p className="mt-2 text-muted">
-          {INDUSTRIES.length} fields you can learn here. Open a live lesson or review full sample
+          {visible.length} fields you can learn here. Open a live lesson or review full sample
           transcripts for each one.
         </p>
       </div>

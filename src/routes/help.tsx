@@ -1,5 +1,5 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
-import { BookOpen, Hexagon, ShieldCheck, Sparkles } from "lucide-react";
+import { Hexagon, ShieldCheck, Sparkles } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import {
   HELP_ASK_LINE,
@@ -7,6 +7,7 @@ import {
   HELP_HIVE_LINE,
   HELP_IDLE_MATCH,
   HELP_PROGRESS_LINE,
+  HELP_START_HIVE,
   HELP_WORK_LINE,
 } from "@/lib/help-copy";
 import { HOST_MATRIX, hostMatrixBlurb } from "@/lib/host-matrix";
@@ -85,16 +86,14 @@ function HelpPage() {
         <h2 className="text-lg font-semibold tracking-tight">Where to start</h2>
         <ol className="space-y-3 text-sm text-muted leading-relaxed">
           <li>
-            <strong className="text-fg">1. Samples</strong> — full multi-turn lessons ready to read
-            anytime.
+            <strong className="text-fg">1. The Hive</strong> — {HELP_START_HIVE}
           </li>
           <li>
             <strong className="text-fg">2. Learn</strong> — open a session: pick industry, level, mode,
             and optional tools.
           </li>
           <li>
-            <strong className="text-fg">3. Industries / Tools</strong> — browse crafts and thinking
-            lenses.
+            <strong className="text-fg">3. Ask</strong> — {HELP_ASK_LINE}
           </li>
           <li>
             <strong className="text-fg">4. Progress</strong> — {HELP_PROGRESS_LINE}
@@ -102,15 +101,10 @@ function HelpPage() {
         </ol>
         <div className="flex flex-wrap gap-2 pt-1">
           <Button asChild size="sm" variant="teal">
-            <Link to="/demo">
-              <BookOpen className="h-3.5 w-3.5" /> Browse samples
-            </Link>
+            <Link to="/">Open The Hive</Link>
           </Button>
           <Button asChild size="sm" variant="secondary">
             <Link to="/tutor">Start learning</Link>
-          </Button>
-          <Button asChild size="sm" variant="outline">
-            <Link to="/">Open The Hive</Link>
           </Button>
         </div>
       </section>
